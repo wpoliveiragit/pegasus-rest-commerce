@@ -1,0 +1,515 @@
+# XXXXX
+# XXXXX
+# XXXXX
+# XXXXX
+# XXXXX
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: API de Produtos
+  termsOfService: http://localhost:8080/docs/terms.html
+  contact: { name: Pegasus SA, email: suporte@pegasus.com.br, url: http://localhost:8080/pegasus/website.html }
+  license: { name: Licença MIT, url: http://localhost:8080/docs/license.html }
+  description: |
+    API de estudo para gerenciamento de produtos.  
+    Contém operações de criação, consulta, atualização e exclusão de elementos do tipo produto.
+    
+    Informações adicionais
+    - `website.html` esta em `resources/static/pegasus/website.html`
+    - `license.html` esta em `resources/static/docs/terms.html`
+    - `terms.html` esta em `resources/static/docs/terms.html`
+
+#servers:
+#  - url: http://localhost:8080/pegasus-rest-commerce
+#    description: Servidor local para solicitações de produtos
+
+tags:
+  - { name: product, description: produto }
+  - { name: cooperator, description: funcionário }
+  - { name: tax-receipt, description: cupom fiscal }
+  - { name: tax-receipt-item, description: item do cupom fiscal }
+
+paths:
+
+  /product:
+
+    get:
+      tags: [ product ]
+      operationId: product-get-all-page
+      summary: Retorna uma lista de elementos
+      description: Retorna uma lista de elementos por paginação
+      parameters:
+        - $ref: '#/components/parameters/_query_page'
+        - $ref: '#/components/parameters/_query_size'
+      responses:
+        '200':
+          description: Uma lista paginada de elementos
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/product-page-response-type' }
+
+    post:
+      tags: [ product ]
+      operationId: product-create
+      summary: Cria um novo elemento
+      description: Cria um novo elemento.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/product-create-body-type' }
+      responses:
+        '201':
+          description: O elemento criado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/product-type' }
+
+  /product/{id}:
+    parameters:
+      - $ref: '#/components/parameters/_path_id'
+
+    get:
+      tags: [ product ]
+      operationId: product-get-one
+      summary: Busca um elemento
+      description: Busca um elemento pelo identificador
+      responses:
+        '200':
+          description: O elemento
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/product-type' }
+
+    put:
+      tags: [ product ]
+      operationId: product-update
+      summary: Atualiza um elemento
+      description: Atualiza um elemento pelo identificador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/product-update-body-type' }
+      responses:
+        '200':
+          description: O elemento atualizado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/product-type' }
+
+    delete:
+      tags: [ product ]
+      operationId: product-delete
+      summary: Deleta um elemento
+      description: Deleta um elemento pelo identificador
+      responses:
+        '204': { description: elemento deletado }
+
+  /cooperator:
+
+    get:
+      tags: [ cooperator ]
+      operationId: cooperator-get-all-page
+      summary: Retorna uma lista de elementos
+      description: Retorna uma lista de elementos por paginação
+      parameters:
+        - $ref: '#/components/parameters/_query_page'
+        - $ref: '#/components/parameters/_query_size'
+      responses:
+        '200':
+          description: Lista paginada de elementos
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/cooperator-page-response-type' }
+
+    post:
+      tags: [ cooperator ]
+      operationId: cooperator-create
+      summary: Cria um novo elemento
+      description: Cria um novo elemento.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/cooperator-create-body-type' }
+      responses:
+        '201':
+          description: elemento criado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/cooperator-type' }
+
+  /cooperator/{id}:
+    parameters:
+      - $ref: '#/components/parameters/_path_id'
+
+    get:
+      tags: [ cooperator ]
+      operationId: cooperator-get-one
+      summary: Busca um elemento
+      description: Busca um elemento pelo identificador
+      responses:
+        '200':
+          description: elemento solicitado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/cooperator-type' }
+
+    put:
+      tags: [ cooperator ]
+      operationId: cooperator-update
+      summary: Atualiza elemento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/cooperator-update-body-type' }
+      responses:
+        '200':
+          description: elemento atualizado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/cooperator-type' }
+
+    delete:
+      tags: [ cooperator ]
+      operationId: cooperator-delete
+      summary: Deleta um elemento
+      description: Deleta um elemento pelo identificador
+      responses:
+        '204': { description: elemento deletado }
+
+  /tax-receipt:
+
+    get:
+      tags: [ tax-receipt ]
+      operationId: tax-receipt-get-all-page
+      summary: Retorna uma lista de elementos
+      description: Retorna uma lista de elementos por paginação
+      parameters:
+        - $ref: '#/components/parameters/_query_page'
+        - $ref: '#/components/parameters/_query_size'
+      responses:
+        '200':
+          description: Lista paginada de cupons
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/tax-receipt-page-response-type' }
+
+    post:
+      tags: [ tax-receipt ]
+      operationId: tax-receipt-create
+      summary: Cria um novo elemento
+      description: Cria um novo elemento.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/tax-receipt-create-body-type' }
+      responses:
+        '201':
+          description: elemento criado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/tax-receipt-type' }
+
+  /tax-receipt/{id}:
+    parameters:
+      - $ref: '#/components/parameters/_path_id'
+
+    get:
+      tags: [ tax-receipt ]
+      operationId: tax-receipt-get-one
+      summary: Busca um elemento
+      description: Busca um elemento pelo identificador
+      responses:
+        '200':
+          description: elemento encontrado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/tax-receipt-type' }
+
+    put:
+      tags: [ tax-receipt ]
+      operationId: tax-receipt-update
+      summary: Atualiza um elemento
+      description: Atualiza um elemento pelo identificador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/tax-receipt-update-body-type' }
+      responses:
+        '200':
+          description: elemento atualizado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/tax-receipt-type' }
+
+    delete:
+      tags: [ tax-receipt ]
+      operationId: tax-receipt-delete
+      summary: Deleta um elemento
+      description: Deleta um elemento pelo identificador
+      responses:
+        '204': { description: elemento deletado }
+
+  /tax-receipt-item:
+
+    get:
+      tags: [ tax-receipt-item ]
+      operationId: tax-receipt-item-get-all-page
+      summary: Retorna uma lista de elementos
+      description: Retorna uma lista de elementos por paginação
+      parameters:
+        - $ref: '#/components/parameters/_query_page'
+        - $ref: '#/components/parameters/_query_size'
+      responses:
+        '200':
+          description: Lista paginada de elementos
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/tax-receipt-item-page-response-type' }
+
+    post:
+      tags: [ tax-receipt-item ]
+      operationId: tax-receipt-item-create
+      summary: Cria um novo elemento
+      description: Cria um novo elemento.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/tax-receipt-item-create-body-type' }
+      responses:
+        '201':
+          description: elemento adicionado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/tax-receipt-item-type' }
+
+  /tax-receipt-item/{id}:
+    parameters:
+      - $ref: '#/components/parameters/_path_id'
+
+    get:
+      tags: [ tax-receipt-item ]
+      operationId: tax-receipt-item-get-one
+      summary: Busca um elemento
+      description: Busca um elemento pelo identificador
+      responses:
+        '200':
+          description: elemento encontrado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/tax-receipt-item-type' }
+
+  /tax-receipt-item/by-tax-receipt/{taxReceiptId}:
+    parameters:
+      - $ref: '#/components/parameters/_query_page'
+      - $ref: '#/components/parameters/_query_size'
+      - $ref: '#/components/parameters/_path_tax_receipt_id'
+
+    get:
+      tags: [ tax-receipt-item ]
+      operationId: tax-receipt-item-get-all-by-tax-receopt-id-page
+      summary: Lista itens pelo ID do cupom fiscal
+      description: Retorna todos os itens vinculados a um cupom fiscal
+      responses:
+        '200':
+          description: Lista de itens encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/tax-receipt-item-type' }
+
+components:
+  schemas:
+
+    # [ GET-PAGE ]
+    pagination-type:
+      type: object
+      properties:
+        page: { $ref: '#/components/schemas/att-page' }
+        size: { $ref: '#/components/schemas/att-size' }
+        elements: { $ref: '#/components/schemas/att-elements' }
+        pages: { $ref: '#/components/schemas/att-pages' }
+        previous: { $ref: '#/components/schemas/att-previous' }
+        next: { $ref: '#/components/schemas/att-next' }
+
+    product-page-response-type:
+      type: object
+      properties:
+        pagination: { $ref: '#/components/schemas/pagination-type' }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/product-type' }
+
+    cooperator-page-response-type:
+      type: object
+      properties:
+        pagination: { $ref: '#/components/schemas/pagination-type' }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/cooperator-type' }
+
+    tax-receipt-page-response-type:
+      type: object
+      properties:
+        pagination: { $ref: '#/components/schemas/pagination-type' }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/tax-receipt-type' }
+
+    tax-receipt-item-page-response-type:
+      type: object
+      properties:
+        pagination: { $ref: '#/components/schemas/pagination-type' }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/tax-receipt-item-type' }
+
+    # [ CREATE ]
+    product-create-body-type:
+      type: object
+      properties:
+        name: { type: string, example: nome da pessoa }
+        price: { type: number, format: float }
+        quantity: { type: integer }
+
+    cooperator-create-body-type:
+      type: object
+      properties:
+        name: { type: string }
+        documentNumber: { type: string }
+
+    tax-receipt-create-body-type:
+      type: object
+      properties:
+        cooperatorId: { type: integer }
+        data: { type: string, format: date-time }
+
+    tax-receipt-item-create-body-type:
+      type: object
+      properties:
+        taxReceiptId: { type: integer }
+        productId: { type: integer }
+        quantity: { type: integer }
+
+    # [ UPDATE ]
+    product-update-body-type:
+      type: object
+      properties:
+        name: { type: string }
+        price: { type: number, format: float }
+        quantity: { type: integer }
+
+    cooperator-update-body-type:
+      type: object
+      properties:
+        name: { type: string }
+        documentNumber: { type: string }
+
+    tax-receipt-update-body-type:
+      type: object
+      properties:
+        cooperatorId: { type: integer }
+        data: { type: string, format: date-time }
+
+    # [ TYPE ]
+    product-type:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string, example: nome da pessoa }
+        price: { type: number, format: float }
+        quantity: { type: integer }
+
+    cooperator-type:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        documentNumber: { type: string }
+
+    tax-receipt-type:
+      type: object
+      properties:
+        id: { type: integer }
+        cooperatorId: { type: integer }
+        data: { type: string, format: date-time }
+
+    tax-receipt-item-type:
+      type: object
+      properties:
+        id: { type: integer }
+        taxReceiptId: { type: integer }
+        productId: { type: integer }
+        quantity: { type: integer }
+
+    # [ ATTRIBUTE ]
+    att-page:
+      type: integer
+      example: 10
+      description: 'Página atual (0-based).'
+
+    att-size:
+      type: integer
+      example: 30
+      description: 'Tamanho da página.'
+
+    att-elements:
+      type: integer
+      example: 300
+      format: int64
+      description: 'Total de registros.'
+
+    att-pages:
+      type: integer
+      example: 10
+      description: 'Total de páginas (com bare no size).'
+
+    att-previous:
+      type: boolean
+      example: true
+      description: 'Se há página anterior.'
+
+    att-next:
+      type: integer
+      example: 10
+      description: 'Página atual (0-based).'
+
+  parameters:
+    _query_page:
+      in: query
+      name: page
+      schema:
+        type: integer
+
+    _query_size:
+      in: query
+      name: size
+      schema:
+        type: integer
+
+    _path_id:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+
+    _path_tax_receipt_id:
+      in: path
+      name: taxReceiptId
+      required: true
+      schema:
+        type: integer
+
+# XXXXX
+# XXXXX
+# XXXXX
+# XXXXX
+# XXXXX
