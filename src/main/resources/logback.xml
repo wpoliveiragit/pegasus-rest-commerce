@@ -1,0 +1,41 @@
+<configuration>
+    <!-- ROOT LOGGER CONFIGURADO PARA O NÍVEL "INFO" -->
+    <root level="info">
+        <appender-ref ref="INFO_APPENDER" />
+        <appender-ref ref="WARN_APPENDER" />
+        <appender-ref ref="ERROR_APPENDER" />
+    </root>
+    <!-- APPENDER PARA INFO -->
+    <appender name="INFO_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%cyan(⬤ INFO) [%blue(%relative ms)] [%blue(%d{HH:mm:ss.SSS})] [%yellow(%logger{36}.%thread)] → %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <!-- APPENDER PARA WARNNING -->
+    <appender name="WARN_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%yellow(⬤ WARN) [%blue(%relative ms)] [%blue(%d{HH:mm:ss.SSS})] [%yellow(%logger{36}.%thread)] → %yellow(%msg%n)</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <!-- APPENDER PARA ERROR -->
+    <appender name="ERROR_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+			<pattern>%red(⬤ ERRO) [%blue(%relative ms)] [%blue(%d{HH:mm:ss.SSS})] [%yellow(%logger{36}.%thread)] → %red(%msg%n)\r%caller%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+</configuration>

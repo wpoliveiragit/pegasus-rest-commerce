@@ -7,21 +7,29 @@ openapi: 3.0.0
 info:
   version: 1.0.0
   title: API de Produtos
+#  title: PEGASUS-SA → API de Produtos
   termsOfService: http://localhost:8080/docs/terms.html
-  contact: { name: Pegasus SA, email: suporte@pegasus.com.br, url: http://localhost:8080/pegasus/website.html }
-  license: { name: Licença MIT, url: http://localhost:8080/docs/license.html }
+  contact: { name: Enterprise, email: suporte@pegasus.com.br, url: http://localhost:8080/pegasus/website.html }
+  license: { name: License, url: http://localhost:8080/docs/license.html }
   description: |
     API de estudo para gerenciamento de produtos.  
     Contém operações de criação, consulta, atualização e exclusão de elementos do tipo produto.
     
-    Informações adicionais
-    - `website.html` esta em `resources/static/pegasus/website.html`
-    - `license.html` esta em `resources/static/docs/terms.html`
-    - `terms.html` esta em `resources/static/docs/terms.html`
+    # Informações Adicionais
+    Este tópico não deve existir em projetos que não sejam de estudo, 
+    pois ele passará informações internas do microsserviço, podendo ter quebra de segurança.
+    
+    ### Links
+    - `Terms of service` → esta em `resources/static/docs/terms.html`
+    - `Website` → esta em `resources/static/pegasus/website.html`
+    - `License` → esta em `resources/static/docs/terms.html`
+    
+    ### Banco de dados
+    acesse o link `http://localhost:8080/h2-console`
 
-#servers:
-#  - url: http://localhost:8080/pegasus-rest-commerce
-#    description: Servidor local para solicitações de produtos
+servers:
+  - url: http://localhost:8080
+    description: Servidor local para solicitações de produtos
 
 tags:
   - { name: product, description: produto }
@@ -92,11 +100,7 @@ paths:
           application/json:
             schema: { $ref: '#/components/schemas/product-update-body-type' }
       responses:
-        '200':
-          description: O elemento atualizado
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/product-type' }
+        '200': { description: O elemento atualizado }
 
     delete:
       tags: [ product ]
@@ -110,7 +114,7 @@ paths:
 
     get:
       tags: [ cooperator ]
-      operationId: cooperator-get-all-page
+      operationId: cooperator-get-page
       summary: Retorna uma lista de elementos
       description: Retorna uma lista de elementos por paginação
       parameters:
@@ -166,11 +170,7 @@ paths:
           application/json:
             schema: { $ref: '#/components/schemas/cooperator-update-body-type' }
       responses:
-        '200':
-          description: elemento atualizado
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/cooperator-type' }
+        '200': { description: elemento atualizado }
 
     delete:
       tags: [ cooperator ]
@@ -241,11 +241,7 @@ paths:
           application/json:
             schema: { $ref: '#/components/schemas/tax-receipt-update-body-type' }
       responses:
-        '200':
-          description: elemento atualizado
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/tax-receipt-type' }
+        '200': { description: elemento atualizado }
 
     delete:
       tags: [ tax-receipt ]
@@ -410,7 +406,6 @@ components:
       type: object
       properties:
         name: { type: string }
-        documentNumber: { type: string }
 
     tax-receipt-update-body-type:
       type: object
@@ -477,9 +472,9 @@ components:
       description: 'Se há página anterior.'
 
     att-next:
-      type: integer
-      example: 10
-      description: 'Página atual (0-based).'
+      type: boolean
+      example: true
+      description: 'Se há página posterior.'
 
   parameters:
     _query_page:
@@ -487,12 +482,16 @@ components:
       name: page
       schema:
         type: integer
+        example: 0
+        default: 0
 
     _query_size:
       in: query
       name: size
       schema:
         type: integer
+        example: 1
+        default: 10
 
     _path_id:
       in: path

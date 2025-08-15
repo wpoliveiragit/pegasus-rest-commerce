@@ -1,0 +1,19 @@
+_      _____                                ______
+/\| |/\  |  __ \                               \ \ \ \
+\ ` ' /  | |__) |__  __ _  __ _ ___ _   _ ___   | | | |
+|_     _| |  ___/ _ \/ _` |/ _` / __| | | / __|   \ \ \ \
+/ , . \  | |  |  __/ (_| | (_| \__ \ |_| \__ \   / / / /
+\/|_|\/  |_|   \___|\__, |\__,_|___/\__,_|___/  | | | |
+__/ |                     /_/_/_/
+|___/  Spring boot version : ${spring-boot.version}
++ ---------------------------------------------------------------
+|# Project Data
+| java version   : ${project.property.java.version}
++ ---------------------------------------------------------------
+| app - name                : ${app.name}
+| app - version             : ${app.version}
+| app - artifact            : ${app.artifactId}
+| app - groupId             : ${app.groupId}
+| app - compilation.build   : ${app.property.compilation.build}
+| app - description         : ${app.description}
++ ---------------------------------------------------------------
