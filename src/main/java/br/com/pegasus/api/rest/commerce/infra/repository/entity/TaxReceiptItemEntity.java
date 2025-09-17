@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,9 +22,10 @@ import lombok.Setter;
 @Table(name = "TB_TAX_RECEIPT_ITEM")
 public class TaxReceiptItemEntity {
 
-    @EmbeddedId
-    private TaxReceiptItemId id;
+  @EmbeddedId
+  private TaxReceiptItemId id;
 
-    @Column(name = "QUANTITY")
-    private Integer quantity;
+  @NotNull
+  @Column(name = "QUANTITY", nullable = false)
+  private Integer quantity;
 }

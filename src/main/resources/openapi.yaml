@@ -7,7 +7,7 @@ openapi: 3.0.0
 info:
   version: 1.0.0
   title: API de Produtos
-#  title: PEGASUS-SA → API de Produtos
+  #  title: PEGASUS-SA → API de Produtos
   termsOfService: http://localhost:8080/docs/terms.html
   contact: { name: Enterprise, email: suporte@pegasus.com.br, url: http://localhost:8080/pegasus/website.html }
   license: { name: License, url: http://localhost:8080/docs/license.html }
@@ -15,17 +15,13 @@ info:
     API de estudo para gerenciamento de produtos.  
     Contém operações de criação, consulta, atualização e exclusão de elementos do tipo produto.
     
-    # Informações Adicionais
-    Este tópico não deve existir em projetos que não sejam de estudo, 
-    pois ele passará informações internas do microsserviço, podendo ter quebra de segurança.
+    **NOTAS DO DESENVOLVEDOR**<br>
     
-    ### Links
-    - `Terms of service` → esta em `resources/static/docs/terms.html`
-    - `Website` → esta em `resources/static/pegasus/website.html`
-    - `License` → esta em `resources/static/docs/terms.html`
-    
-    ### Banco de dados
-    acesse o link `http://localhost:8080/h2-console`
+    **Links**<br>
+    ● `Terms of service` → `resources/static/docs/terms.html`<br>
+    ● `Website` → `resources/static/pegasus/website.html`<br>
+    ● `License` → `resources/static/docs/terms.html`<br>
+    ● `Database` → `http://localhost:8080/h2-console`<br>
 
 servers:
   - url: http://localhost:8080
@@ -33,105 +29,66 @@ servers:
 
 tags:
   - { name: product, description: produto }
-  - { name: cooperator, description: funcionário }
+  - { name: cooperator, description: cooperador }
   - { name: tax-receipt, description: cupom fiscal }
   - { name: tax-receipt-item, description: item do cupom fiscal }
 
 paths:
-
-  /product:
-
-    get:
-      tags: [ product ]
-      operationId: product-get-all-page
-      summary: Retorna uma lista de elementos
-      description: Retorna uma lista de elementos por paginação
-      parameters:
-        - $ref: '#/components/parameters/_query_page'
-        - $ref: '#/components/parameters/_query_size'
-      responses:
-        '200':
-          description: Uma lista paginada de elementos
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/product-page-response-type' }
-
-    post:
-      tags: [ product ]
-      operationId: product-create
-      summary: Cria um novo elemento
-      description: Cria um novo elemento.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/product-create-body-type' }
-      responses:
-        '201':
-          description: O elemento criado
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/product-type' }
-
-  /product/{id}:
-    parameters:
-      - $ref: '#/components/parameters/_path_id'
-
-    get:
-      tags: [ product ]
-      operationId: product-get-one
-      summary: Busca um elemento
-      description: Busca um elemento pelo identificador
-      responses:
-        '200':
-          description: O elemento
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/product-type' }
-
-    put:
-      tags: [ product ]
-      operationId: product-update
-      summary: Atualiza um elemento
-      description: Atualiza um elemento pelo identificador
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/product-update-body-type' }
-      responses:
-        '200': { description: O elemento atualizado }
-
-    delete:
-      tags: [ product ]
-      operationId: product-delete
-      summary: Deleta um elemento
-      description: Deleta um elemento pelo identificador
-      responses:
-        '204': { description: elemento deletado }
 
   /cooperator:
 
     get:
       tags: [ cooperator ]
       operationId: cooperator-get-page
-      summary: Retorna uma lista de elementos
-      description: Retorna uma lista de elementos por paginação
       parameters:
         - $ref: '#/components/parameters/_query_page'
         - $ref: '#/components/parameters/_query_size'
+      summary: Busca uma paginação de elementos
+      description: |
+        Busca uma paginação de elementos.        
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        200: ok 
+        400: bad request
+        ● page/size: null - negativo
+        500: Internal server erro
+        ● erro ao executar uma query no banco de dado
+        ● banco de dados off-line
+        ```
       responses:
         '200':
-          description: Lista paginada de elementos
+          description: Retorna uma lista paginada de elementos
           content:
             application/json:
               schema: { $ref: '#/components/schemas/cooperator-page-response-type' }
+        "400": { $ref: '#/components/responses/bad-request-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
 
     post:
       tags: [ cooperator ]
       operationId: cooperator-create
       summary: Cria um novo elemento
-      description: Cria um novo elemento.
+      description: |
+        Cria um novo elemento
+        
+        **Notas do Desenvolvedor**
+        ```
+        ● Documente number: campo único que representa o CPF
+        ```
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        201: created
+        400: bad request
+        ● name: null - branco
+        ● document number: null - branco - invalido.
+        409: conflict
+        ● document number já cadastrado
+        500: Internal server erro
+        ● erro ao executar uma query no banco de dado
+        ● banco de dados off-line
+        ```
       requestBody:
         required: true
         content:
@@ -139,10 +96,13 @@ paths:
             schema: { $ref: '#/components/schemas/cooperator-create-body-type' }
       responses:
         '201':
-          description: elemento criado
+          description: Retorna o elemento criado
           content:
             application/json:
               schema: { $ref: '#/components/schemas/cooperator-type' }
+        "400": { $ref: '#/components/responses/bad-request-response' }
+        "409": { $ref: '#/components/responses/conflict-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
 
   /cooperator/{id}:
     parameters:
@@ -151,57 +111,282 @@ paths:
     get:
       tags: [ cooperator ]
       operationId: cooperator-get-one
-      summary: Busca um elemento
-      description: Busca um elemento pelo identificador
+      summary: Busca um elemento pelo ID
+      description: |
+        Busca um elemento pelo ID
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        200: ok 
+        404: not found
+        500: Internal server erro
+          ● erro ao executar uma query no banco de dado
+          ● banco de dados off-line
+        ```
       responses:
         '200':
-          description: elemento solicitado
+          description: Retorna o elemento solicitado
           content:
             application/json:
               schema: { $ref: '#/components/schemas/cooperator-type' }
+        "404": { $ref: '#/components/responses/not-found-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
 
     put:
       tags: [ cooperator ]
       operationId: cooperator-update
-      summary: Atualiza elemento
+      summary: Atualiza elemento pelo ID
+      description: |
+        Atualiza elemento pelo ID
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        204: no content
+        400: bad request
+          ● document number: invalido
+        404: not found
+        409: conflict
+          ● document number já cadastrado
+        500: Internal server erro
+          ● erro ao executar uma query no banco de dado
+          ● banco de dados off-line
+        ```
       requestBody:
         required: true
         content:
           application/json:
             schema: { $ref: '#/components/schemas/cooperator-update-body-type' }
       responses:
-        '200': { description: elemento atualizado }
+        '204': { description: ok }
+        "400": { $ref: '#/components/responses/bad-request-response' }
+        "404": { $ref: '#/components/responses/not-found-response' }
+        "409": { $ref: '#/components/responses/conflict-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
 
     delete:
       tags: [ cooperator ]
       operationId: cooperator-delete
-      summary: Deleta um elemento
-      description: Deleta um elemento pelo identificador
+      summary: Deleta um elemento pelo ID
+      description: |
+        Deleta um elemento pelo ID
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        204: no content
+        404: not found
+        500: Internal server erro
+          ● erro ao executar uma query no banco de dado
+          ● banco de dados off-line
+        ```
       responses:
-        '204': { description: elemento deletado }
+        '204': { description: ok }
+        "404": { $ref: '#/components/responses/not-found-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
+
+  /product:
+
+    get:
+      tags: [ product ]
+      operationId: product-get-page
+      parameters:
+        - $ref: '#/components/parameters/_query_page'
+        - $ref: '#/components/parameters/_query_size'
+      summary: Busca uma paginação de elementos
+      description: |
+        Busca uma paginação de elementos
+        
+        **Notas do Desenvolvedor**
+        ```mark
+        ♢♢ HTTP STATUS ♢♢
+        200: ok 
+        400: bad request
+          ● page/size: null - negativo
+        500: Internal server erro
+          ● erro ao executar uma query no banco de dado
+          ● banco de dados off-line
+        ```
+      responses:
+        '200':
+          description: Retorna a paginação solicitada
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/product-page-response-type' }
+        "400": { $ref: '#/components/responses/bad-request-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
+
+    post:
+      tags: [ product ]
+      operationId: product-create
+      summary: Cria um novo elemento
+      description: |
+        Cria um novo elemento
+        
+        **Notas do Desenvolvedor**
+        ```
+        ● name: campo único
+        ```
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        201: created
+        400: bad request
+          ● name: nulo - branco
+          ● price: nulo - negativo
+          ● quantity: nulo - negativo
+        409: conflict
+          ● nome já cadastrado
+        500: Internal server erro
+          ● erro ao executar uma query no banco de dado
+          ● banco de dados off-line
+        ```
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/product-create-body-type' }
+      responses:
+        '201':
+          description: Retorna o elemento criado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/product-type' }
+        "400": { $ref: '#/components/responses/bad-request-response' }
+        "409": { $ref: '#/components/responses/conflict-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
+
+  /product/{id}:
+    parameters:
+      - $ref: '#/components/parameters/_path_product_id'
+
+    get:
+      tags: [ product ]
+      operationId: product-get-one
+      summary: Busca um elemento pelo ID
+      description: |
+        Busca um elemento pelo ID
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        200: ok
+        404: not found
+        500: Internal server erro
+          ● erro ao executar uma query no banco de dado
+          ● banco de dados off-line
+        ```
+      responses:
+        '200':
+          description: O elemento correspondente ao ID
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/product-type' }
+        "404": { $ref: '#/components/responses/not-found-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
+
+    put:
+      tags: [ product ]
+      operationId: product-update
+      summary: Atualiza um elemento pelo ID
+      description: |
+        Atualiza um elemento pelo ID
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        200: ok 
+        400: bad request
+          ● price: negativo
+          ● quality: negativo
+        404: not found
+        409: conflict
+          ● nome já cadastrado
+        500: Internal server erro
+          ● erro ao executar uma query no banco de dado
+          ● banco de dados off-line
+        ```
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/product-update-body-type' }
+      responses:
+        '200': { description: ok }
+        "400": { $ref: '#/components/responses/bad-request-response' }
+        "404": { $ref: '#/components/responses/not-found-response' }
+        "409": { $ref: '#/components/responses/conflict-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
+
+    delete:
+      tags: [ product ]
+      operationId: product-delete
+      summary: Deleta um elemento pelo ID
+      description: |
+        Deleta um elemento pelo ID
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        204: no content
+        404: not found
+        500: Internal server erro
+          ● erro ao executar uma query no banco de dado
+          ● banco de dados off-line
+        ```
+      responses:
+        '204': { description: ok }
+        "404": { $ref: '#/components/responses/not-found-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
 
   /tax-receipt:
 
     get:
       tags: [ tax-receipt ]
-      operationId: tax-receipt-get-all-page
-      summary: Retorna uma lista de elementos
-      description: Retorna uma lista de elementos por paginação
+      operationId: tax-receipt-get-page
       parameters:
         - $ref: '#/components/parameters/_query_page'
         - $ref: '#/components/parameters/_query_size'
+      summary: Busca uma paginação de elementos
+      description: |
+        Busca uma paginação de elementos
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        200: ok 
+        400: bad request
+        ● page/size: null - branco
+        500: Internal server erro
+        ● erro ao executar uma query no banco de dado
+        ● banco de dados off-line
+        ```
       responses:
         '200':
-          description: Lista paginada de cupons
+          description: Retorna uma lista paginada de elementos
           content:
             application/json:
               schema: { $ref: '#/components/schemas/tax-receipt-page-response-type' }
+        "400": { $ref: '#/components/responses/bad-request-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
 
     post:
       tags: [ tax-receipt ]
       operationId: tax-receipt-create
       summary: Cria um novo elemento
-      description: Cria um novo elemento.
+      description: |
+        Cria um novo elemento
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        201: created
+        400: bad request
+        ● cooperatorId: null, negativo
+        500: Internal server erro
+        ● erro ao executar uma query no banco de dado
+        ● banco de dados off-line
+        ```
       requestBody:
         required: true
         content:
@@ -209,10 +394,12 @@ paths:
             schema: { $ref: '#/components/schemas/tax-receipt-create-body-type' }
       responses:
         '201':
-          description: elemento criado
+          description: Retorna o elemento criado
           content:
             application/json:
               schema: { $ref: '#/components/schemas/tax-receipt-type' }
+        "400": { $ref: '#/components/responses/bad-request-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
 
   /tax-receipt/{id}:
     parameters:
@@ -221,58 +408,81 @@ paths:
     get:
       tags: [ tax-receipt ]
       operationId: tax-receipt-get-one
-      summary: Busca um elemento
-      description: Busca um elemento pelo identificador
+      summary: Busca um elemento pelo ID
+      description: |
+        Busca um elemento pelo ID
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        200: ok 
+        404: not found
+        500: Internal server erro
+        ● erro ao executar uma query no banco de dado
+        ● banco de dados off-line
+        ```
       responses:
         '200':
-          description: elemento encontrado
+          description: O elemento correspondente ao ID
           content:
             application/json:
               schema: { $ref: '#/components/schemas/tax-receipt-type' }
-
-    put:
-      tags: [ tax-receipt ]
-      operationId: tax-receipt-update
-      summary: Atualiza um elemento
-      description: Atualiza um elemento pelo identificador
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/tax-receipt-update-body-type' }
-      responses:
-        '200': { description: elemento atualizado }
-
-    delete:
-      tags: [ tax-receipt ]
-      operationId: tax-receipt-delete
-      summary: Deleta um elemento
-      description: Deleta um elemento pelo identificador
-      responses:
-        '204': { description: elemento deletado }
+        "404": { $ref: '#/components/responses/not-found-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
 
   /tax-receipt-item:
 
     get:
       tags: [ tax-receipt-item ]
-      operationId: tax-receipt-item-get-all-page
-      summary: Retorna uma lista de elementos
-      description: Retorna uma lista de elementos por paginação
+      operationId: tax-receipt-item-get-page
+      summary: Busca uma paginação de elementos
       parameters:
         - $ref: '#/components/parameters/_query_page'
         - $ref: '#/components/parameters/_query_size'
+      description: |
+        Busca uma paginação de elementos
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        200: ok 
+        400: bad request
+        ● page/size: null - negativo
+        500: Internal server erro
+        ● erro ao executar uma query no banco de dado
+        ● banco de dados off-line
+        ```
       responses:
         '200':
-          description: Lista paginada de elementos
+          description: Retorna uma lista paginada de elementos
           content:
             application/json:
               schema: { $ref: '#/components/schemas/tax-receipt-item-page-response-type' }
+        "400": { $ref: '#/components/responses/bad-request-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
 
     post:
       tags: [ tax-receipt-item ]
       operationId: tax-receipt-item-create
       summary: Cria um novo elemento
-      description: Cria um novo elemento.
+      description: |
+        Cria um novo elemento
+        
+        **Notas do Desenvolvedor**<br>
+        ```
+        ● Em caso de conflito de ID, apena registre o somatório das quantidades
+        ```
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        202: created
+        400: bad request
+        ● name: null, branco, negativo, invalido.
+        409: conflict
+          ● id ja cadastrado e preços diferentes
+        500: Internal server erro
+        ● erro ao executar uma query no banco de dado
+        ● banco de dados off-line
+        ```
       requestBody:
         required: true
         content:
@@ -280,51 +490,95 @@ paths:
             schema: { $ref: '#/components/schemas/tax-receipt-item-create-body-type' }
       responses:
         '201':
-          description: elemento adicionado
+          description: Retorna o elemento criado
           content:
             application/json:
               schema: { $ref: '#/components/schemas/tax-receipt-item-type' }
+        "400": { $ref: '#/components/responses/bad-request-response' }
+        "409": { $ref: '#/components/responses/conflict-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
 
-  /tax-receipt-item/{id}:
+  /tax-receipt-items/{taxReceiptId}/{productId}:
     parameters:
-      - $ref: '#/components/parameters/_path_id'
+      - $ref: '#/components/parameters/_path_tax_receipt_id'
+      - $ref: '#/components/parameters/_path_product_id'
 
     get:
       tags: [ tax-receipt-item ]
       operationId: tax-receipt-item-get-one
-      summary: Busca um elemento
-      description: Busca um elemento pelo identificador
+      summary: Busca um elemento pelo ID
+      description: |
+        Busca um elemento pelo ID
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        200: ok
+        404: not found
+        500: Internal server erro
+        ● erro ao executar uma query no banco de dado
+        ● banco de dados off-line
+        ```
       responses:
         '200':
-          description: elemento encontrado
+          description: O elemento correspondente ao ID
           content:
             application/json:
               schema: { $ref: '#/components/schemas/tax-receipt-item-type' }
+        "404": { $ref: '#/components/responses/not-found-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
 
-  /tax-receipt-item/by-tax-receipt/{taxReceiptId}:
+  /tax-receipt-items/{taxReceiptId}:
     parameters:
-      - $ref: '#/components/parameters/_query_page'
-      - $ref: '#/components/parameters/_query_size'
       - $ref: '#/components/parameters/_path_tax_receipt_id'
 
     get:
       tags: [ tax-receipt-item ]
-      operationId: tax-receipt-item-get-all-by-tax-receopt-id-page
-      summary: Lista itens pelo ID do cupom fiscal
-      description: Retorna todos os itens vinculados a um cupom fiscal
+      operationId: tax-receipt-item-get-page-by-tax-receipt-id
+      parameters:
+        - $ref: '#/components/parameters/_query_page'
+        - $ref: '#/components/parameters/_query_size'
+      summary: Busca uma paginação de elementos
+      description: |
+        Busca uma paginação de elementos
+        
+        **Notas do Desenvolvedor**
+        ```
+        ♢♢ HTTP STATUS ♢♢
+        200: ok 
+        400: bad request
+        ● page/size: null - negativo
+        500: Internal server erro
+        ● erro ao executar uma query no banco de dado
+        ● banco de dados off-line
+        ```
       responses:
         '200':
-          description: Lista de itens encontrados
+          description: Retorna a paginação solicitada
           content:
             application/json:
-              schema:
-                type: array
-                items: { $ref: '#/components/schemas/tax-receipt-item-type' }
+              schema: { $ref: '#/components/schemas/tax-receipt-item-page-response-type' }
+        "404": { $ref: '#/components/responses/not-found-response' }
+        "500": { $ref: '#/components/responses/internal-server-error-response' }
 
 components:
   schemas:
+    # [ GERAL ]
+    att-id: { type: integer, example: 10 , description: Identificador do elemento }
 
-    # [ GET-PAGE ]
+    att-page: { type: integer, example: 10, description: Página atual (0-based) }
+    att-size: { type: integer, example: 30, description: Tamanho da página }
+    att-pages: { type: integer, example: 10, description: Total de páginas (com base no size) }
+    att-previous: { type: boolean, example: true, description: Se há página anterior }
+    att-next: { type: boolean, example: true, description: Se há página posterior }
+    att-elements: { type: integer, format: int64, example: 300, description: Total de registros }
+    att-name: { type: string, example: 'Wellington', description: Nome do elemento }
+    att-document-number: { type: string, example: '33344455512', description: Nome do cooperador }
+    att-price: { type: number, format: float, example: '3.52', description: preço do elemento }
+    att-quantity: { type: integer, example: 10, description: quantidade de elementos }
+
+    att-date: { type: string, format: date-time, example: 12, description: data do registro }
+
     pagination-type:
       type: object
       properties:
@@ -335,13 +589,18 @@ components:
         previous: { $ref: '#/components/schemas/att-previous' }
         next: { $ref: '#/components/schemas/att-next' }
 
-    product-page-response-type:
+    exception-type:
       type: object
       properties:
-        pagination: { $ref: '#/components/schemas/pagination-type' }
-        data:
-          type: array
-          items: { $ref: '#/components/schemas/product-type' }
+        id: { $ref: '#/components/schemas/att-id' }
+
+    # [ COOPERATOR ]
+    cooperator-type:
+      type: object
+      properties:
+        id: { $ref: '#/components/schemas/att-id' }
+        name: { $ref: '#/components/schemas/att-name' }
+        documentNumber: { $ref: '#/components/schemas/att-document-number' }
 
     cooperator-page-response-type:
       type: object
@@ -351,6 +610,58 @@ components:
           type: array
           items: { $ref: '#/components/schemas/cooperator-type' }
 
+    cooperator-create-body-type:
+      type: object
+      properties:
+        name: { $ref: '#/components/schemas/att-name' }
+        documentNumber: { $ref: '#/components/schemas/att-document-number' }
+      required: [ name, documentNumber ]
+
+    cooperator-update-body-type:
+      type: object
+      properties:
+        name: { $ref: '#/components/schemas/att-name' }
+        documentNumber: { $ref: '#/components/schemas/att-document-number' }
+
+    # [ PROCUCT ]
+    product-type:
+      type: object
+      properties:
+        id: { $ref: '#/components/schemas/att-id' }
+        name: { $ref: '#/components/schemas/att-name' }
+        price: { $ref: '#/components/schemas/att-price' }
+        quantity: { $ref: '#/components/schemas/att-quantity' }
+
+    product-page-response-type:
+      type: object
+      properties:
+        pagination: { $ref: '#/components/schemas/pagination-type' }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/product-type' }
+
+    product-create-body-type:
+      type: object
+      properties:
+        name: { $ref: '#/components/schemas/att-name' }
+        price: { $ref: '#/components/schemas/att-price' }
+        quantity: { $ref: '#/components/schemas/att-quantity' }
+
+    product-update-body-type:
+      type: object
+      properties:
+        name: { $ref: '#/components/schemas/att-name' }
+        price: { $ref: '#/components/schemas/att-price' }
+        quantity: { $ref: '#/components/schemas/att-quantity' }
+
+    # [ TAX-RECEIPT ]
+    tax-receipt-type:
+      type: object
+      properties:
+        id: { $ref: '#/components/schemas/att-id' }
+        cooperator-id: { $ref: '#/components/schemas/att-id' }
+        date: { $ref: '#/components/schemas/att-date' }
+
     tax-receipt-page-response-type:
       type: object
       properties:
@@ -358,6 +669,19 @@ components:
         data:
           type: array
           items: { $ref: '#/components/schemas/tax-receipt-type' }
+
+    tax-receipt-create-body-type:
+      type: object
+      properties:
+        cooperator-id: { $ref: '#/components/schemas/att-id' }
+
+    # [ TAX-RECEIPT-ITEM ]
+    tax-receipt-item-type:
+      type: object
+      properties:
+        taxReceipt-id: { $ref: '#/components/schemas/att-id' }
+        product-id: { $ref: '#/components/schemas/att-id' }
+        quantity: { $ref: '#/components/schemas/att-quantity' }
 
     tax-receipt-item-page-response-type:
       type: object
@@ -367,140 +691,91 @@ components:
           type: array
           items: { $ref: '#/components/schemas/tax-receipt-item-type' }
 
-    # [ CREATE ]
-    product-create-body-type:
-      type: object
-      properties:
-        name: { type: string, example: nome da pessoa }
-        price: { type: number, format: float }
-        quantity: { type: integer }
-
-    cooperator-create-body-type:
-      type: object
-      properties:
-        name: { type: string }
-        documentNumber: { type: string }
-
-    tax-receipt-create-body-type:
-      type: object
-      properties:
-        cooperatorId: { type: integer }
-        data: { type: string, format: date-time }
-
     tax-receipt-item-create-body-type:
       type: object
       properties:
-        taxReceiptId: { type: integer }
-        productId: { type: integer }
-        quantity: { type: integer }
+        taxReceipt-id: { $ref: '#/components/schemas/att-id' }
+        product-id: { $ref: '#/components/schemas/att-id' }
+        quantity: { $ref: '#/components/schemas/att-quantity' }
 
-    # [ UPDATE ]
-    product-update-body-type:
+    # [ Exception ]
+    exception-response-type:
       type: object
+      description: Modelo padrão para exceptions
       properties:
-        name: { type: string }
-        price: { type: number, format: float }
-        quantity: { type: integer }
+        details:
+          type: array
+          items: { $ref: '#/components/schemas/exception-type' }
 
-    cooperator-update-body-type:
-      type: object
-      properties:
-        name: { type: string }
+  responses:
+    bad-request-response:
+      description: Requisição inválida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/exception-response-type'
+          example:
+            - id: 1001
+              msg: 400
+            - id: 1002
+              msg: 404
 
-    tax-receipt-update-body-type:
-      type: object
-      properties:
-        cooperatorId: { type: integer }
-        data: { type: string, format: date-time }
+    not-found-response:
+      description: Recurso não encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/exception-response-type'
 
-    # [ TYPE ]
-    product-type:
-      type: object
-      properties:
-        id: { type: integer }
-        name: { type: string, example: nome da pessoa }
-        price: { type: number, format: float }
-        quantity: { type: integer }
+    conflict-response:
+      description: Elemento já Cadastrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/exception-response-type'
 
-    cooperator-type:
-      type: object
-      properties:
-        id: { type: integer }
-        name: { type: string }
-        documentNumber: { type: string }
-
-    tax-receipt-type:
-      type: object
-      properties:
-        id: { type: integer }
-        cooperatorId: { type: integer }
-        data: { type: string, format: date-time }
-
-    tax-receipt-item-type:
-      type: object
-      properties:
-        id: { type: integer }
-        taxReceiptId: { type: integer }
-        productId: { type: integer }
-        quantity: { type: integer }
-
-    # [ ATTRIBUTE ]
-    att-page:
-      type: integer
-      example: 10
-      description: 'Página atual (0-based).'
-
-    att-size:
-      type: integer
-      example: 30
-      description: 'Tamanho da página.'
-
-    att-elements:
-      type: integer
-      example: 300
-      format: int64
-      description: 'Total de registros.'
-
-    att-pages:
-      type: integer
-      example: 10
-      description: 'Total de páginas (com bare no size).'
-
-    att-previous:
-      type: boolean
-      example: true
-      description: 'Se há página anterior.'
-
-    att-next:
-      type: boolean
-      example: true
-      description: 'Se há página posterior.'
+    internal-server-error-response:
+      description: Erro interno no servidor
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/exception-response-type'
 
   parameters:
     _query_page:
+      description: não pode ser nulo, negativo ou em branco.
       in: query
       name: page
       schema:
         type: integer
         example: 0
-        default: 0
 
     _query_size:
+      description: não pode ser nulo, negativo ou em branco.
       in: query
       name: size
       schema:
         type: integer
         example: 1
-        default: 10
 
     _path_id:
+      description: não pode ser nulo, negativo ou em branco.
       in: path
       name: id
       required: true
       schema:
         type: integer
 
+    _path_product_id:
+      description: não pode ser nulo, negativo ou em branco.
+      in: path
+      name: productId
+      required: true
+      schema:
+        type: integer
+
     _path_tax_receipt_id:
+      description: não pode ser nulo, negativo ou em branco.
       in: path
       name: taxReceiptId
       required: true

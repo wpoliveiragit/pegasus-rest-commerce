@@ -1,6 +1,10 @@
 package br.com.pegasus.api.rest.commerce.app.delegate;
 
+import br.com.pegasus.api.rest.commerce.app.tool.ResponseTool;
+import br.com.pegasus.api.rest.commerce.app.tool.ValidTool;
 import br.com.pegasus.api.rest.commerce.domain.port.ProductPort;
+import br.com.pegasus.api.rest.commerce.infra.handler.annot.LogAnnot;
+import br.com.pegasus.api.rest.commerce.infra.mapper.ProductMapper;
 import br.com.pegasus.gen.openapi.api.ProductApiDelegate;
 import br.com.pegasus.gen.openapi.type.ProductCreateBodyType;
 import br.com.pegasus.gen.openapi.type.ProductPageResponseType;
@@ -18,30 +22,56 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class ProductDelegate implements ProductApiDelegate {
 
-    private final ProductPort service;
+  private final ProductPort service;
+  private final ProductMapper mapper;
 
-    @Override
-    public CompletableFuture<ResponseEntity<ProductType>> productCreate(ProductCreateBodyType productCreateBodyType) {
-        return ProductApiDelegate.super.productCreate(productCreateBodyType);
-    }
+  @LogAnnot
+  @Override
+  public CompletableFuture<ResponseEntity<ProductPageResponseType>> productGetPage(
+      Integer page, Integer size) {
 
-    @Override
-    public CompletableFuture<ResponseEntity<Void>> productDelete(Integer id) {
-        return ProductApiDelegate.super.productDelete(id);
-    }
+    ValidTool.page(page, size);
+    //!: ValidaToModel → Service → ToType
+    return ResponseTool.ok(mapper.toType(service.findPage(mapper.toModelByPage(page, size))));
+  }
 
-    @Override
-    public CompletableFuture<ResponseEntity<ProductPageResponseType>> productGetAllPage(Integer page, Integer size) {
-        return ProductApiDelegate.super.productGetAllPage(page, size);
-    }
+  @LogAnnot
+  @Override
+  public CompletableFuture<ResponseEntity<ProductType>> productGetOne(Integer id) {
 
-    @Override
-    public CompletableFuture<ResponseEntity<ProductType>> productGetOne(Integer id) {
-        return ProductApiDelegate.super.productGetOne(id);
-    }
+    ValidTool.commonId(id);
+    // !: ToModel → Service → ToType
+    return ResponseTool.ok(mapper.toType(service.findById(mapper.toModelById(id))));
+  }
 
-    @Override
-    public CompletableFuture<ResponseEntity<Void>> productUpdate(Integer id, ProductUpdateBodyType productUpdateBodyType) {
-        return ProductApiDelegate.super.productUpdate(id, productUpdateBodyType);
-    }
+  @LogAnnot
+  @Override
+  public CompletableFuture<ResponseEntity<ProductType>> productCreate(ProductCreateBodyType bodyType) {
+
+    ValidTool.createBody(bodyType);
+    //!: ToModel → Service → ToType
+    return ResponseTool.created(mapper.toType(service.create(mapper.toModel(bodyType))));
+  }
+
+  @LogAnnot
+  @Override
+  public CompletableFuture<ResponseEntity<Void>> productUpdate(
+      Integer id, ProductUpdateBodyType bodyType) {
+
+    ValidTool.updateBody(id, bodyType);
+    //!: ToModel → Service
+    service.update(mapper.toModel(bodyType));
+    return ResponseTool.noContent();
+  }
+
+  @LogAnnot
+  @Override
+  public CompletableFuture<ResponseEntity<Void>> productDelete(Integer id) {
+
+    ValidTool.commonId(id);
+    //!: ToModel → Service
+    service.delete(mapper.toModelById(id));
+    return ResponseTool.noContent();
+  }
+
 }

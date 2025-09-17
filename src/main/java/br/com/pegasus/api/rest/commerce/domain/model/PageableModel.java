@@ -10,17 +10,15 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
+@Builder(toBuilder = true)
 @NoArgsConstructor
+@AllArgsConstructor
 public class PageableModel<T> {
-
-    private int page;
-    private int size;
-    private long elements;
-    private int pages;
-    private boolean previous;
-    private boolean next;
-
-    private List<T> list;
+  private int page;
+  private int size;
+  private long elements;
+  private int pages;
+  private boolean previous;
+  private boolean next;
+  private List<T> list;
 }

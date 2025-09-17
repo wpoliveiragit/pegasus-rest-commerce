@@ -1,34 +1,36 @@
-# ==============================
-# Configuração do path da aplicação
-# ==============================
-#server.servlet.context-path: '/pegasus-rest-commerce'
+# ============================================================
+# [INFO]
+# - Propriedades de uso locais, use o prefixo 'app'
+# ============================================================
 
-# ==============================
-# swagger-ui custom path
-# ==============================
-springdoc.swagger-ui.path: /swagger-ui.html # muda a url do swagger (Este é o default)
-springdoc.swagger-ui.url: /openapi.yaml # informa ao springDoc onde esta o contrato
+# [BANNER]
+# Informações do build incorporadas no banner de inicialização
+# ============================================================
+app.property.java.version: '@java.version@'
+app.property.compilation.build: '@compilation.build@'
+app.groupId: '@project.groupId@'
+app.artifactId: '@project.artifactId@'
+app.version: '@project.version@'
+#app.name: '@project.name@'
+app.description: '@project.description@'
 
-# ==============================
-# DATABASE - Configurações do Banco de Dados H2
-# ==============================
-spring.datasource.url: 'jdbc:h2:file:./src/main/resources/banco-dados-h2'  # URL do banco de dados (armazenado localmente em arquivo)
-spring.datasource.driver-class-name: 'org.h2.Driver'  # Driver do banco de dados H2
-spring.datasource.username: 'sa'  # Usuário do banco de dados
-spring.datasource.password: ''  # Senha do banco de dados (vazia)
+app.contact.email: sdadsa
+app.contact.phone: dasdasd
+app.name: dasdasdasda
 
-# ==============================
-# CONSOLE H2 - Acesso ao Console do H2 via Navegador
-# ==============================
-spring.h2.console.enabled: true  # Habilita o console do H2
-spring.h2.console.path: /h2-console  # Define o caminho para acessar o console no navegador (ex: http://localhost:8080/h2-console)
+# [OUTRAS PROPRIEDADES] Arquivos de propriedades externas
+# ============================================================
+spring.config.import:
+  - "classpath:properties/database-prop.yml"
+  - "classpath:properties/swagger-prop.yml"
 
-# ==============================
-# JPA - Configurações de Persistência
-# ==============================
-spring.jpa.show-sql: true  # Exibe as consultas SQL geradas pelo JPA no console
-spring.jpa.hibernate.ddl-auto: create  # Define o comportamento do Hibernate em relação ao esquema do banco (no caso, cria o esquema e apaga os dados existentes)
-hibernate.dialect: org.hibernate.dialect.H2Dialect  # Dialeto específico do H2 para o Hibernate (H2 não precisa)
+    #server.servlet.context-path: '/pegasus-rest-commerce'
+
+
+
+
+
+
 
 # ==============================
 # LOG - Configuração de Logs
@@ -44,13 +46,4 @@ hibernate.dialect: org.hibernate.dialect.H2Dialect  # Dialeto específico do H2 
 #logging.level.org.springframework.security.web.savedrequest.HttpSessionRequestCache: OFF
 #logging.level.org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer: OFF
 
-# ==============================
-# BANNER - Informações de Compilação e Versão
-# ==============================
-app.property.java.version: '@java.version@'
-app.property.compilation.build: '@compilation.build@'
-app.groupId: '@project.groupId@'
-app.artifactId: '@project.artifactId@'
-app.version: '@project.version@'
-app.name: '@project.name@'
-app.description: '@project.description@'
+

@@ -8,10 +8,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
+@Builder(toBuilder = true)
 @NoArgsConstructor
+@AllArgsConstructor
 public class PageModel {
-    private Integer number;
-    private Integer size;
+  private Integer number;
+  private Integer size;
 }

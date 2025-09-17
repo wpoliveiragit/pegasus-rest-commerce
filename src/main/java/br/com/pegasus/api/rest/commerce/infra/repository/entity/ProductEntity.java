@@ -24,18 +24,18 @@ import java.math.BigDecimal;
 @Table(name = "TB_PRODUCT")
 public class ProductEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID")
+  private Integer id;
 
-    @Column(name = "NAME")
-    private String name;
+  @Column(name = "NAME", nullable = false)
+  private String name;
 
-    @Column(name = "PRICE")
-    private BigDecimal price;
+  @Column(name = "PRICE", nullable = false)
+  private BigDecimal price;
 
-    @Column(name = "QUANTITY")
-    private Integer quantity;
+  @Column(name = "QUANTITY", nullable = false)
+  private Integer quantity;
 
 }

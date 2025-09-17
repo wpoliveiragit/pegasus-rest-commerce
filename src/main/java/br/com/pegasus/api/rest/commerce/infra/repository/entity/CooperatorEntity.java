@@ -12,8 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @Getter
 @Setter
 @Builder(toBuilder = true)
@@ -24,15 +22,15 @@ import java.math.BigDecimal;
 @Table(name = "TB_COOPERATOR")
 public class CooperatorEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID")
+  private Integer id;
 
-    @Column(name = "NAME")
-    private String name;
+  @Column(name = "NAME", nullable = false)
+  private String name;
 
-    @Column(name = "DOCUMENT_NUMBER")
-    private String documentNumber;
+  @Column(name = "DOCUMENT_NUMBER", unique = true, nullable = false)
+  private String documentNumber;
 
 }

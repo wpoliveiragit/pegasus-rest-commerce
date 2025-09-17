@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface CooperatorRepository extends JpaRepository<CooperatorEntity, Integer> {
 
-    Optional<CooperatorEntity> findByDocumentNumber(String documentNumber);
+  Optional<CooperatorEntity> findByDocumentNumber(String documentNumber);
 }

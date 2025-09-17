@@ -1,55 +1,84 @@
 package br.com.pegasus.api.rest.commerce.domain.core;
 
-import br.com.pegasus.api.rest.commerce.domain.adapter.CooperatorJpaAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.ExceptionMethodAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.ToolKitAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.ValidMethodAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.repo.CooperatorDBAdapter;
+import br.com.pegasus.api.rest.commerce.domain.model.CooperatorModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
-import br.com.pegasus.api.rest.commerce.domain.model.cooperator.CooperatorModel;
 import br.com.pegasus.api.rest.commerce.domain.port.CooperatorPort;
-import br.com.pegasus.api.rest.commerce.infra.exception.ConflictException;
-import br.com.pegasus.api.rest.commerce.infra.exception.NotFoundException;
-import lombok.RequiredArgsConstructor;
+import br.com.pegasus.api.rest.commerce.infra.handler.annot.LogAnnot;
 
-@RequiredArgsConstructor
 public class CooperatorCore implements CooperatorPort {
 
-    private final CooperatorJpaAdapter coopJpa;
-    private final CommonMethodCore method = new CommonMethodCore();
+  private final CooperatorDBAdapter repo;
+  private final ExceptionMethodAdapter exMethod;
+  private final ValidMethodAdapter validMethod;
 
-    @Override
-    public PageableModel<CooperatorModel> findPage(PageModel inModel) {
-        method.valid(inModel.getNumber(),"Numero da pagina não enviado");
-        method.valid(inModel.getSize(),"Tamanho da pagina não enviado");
+  public CooperatorCore(ToolKitAdapter tools) {
+    this.repo = tools.getCooperatorRepository();
+    this.validMethod = tools.getValidMethod();
+    this.exMethod = tools.getExceptionMethod();
+  }
 
-        return coopJpa.findPage(inModel);
+  @LogAnnot
+  @Override
+  public PageableModel<CooperatorModel> findPage(PageModel inModel) {
+    return repo.findPage(inModel);
+  }
+
+  @LogAnnot
+  @Override
+  public CooperatorModel findById(CooperatorModel inModel) {
+    return this.getById(inModel);
+  }
+
+  @LogAnnot
+  @Override
+  public CooperatorModel create(CooperatorModel inModel) {
+    this.checkDocumentNumberConflict(inModel);
+    return repo.create(inModel);
+  }
+
+  @LogAnnot
+  @Override
+  public void update(CooperatorModel inModel) {
+    CooperatorModel upModel = this.getById(inModel);
+    boolean update = false;
+
+    String name = inModel.getName();
+    if (validMethod.isNotBlank(inModel.getName())) {
+      upModel.setName(name);
+      update = true;
     }
 
-    @Override
-    public CooperatorModel findById(CooperatorModel inModel) {
-        method.valid(inModel.getId(),"Id não enviado");
-
-        return coopJpa.findById(inModel)
-                .orElseThrow(() -> new NotFoundException("Entidade não encontrada!"));
+    String docNum = inModel.getDocumentNumber();
+    if (validMethod.isNotBlank(docNum)) {
+      this.checkDocumentNumberConflict(inModel);
+      upModel.setDocumentNumber(docNum);
+      update = true;
     }
-
-    @Override
-    public CooperatorModel create(CooperatorModel inModel) {
-        /* Usar os métodos do Optional deixa mais claro as regras de negocio, porem menos performatico */
-        coopJpa.findByDocumentNumber(inModel).ifPresent(obj -> {
-            throw new ConflictException("Entidade existente.");
-        });
-        return coopJpa.create(inModel);
+    if (update) {
+      repo.update(upModel);
+    }else{
+      //!: Criar algum tipo de retorno
     }
+  }
 
-    @Override
-    public void update(final CooperatorModel inModel) {
-        method.valid(inModel.getId(),"Id não enviado");
-        findById(inModel).setName(inModel.getName());
-    }
+  @LogAnnot
+  @Override
+  public void delete(CooperatorModel inModel) {
+    repo.delete(getById(inModel));
+  }
 
-    @Override
-    public void delete(CooperatorModel inModel) {
-        method.valid(inModel.getId(),"Id não enviado");
-        coopJpa.deleteById(findById(inModel));
-    }
+  private void checkDocumentNumberConflict(CooperatorModel inModel) {
+    validMethod.validDocumentNumber(inModel.getDocumentNumber());
+    repo.findByDocumentNumber(inModel).ifPresent(e -> exMethod.throwConflictDocumentNumber());
+  }
+
+  private CooperatorModel getById(CooperatorModel inModel) {
+    return repo.findById(inModel).orElseThrow(exMethod::newNotFound);
+  }
 
 }

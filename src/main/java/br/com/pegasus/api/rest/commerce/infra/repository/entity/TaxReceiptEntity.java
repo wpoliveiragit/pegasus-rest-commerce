@@ -12,8 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
@@ -26,15 +24,15 @@ import java.time.LocalDateTime;
 @Table(name = "TB_TAX_RECEIPT")
 public class TaxReceiptEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID")
+  private Integer id;
 
-    @Column(name = "cooperator_Id")
-    private Integer cooperatorId;
+  @Column(name = "cooperator_Id", nullable = false)
+  private Integer cooperatorId;
 
-    @Column(name = "DATE")
-    private LocalDateTime date;
+  @Column(name = "DATE", nullable = false)
+  private LocalDateTime date;
 
 }

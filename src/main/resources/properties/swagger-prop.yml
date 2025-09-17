@@ -1,0 +1,5 @@
+# ==============================
+# swagger-ui custom path
+# ==============================
+springdoc.swagger-ui.path: /swagger-ui.html # muda a url do swagger (Este é o default)
+springdoc.swagger-ui.url: /openapi.yaml # informa ao springDoc onde esta o contrato
