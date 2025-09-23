@@ -9,7 +9,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LogAnnot {
 
-  String started() default "started";
+  /**
+   * Use o padrão String de map abaixo para definir os textos do log de cada ponto, caso não queira algum tipo algum
+   * log, basta apenas exluir a etapa;
+   *
+   * ST:started EN:ending EX:exception FI:finally
+   */
+  String value() default "start:started end:ending exception:exception finally:finally";
 
-  String finished() default "finished";
 }

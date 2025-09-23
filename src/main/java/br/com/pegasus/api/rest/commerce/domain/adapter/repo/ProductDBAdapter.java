@@ -19,4 +19,5 @@ public interface ProductDBAdapter {
   void delete(ProductModel inModel);
 
   Optional<ProductModel> findByName(ProductModel inModel);
+
 }

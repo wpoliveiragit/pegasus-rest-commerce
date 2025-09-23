@@ -13,17 +13,6 @@ import java.util.Objects;
 
 public class ValidatedUtil {
 
-    /** Representa o @NotNull: valor não pode ser null. */
-  public static void notNull(Object value, CodeMessageVO codeMsg) {
-    if (Objects.isNull(value)) throw new BadRequestCoreException(codeMsg);
-  }
-
-  /** Representa o @NotBlank do valid → string não pode ser null, vazia ("") ou só espaços. */
-  public static void notBlank(String obj, CodeMessageVO codeMsg) {
-    notNull(obj, codeMsg);
-    if (obj.isBlank()) throw new BadRequestCoreException(codeMsg);
-  }
-
   /** Representa o @NotEmpty → string/coleção/array não pode ser null nem vazia. */
   public static void notEmpity(Object obj, CodeMessageVO codeMsg) {
     notNull(obj, codeMsg);
@@ -38,12 +27,6 @@ public class ValidatedUtil {
   public static void positive(Number obj, CodeMessageVO codeMsg) {
     notNull(obj, codeMsg);
     if (obj.doubleValue() < 0) throw new BadRequestCoreException(codeMsg);
-  }
-
-  /** Representa o @PositiveOrZero: número ≤ 0. */
-  public static void positiveOrZero(Number obj, CodeMessageVO codeMsg) {
-    notNull(obj, codeMsg);
-    if (obj.doubleValue() <= 0) throw new BadRequestCoreException(codeMsg);
   }
 
   /** Representa o @Negative: número > 0. */
@@ -61,19 +44,25 @@ public class ValidatedUtil {
   /** Representa o @Min(x): número deve ser ≥ x. */
   public static void min(Number obj, int x, CodeMessageVO codeMsg) {
     notNull(obj, codeMsg);
-    if (obj.doubleValue() >= x) throw new BadRequestCoreException(codeMsg);
+    if (obj.doubleValue() >= x) {
+      throw new BadRequestCoreException(codeMsg);
+    }
   }
 
   /** Representa o @Max(x): número deve ser ≤ x. */
   public static void max(Number obj, int x, CodeMessageVO codeMsg) {
     notNull(obj, codeMsg);
-    if (obj.doubleValue() <= x) throw new BadRequestCoreException(codeMsg);
+    if (obj.doubleValue() <= x) {
+      throw new BadRequestCoreException(codeMsg);
+    }
   }
 
   /** Representa o @Past: data < agora */
   public static void past(Temporal obj, CodeMessageVO codeMsg) {
     notNull(obj, codeMsg);
-    if (!((ChronoZonedDateTime<?>) obj).isBefore(ZonedDateTime.now())) throw new BadRequestCoreException(codeMsg);
+    if (!((ChronoZonedDateTime<?>) obj).isBefore(ZonedDateTime.now())) {
+      throw new BadRequestCoreException(codeMsg);
+    }
   }
 
   /** Representa o @PastOrPresent: data ≤ agora */
@@ -100,6 +89,39 @@ public class ValidatedUtil {
     }
   }
 
+  /** Representa o @Pattern(regexp): regex em String */
+  public static void pattern(String obj, String regexp, CodeMessageVO codeMsg) {
+    notNull(obj, codeMsg);
+    if (!obj.matches(regexp)) {
+      throw new BadRequestCoreException(codeMsg);
+    }
+  }
+
+  /** Representa o @Email: formato simples de email */
+  public static void email(String obj, CodeMessageVO codeMsg) {
+    notNull(obj, codeMsg);
+    if (!obj.matches(ConstUtil.REGEX_EMAIL_PATTERN)) {
+      throw new BadRequestCoreException(codeMsg);
+    }
+  }
+
+  /** Representa o @NotNull: valor não pode ser null. */
+  public static void notNull(Object value, CodeMessageVO codeMsg) {
+    if (Objects.isNull(value)) throw new BadRequestCoreException(codeMsg);
+  }
+
+  /** Representa o @NotBlank do valid → string não pode ser null, vazia ("") ou só espaços. */
+  public static void notBlank(String obj, CodeMessageVO codeMsg) {
+    notNull(obj, codeMsg);
+    if (obj.isBlank()) throw new BadRequestCoreException(codeMsg);
+  }
+
+  /** Representa o @PositiveOrZero: número ≤ 0. */
+  public static void positiveOrZero(Number obj, CodeMessageVO codeMsg) {
+    notNull(obj, codeMsg);
+    if (obj.doubleValue() <= 0) throw new BadRequestCoreException(codeMsg);
+  }
+
   /** Representa o @Range(min, max): número entre [min, max] */
   public static void range(Number obj, double min, double max, CodeMessageVO codeMsg) {
     notNull(obj, codeMsg);
@@ -116,18 +138,6 @@ public class ValidatedUtil {
         : (obj instanceof Object[] arr) ? arr.length //
         : -1;
     range(length, min, max, codeMsg);
-  }
-
-  /** Representa o @Pattern(regexp): regex em String */
-  public static void pattern(String obj, String regexp, CodeMessageVO codeMsg) {
-    notNull(obj, codeMsg);
-    if (!obj.matches(regexp)) throw new BadRequestCoreException(codeMsg);
-  }
-
-  /** Representa o @Email: formato simples de email */
-  public static void email(String obj, CodeMessageVO codeMsg) {
-    notNull(obj, codeMsg);
-    if (!obj.matches(ConstUtil.REGEX_EMAIL_PATTERN)) throw new BadRequestCoreException(codeMsg);
   }
 
 }

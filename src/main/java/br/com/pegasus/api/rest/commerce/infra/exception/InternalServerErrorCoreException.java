@@ -3,9 +3,9 @@ package br.com.pegasus.api.rest.commerce.infra.exception;
 import br.com.pegasus.api.rest.commerce.infra.enums.InternalServerErrorEnum;
 import br.com.pegasus.api.rest.commerce.infra.vo.CodeMessageVO;
 
+//500: Internal server error
 public class InternalServerErrorCoreException extends CoreRuntimeException {
 
-  //500: Internal server error
   public InternalServerErrorCoreException(Throwable cause, CodeMessageVO type) {
     super(cause, type);
   }
@@ -14,7 +14,7 @@ public class InternalServerErrorCoreException extends CoreRuntimeException {
     super(cause, type.getCodeMsg());
   }
 
-  public static InternalServerErrorCoreException bdQueryError(Throwable cause){
+  public static InternalServerErrorCoreException bdQueryError(Throwable cause) {
     return new InternalServerErrorCoreException(cause, InternalServerErrorEnum.DB_QUERY_ERROR);
   }
 

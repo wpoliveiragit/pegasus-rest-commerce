@@ -2,13 +2,16 @@ package br.com.pegasus.api.rest.commerce.infra.util;
 
 import br.com.pegasus.api.rest.commerce.infra.enums.InternalServerErrorEnum;
 import br.com.pegasus.api.rest.commerce.infra.exception.InternalServerErrorCoreException;
+import org.springframework.core.io.ClassPathResource;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.function.Supplier;
 
-public final class CommomMethod {
+public final class MethodUtil {
 
   public static boolean isBlank(String value) {
     return value == null || value.isBlank();
@@ -16,14 +19,6 @@ public final class CommomMethod {
 
   public static boolean isNegative(Number value) {
     return value == null || value.doubleValue() < ConstUtil.N_0;
-  }
-
-  public static String getValueNotBlank(String value, String defaultValue){
-    return isBlank(value)? defaultValue : value;
-  }
-
-  public static <T extends Number> T getValueNotNegative(T value, T defaultValue) {
-    return isNegative(value) ? defaultValue : value;
   }
 
   public static OffsetDateTime toOffsetDateTime(LocalDateTime date) {
@@ -34,8 +29,8 @@ public final class CommomMethod {
    * Executa qualquer função ou lambda que não receba parametro e tenha um retorno.
    *
    * @param task a função ou lambda
-   * @return o Retorno da função ou lambda
    * @param <T> O tipo do retorno
+   * @return o Retorno da função ou lambda
    */
   public static <T> T funcionalExecute(Supplier<T> task) {
     try {
@@ -47,6 +42,7 @@ public final class CommomMethod {
 
   /**
    * Executa qualquer função ou lambda que não receba parametro e nem tenha um retorno.
+   *
    * @param task a função ou lambda
    */
   public static void executeVoid(Runnable task) {
@@ -56,6 +52,21 @@ public final class CommomMethod {
       throw new InternalServerErrorCoreException(ex, InternalServerErrorEnum.DB_QUERY_ERROR.getCodeMsg());
     }
   }
+
+  public static String loadResourceFile(String nameFile) throws IOException {
+    return Files.readString(new ClassPathResource(nameFile).getFile().toPath());
+  }
+
+  /**
+   * Cria um String.format, de largura mínima 6 e alinhado a esquerda.
+   *
+   * @param value O texto de formatação
+   * @return O texto formatado.
+   */
+  public static String formatL6(String value){
+    return String.format("%-6s", value);
+  }
+
 
 
 }

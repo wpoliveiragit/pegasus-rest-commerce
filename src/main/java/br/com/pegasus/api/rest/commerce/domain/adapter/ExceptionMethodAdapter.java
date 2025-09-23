@@ -8,6 +8,10 @@ public interface ExceptionMethodAdapter {
 
   NotFoundCoreException newCooperatorNotFound();
 
+  NotFoundCoreException newTaxReceiptNotFound();
+
+  NotFoundCoreException newProductNotFound();
+
   void throwConflictDocumentNumber();
 
   void throwConflictName();

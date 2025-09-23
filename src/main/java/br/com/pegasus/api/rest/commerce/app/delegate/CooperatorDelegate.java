@@ -27,8 +27,7 @@ public class CooperatorDelegate implements CooperatorApiDelegate {
 
   @LogAnnot
   @Override
-  public CompletableFuture<ResponseEntity<CooperatorPageResponseType>> cooperatorGetPage(
-      Integer page, Integer size) {
+  public CompletableFuture<ResponseEntity<CooperatorPageResponseType>> cooperatorGetPage(Integer page, Integer size) {
 
     ValidTool.page(page, size);
     //!: ToModel → Service → ToModel
@@ -46,8 +45,7 @@ public class CooperatorDelegate implements CooperatorApiDelegate {
 
   @LogAnnot
   @Override
-  public CompletableFuture<ResponseEntity<CooperatorType>> cooperatorCreate(
-      CooperatorCreateBodyType bodyType) {
+  public CompletableFuture<ResponseEntity<CooperatorType>> cooperatorCreate(CooperatorCreateBodyType bodyType) {
 
     ValidTool.createBody(bodyType);
     //!: ToModel → Service → ToType

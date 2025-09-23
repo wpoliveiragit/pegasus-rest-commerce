@@ -7,7 +7,7 @@ import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.infra.handler.annot.LogAnnot;
 import br.com.pegasus.api.rest.commerce.infra.mapper.CooperatorMapper;
 import br.com.pegasus.api.rest.commerce.infra.repository.CooperatorRepository;
-import br.com.pegasus.api.rest.commerce.infra.util.CommomMethod;
+import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,19 +23,25 @@ public class CooperatorRepoAdapterBeanDB implements CooperatorDBAdapter {
   @LogAnnot
   @Override
   public PageableModel<CooperatorModel> findPage(PageModel page) {
-    return CommomMethod.funcionalExecute(() -> mapper.toModel(repo.findAll(mapper.toEntity(page))));
+    return MethodUtil.funcionalExecute( //
+        () -> mapper.toModel(repo.findAll(mapper.toEntity(page))) //
+    );
   }
 
   @LogAnnot
   @Override
   public Optional<CooperatorModel> findById(CooperatorModel inModel) {
-    return CommomMethod.funcionalExecute(() -> repo.findById(inModel.getId()).map(mapper::toModel));
+    return MethodUtil.funcionalExecute(//
+        () -> repo.findById(inModel.getId()).map(mapper::toModel)//
+    );
   }
 
   @LogAnnot
   @Override
   public Optional<CooperatorModel> findByDocumentNumber(CooperatorModel inModel) {
-    return CommomMethod.funcionalExecute(() -> repo.findByDocumentNumber(inModel.getDocumentNumber()).map(mapper::toModel));
+    return MethodUtil.funcionalExecute( //
+        () -> repo.findByDocumentNumber(inModel.getDocumentNumber()).map(mapper::toModel) //
+    );
   }
 
   @LogAnnot
@@ -53,11 +59,11 @@ public class CooperatorRepoAdapterBeanDB implements CooperatorDBAdapter {
   @LogAnnot
   @Override
   public void delete(CooperatorModel inModel) {
-    CommomMethod.executeVoid(() -> repo.deleteById(inModel.getId()));
+    MethodUtil.executeVoid(() -> repo.deleteById(inModel.getId()));
   }
 
   private CooperatorModel save(CooperatorModel inModel) {
-    return CommomMethod.funcionalExecute(() -> mapper.toModel(repo.save(mapper.toEntity(inModel))));
+    return MethodUtil.funcionalExecute(() -> mapper.toModel(repo.save(mapper.toEntity(inModel))));
   }
 
 }

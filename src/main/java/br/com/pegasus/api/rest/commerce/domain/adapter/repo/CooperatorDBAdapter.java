@@ -19,4 +19,5 @@ public interface CooperatorDBAdapter {
   void delete(CooperatorModel inModel);
 
   Optional<CooperatorModel> findByDocumentNumber(CooperatorModel inModel);
+
 }

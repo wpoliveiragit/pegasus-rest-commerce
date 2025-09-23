@@ -7,7 +7,7 @@ import br.com.pegasus.api.rest.commerce.domain.model.TaxReceiptItemModel;
 import br.com.pegasus.api.rest.commerce.infra.handler.annot.LogAnnot;
 import br.com.pegasus.api.rest.commerce.infra.mapper.TaxReceiptItemMapper;
 import br.com.pegasus.api.rest.commerce.infra.repository.TaxReceiptItemRepository;
-import br.com.pegasus.api.rest.commerce.infra.util.CommomMethod;
+import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,24 +23,26 @@ public class TaxReceiptItemRepoAdapterBeanDB implements TaxReceiptItemDBAdapter 
   @LogAnnot
   @Override
   public PageableModel<TaxReceiptItemModel> findPage(PageModel inModel) {
-    return CommomMethod.funcionalExecute(() -> mapper.toModel(repo.findAll(mapper.toEntity(inModel))));
+    return MethodUtil.funcionalExecute(() -> mapper.toModel(repo.findAll(mapper.toEntity(inModel))));
   }
 
   @Override
   public PageableModel<TaxReceiptItemModel> findPageByTaxReceiptId(PageModel inPageModel, TaxReceiptItemModel inModel) {
-    return CommomMethod.funcionalExecute(() -> mapper.toModel(repo.findByIdTaxReceiptId(inModel.getTaxReceiptId(), mapper.toEntity(inPageModel))));
+    return MethodUtil.funcionalExecute(//
+        () -> mapper.toModel(repo.findByIdTaxReceiptId(inModel.getTaxReceiptId(), mapper.toEntity(inPageModel)))//
+    );
   }
 
 
   @LogAnnot
   @Override
   public Optional<TaxReceiptItemModel> findById(TaxReceiptItemModel inModel) {
-    return CommomMethod.funcionalExecute(() -> repo.findById(mapper.toEntity(inModel).getId()).map(mapper::toModel));
+    return MethodUtil.funcionalExecute(() -> repo.findById(mapper.toEntity(inModel).getId()).map(mapper::toModel));
   }
 
   @LogAnnot
   @Override
   public TaxReceiptItemModel create(TaxReceiptItemModel inModel) {
-    return CommomMethod.funcionalExecute(() -> mapper.toModel(repo.save(mapper.toEntity(inModel))));
+    return MethodUtil.funcionalExecute(() -> mapper.toModel(repo.save(mapper.toEntity(inModel))));
   }
 }

@@ -2,9 +2,9 @@ package br.com.pegasus.api.rest.commerce.infra.exception;
 
 import br.com.pegasus.api.rest.commerce.infra.enums.ConflictEnum;
 
+//409: conflict
 public class ConflictCoreException extends CoreRuntimeException {
 
-  //409: conflict
   private ConflictCoreException(ConflictEnum type) {
     super(type.getCodeMsg());
   }

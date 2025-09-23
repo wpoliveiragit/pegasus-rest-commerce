@@ -15,4 +15,5 @@ public interface TaxReceiptItemDBAdapter {
   Optional<TaxReceiptItemModel> findById(TaxReceiptItemModel inModel);
 
   TaxReceiptItemModel create(TaxReceiptItemModel inModel);
+
 }

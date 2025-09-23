@@ -31,15 +31,17 @@ public class PomBeanInfo {
   private List<DependencePropPom> collectDataDependenciesPom() throws Exception {
     Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File("pom.xml"));
     NodeList docDependencies = doc.getElementsByTagName("dependency");
-    return IntStream.range(0, docDependencies.getLength()).mapToObj(i -> {
-      Element elem = (Element) docDependencies.item(i);
-      Node versionNode = elem.getElementsByTagName("version").item(0);
-      return DependencePropPom.builder()
-          .groupId(elem.getElementsByTagName("groupId").item(0).getTextContent())
-          .artifactId(elem.getElementsByTagName("artifactId").item(0).getTextContent())
-          .version((versionNode == null) ? null : versionNode.getTextContent())
-          .build();
-    }).toList();
+    return IntStream.range(0, docDependencies.getLength()) //
+        .mapToObj(i -> {
+          Element elem = (Element) docDependencies.item(i);
+          Node versionNode = elem.getElementsByTagName("version").item(0);
+          return DependencePropPom.builder()//
+              .groupId(elem.getElementsByTagName("groupId").item(0).getTextContent())//
+              .artifactId(elem.getElementsByTagName("artifactId").item(0).getTextContent())//
+              .version((versionNode == null) ? null : versionNode.getTextContent())//
+              .build();
+        })//
+        .toList();
   }
 
 }

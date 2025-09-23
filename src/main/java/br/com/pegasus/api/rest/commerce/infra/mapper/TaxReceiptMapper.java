@@ -4,7 +4,7 @@ import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.model.TaxReceiptModel;
 import br.com.pegasus.api.rest.commerce.infra.repository.entity.TaxReceiptEntity;
-import br.com.pegasus.api.rest.commerce.infra.util.CommomMethod;
+import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
 import br.com.pegasus.gen.openapi.type.TaxReceiptCreateBodyType;
 import br.com.pegasus.gen.openapi.type.TaxReceiptPageResponseType;
 import br.com.pegasus.gen.openapi.type.TaxReceiptType;
@@ -44,7 +44,7 @@ public class TaxReceiptMapper {
   public TaxReceiptModel toModel(TaxReceiptEntity obj) {
     return TaxReceiptModel.builder()
         .cooperatorId(obj.getCooperatorId())
-        .date(CommomMethod.toOffsetDateTime(obj.getDate()))
+        .date(MethodUtil.toOffsetDateTime(obj.getDate()))
         .build();
   }
 

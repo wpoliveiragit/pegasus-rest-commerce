@@ -35,8 +35,7 @@ public class TaxReceiptItemDelegate implements TaxReceiptItemApiDelegate {
 
   @LogAnnot
   @Override
-  public CompletableFuture<ResponseEntity<TaxReceiptItemType>> taxReceiptItemGetOne(
-      Integer taxReceiptId, Integer productId) {
+  public CompletableFuture<ResponseEntity<TaxReceiptItemType>> taxReceiptItemGetOne(Integer taxReceiptId, Integer productId) {
 
     ValidTool.productId(productId);
     ValidTool.taxReceiptId(taxReceiptId);
@@ -46,8 +45,7 @@ public class TaxReceiptItemDelegate implements TaxReceiptItemApiDelegate {
 
   @LogAnnot
   @Override
-  public CompletableFuture<ResponseEntity<TaxReceiptItemPageResponseType>> taxReceiptItemGetPageByTaxReceiptId(
-      Integer taxReceiptId, Integer page, Integer size) {
+  public CompletableFuture<ResponseEntity<TaxReceiptItemPageResponseType>> taxReceiptItemGetPageByTaxReceiptId(Integer taxReceiptId, Integer page, Integer size) {
 
     ValidTool.page(page, size);
     ValidTool.taxReceiptId(taxReceiptId);

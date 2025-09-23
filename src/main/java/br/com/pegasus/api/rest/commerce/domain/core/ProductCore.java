@@ -10,8 +10,6 @@ import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 import br.com.pegasus.api.rest.commerce.domain.port.ProductPort;
 import br.com.pegasus.api.rest.commerce.infra.handler.annot.LogAnnot;
 
-import java.util.Objects;
-
 public class ProductCore implements ProductPort {
 
   private final ProductDBAdapter productJpa;
@@ -39,7 +37,7 @@ public class ProductCore implements ProductPort {
   @LogAnnot
   @Override
   public ProductModel create(ProductModel inModel) {
-    checkNameConflict(inModel); // Verificações básicas de bad request feitas na camada de entrada
+    checkNameConflict(inModel);
     validMethod.validPrice(inModel.getPrice());
     validMethod.validQuantity(inModel.getQuantity());
     return productJpa.create(inModel);
@@ -50,25 +48,29 @@ public class ProductCore implements ProductPort {
   public void update(ProductModel inModel) {
     ProductModel upModel = this.getById(inModel);
     boolean update = false;
+
     String name = inModel.getName();
-    if(validMethod.isNotBlank(inModel.getName())){
+    if (validMethod.isNotBlank(inModel.getName())) {
       this.checkNameConflict(inModel);
       upModel.setName(name);
       update = true;
     }
+
     Float price = inModel.getPrice();
     if (price != null) {
       validMethod.validPrice(price);
       upModel.setPrice(price);
       update = true;
     }
+
     Integer quantity = inModel.getQuantity();
     if (quantity != null) {
       validMethod.validQuantity(quantity);
       upModel.setQuantity(quantity);
       update = true;
     }
-    if(update){
+
+    if (update) {
       productJpa.update(upModel);
     }
   }
@@ -86,4 +88,5 @@ public class ProductCore implements ProductPort {
   private ProductModel getById(ProductModel inModel) {
     return productJpa.findById(inModel).orElseThrow(exMethod::newNotFound);
   }
+
 }

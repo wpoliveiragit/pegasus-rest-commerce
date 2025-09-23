@@ -6,8 +6,9 @@ import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface ProductPort{
+public interface ProductPort {
 //TODO: criar o java doc informando todas as necessidade antes de passar.
+
   /**
    * Retorna uma paginação de elementos.
    *

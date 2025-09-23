@@ -5,10 +5,29 @@ public final class ConstUtil {
   // [Textos]
 
   public static final String T_EMPTY = "";
+  public static final String T_SEP = "#:#";// String de separação
   public static final String T_NULL = "null";
+  public static final String T_OPENAPI_INFO_CONTROLLER_INIT_SUCCESS = "OpenAPI contract file successfully uploaded";
+  public static final String T_OPENAPI_INFO_CONTROLLER_INIT_FAIL = "Problems loading the OpenAPI file: {}";
+
+  public static final String T_LOG_ADVICE_INTERNAL_SERVER_ERROR = "Internal Server Error → Code: {} Message: {}";
+  public static final String T_LOG_ADVICE_NOT_FOUND = "Not Found → Code: {} Message: {}";
+  public static final String T_LOG_ADVICE_BAD_REQUEST = "Bad Request → Code: {} Message: {}";
+  public static final String T_LOG_ADVICE_CONFLICT = "Conflict → Code: {} Message: {}";
+  public static final String T_LOG_ADVICE_UNPROCESSABLE_ENTITY = "Unprocessable Entity → Code: {} Message: {}";
+
+  // ARQUIVOS
+  public static final String FILE_OPENAPI = "openapi.yaml";
 
   // [CONSTANTES CARACTERES]
   public static final char C_0 = '0';
+
+  // INDEX
+  public static final int CONFLICT_INIT = 1000;
+  public static final int NOT_FOUND_INIT = 2000;
+  public static final int BAD_REQUEST_INIT = 3000;
+  public static final int UNPROCESSABLE_INIT = 4000;
+  public static final int INTERNAL_SERVER_ERROR = 5000;
 
   // [CONSTANTES NUMÉRICOS]
   public static final int N_0 = 0;

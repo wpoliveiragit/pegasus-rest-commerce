@@ -5,7 +5,7 @@ import br.com.pegasus.api.rest.commerce.domain.adapter.ValidMethodAdapter;
 import br.com.pegasus.api.rest.commerce.infra.exception.BadRequestCoreException;
 import br.com.pegasus.api.rest.commerce.infra.exception.ConflictCoreException;
 import br.com.pegasus.api.rest.commerce.infra.exception.NotFoundCoreException;
-import br.com.pegasus.api.rest.commerce.infra.util.CommomMethod;
+import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
 import br.com.pegasus.api.rest.commerce.infra.util.CpfUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +37,16 @@ public class MethodAdapterCollectionBean {
         return NotFoundCoreException.newCooperator();
       }
 
+      @Override
+      public NotFoundCoreException newTaxReceiptNotFound() {
+        return NotFoundCoreException.newTaxReceipt();
+      }
+
+      @Override
+      public NotFoundCoreException newProductNotFound() {
+        return NotFoundCoreException.newProduct();
+      }
+
     };
   }
 
@@ -46,17 +56,7 @@ public class MethodAdapterCollectionBean {
 
       @Override
       public boolean isNotBlank(String value) {
-        return !CommomMethod.isBlank(value);
-      }
-
-      @Override
-      public String getValueNotBlank(String value, String defaultValue) {
-        return CommomMethod.getValueNotBlank(value, defaultValue);
-      }
-
-      @Override
-      public <T extends Number> T getValueNotNegative(T value, T defaultValue) {
-        return CommomMethod.getValueNotNegative(value, defaultValue);
+        return !MethodUtil.isBlank(value);
       }
 
       @Override
@@ -69,14 +69,14 @@ public class MethodAdapterCollectionBean {
 
       @Override
       public void validPrice(Number value) {
-        if(CommomMethod.isNegative(value)){
+        if (MethodUtil.isNegative(value)) {
           throw BadRequestCoreException.newPrice();
         }
       }
 
       @Override
       public void validQuantity(Number value) {
-        if(CommomMethod.isNegative(value)){
+        if (MethodUtil.isNegative(value)) {
           throw BadRequestCoreException.newQuantity();
         }
       }

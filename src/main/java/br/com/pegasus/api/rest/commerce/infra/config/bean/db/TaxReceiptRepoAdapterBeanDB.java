@@ -7,7 +7,7 @@ import br.com.pegasus.api.rest.commerce.domain.model.TaxReceiptModel;
 import br.com.pegasus.api.rest.commerce.infra.handler.annot.LogAnnot;
 import br.com.pegasus.api.rest.commerce.infra.mapper.TaxReceiptMapper;
 import br.com.pegasus.api.rest.commerce.infra.repository.TaxReceiptRepository;
-import br.com.pegasus.api.rest.commerce.infra.util.CommomMethod;
+import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,13 +23,15 @@ public class TaxReceiptRepoAdapterBeanDB implements TaxReceiptDBAdapter {
   @LogAnnot
   @Override
   public PageableModel<TaxReceiptModel> findPage(PageModel inModel) {
-    return CommomMethod.funcionalExecute(() -> mapper.toModel(repo.findAll(mapper.toEntity(inModel))));
+    return MethodUtil.funcionalExecute(() -> mapper.toModel(repo.findAll(mapper.toEntity(inModel))));
   }
 
   @LogAnnot
   @Override
   public Optional<TaxReceiptModel> findById(TaxReceiptModel inModel) {
-    return CommomMethod.funcionalExecute(() -> repo.findById(mapper.toEntity(inModel).getId()).map(mapper::toModel));
+    return MethodUtil.funcionalExecute( //
+        () -> repo.findById(mapper.toEntity(inModel).getId()).map(mapper::toModel) //
+    );
   }
 
   @LogAnnot
@@ -39,7 +41,7 @@ public class TaxReceiptRepoAdapterBeanDB implements TaxReceiptDBAdapter {
   }
 
   private TaxReceiptModel save(TaxReceiptModel inModel) {
-    return CommomMethod.funcionalExecute(() -> mapper.toModel(repo.save(mapper.toEntity(inModel))));
+    return MethodUtil.funcionalExecute(() -> mapper.toModel(repo.save(mapper.toEntity(inModel))));
   }
 
 }

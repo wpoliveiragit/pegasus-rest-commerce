@@ -1,6 +1,6 @@
 package br.com.pegasus.api.rest.commerce.infra.enums;
 
-import br.com.pegasus.api.rest.commerce.infra.consts.ExceptionConsts;
+import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import br.com.pegasus.api.rest.commerce.infra.vo.CodeMessageVO;
 import lombok.Getter;
 
@@ -11,10 +11,9 @@ public enum UnprocessableEntityEnum {
   private final CodeMessageVO codeMsg;
 
   UnprocessableEntityEnum(int code, String msg) {
-    this.codeMsg = CodeMessageVO.builder()
-        .code(ExceptionConsts.UNPROCESSABLE_INIT + code)
-        .msg(msg)
-        .build();
+    this.codeMsg = new CodeMessageVO();
+    codeMsg.setCode(ConstUtil.UNPROCESSABLE_INIT + code);
+    codeMsg.setMsg(msg);
   }
 
 }

@@ -43,12 +43,12 @@ public class LogAdapterBean implements LogAdapter {
   }
 
   private static String replaceBracesValues(final String msg, Object... values) {
-    return (values == null) ? msg : Arrays.stream(values).reduce(msg, //
-        (acc, obj) -> acc.replaceFirst(ConstUtil.REGEX_BRACES,//
-            obj == null//
-                ? ConstUtil.T_NULL//
-                : obj.toString()),//
-        (s1, s2) -> s1);
+    return (values == null) ? msg : Arrays.stream(values).reduce(msg, (newMsg, obj) -> {
+      if (obj == null) {
+        return newMsg.replaceFirst(ConstUtil.REGEX_BRACES, ConstUtil.T_NULL);
+      }
+      return newMsg.replaceFirst(ConstUtil.REGEX_BRACES, obj.toString());
+    }, (s1, s2) -> s1);
   }
 
 }

@@ -26,8 +26,7 @@ public class TaxReceiptDelegate implements TaxReceiptApiDelegate {
 
   @LogAnnot
   @Override
-  public CompletableFuture<ResponseEntity<TaxReceiptPageResponseType>> taxReceiptGetPage(
-      Integer page, Integer size) {
+  public CompletableFuture<ResponseEntity<TaxReceiptPageResponseType>> taxReceiptGetPage(Integer page, Integer size) {
 
     ValidTool.page(page, size);
     //!: ToMode → Service → ToType
@@ -45,8 +44,7 @@ public class TaxReceiptDelegate implements TaxReceiptApiDelegate {
 
   @LogAnnot
   @Override
-  public CompletableFuture<ResponseEntity<TaxReceiptType>> taxReceiptCreate(
-      TaxReceiptCreateBodyType bodyType) {
+  public CompletableFuture<ResponseEntity<TaxReceiptType>> taxReceiptCreate(TaxReceiptCreateBodyType bodyType) {
 
     ValidTool.createBody(bodyType);
     //!: ToModel → Service → ToType

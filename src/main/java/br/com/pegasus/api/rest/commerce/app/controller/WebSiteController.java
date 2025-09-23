@@ -1,6 +1,7 @@
 package br.com.pegasus.api.rest.commerce.app.controller;
 
 import br.com.pegasus.api.rest.commerce.infra.handler.annot.LogAnnot;
+import br.com.pegasus.api.rest.commerce.infra.util.StreamUtil;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 public class WebSiteController {
@@ -32,19 +32,17 @@ public class WebSiteController {
 
   private void createPropDataBase(Map<String, Object> prop) {
     final String err = "@ERR";
-    List<String[]> keys = List.of(
-        new String[]{"app.name", "name"},
-        new String[]{"app.url", "url"},
-        new String[]{"app.consoleUrl", "consoleUrl"},
-        new String[]{"app.user", "user"},
-        new String[]{"app.password", "password"},
-        new String[]{"app.ddlAuto", "ddlAuto"}
+
+    List<String> keys = List.of(//
+        "app.name", "name",//
+        "app.url", "url",//
+        "app.user", "user"//
     );
 
-    prop.put("db", keys.stream()
-        .map(k -> Map.entry(k[1], env.getProperty(k[0], err)))
-        .filter(entry -> !entry.getValue().equals(err))
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+    prop.put("db", StreamUtil.of(keys)//
+        .map(key -> Map.entry(key, env.getProperty(key, err)))//
+        .filter(entry -> !entry.getValue().equals(err))//
+        .toMap(Map.Entry::getKey, Map.Entry::getValue)//
     );
   }
 }

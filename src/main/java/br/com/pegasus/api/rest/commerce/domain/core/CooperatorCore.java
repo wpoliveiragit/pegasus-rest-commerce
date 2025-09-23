@@ -12,12 +12,12 @@ import br.com.pegasus.api.rest.commerce.infra.handler.annot.LogAnnot;
 
 public class CooperatorCore implements CooperatorPort {
 
-  private final CooperatorDBAdapter repo;
+  private final CooperatorDBAdapter coopJpa;
   private final ExceptionMethodAdapter exMethod;
   private final ValidMethodAdapter validMethod;
 
   public CooperatorCore(ToolKitAdapter tools) {
-    this.repo = tools.getCooperatorRepository();
+    this.coopJpa = tools.getCooperatorRepository();
     this.validMethod = tools.getValidMethod();
     this.exMethod = tools.getExceptionMethod();
   }
@@ -25,7 +25,7 @@ public class CooperatorCore implements CooperatorPort {
   @LogAnnot
   @Override
   public PageableModel<CooperatorModel> findPage(PageModel inModel) {
-    return repo.findPage(inModel);
+    return coopJpa.findPage(inModel);
   }
 
   @LogAnnot
@@ -38,7 +38,7 @@ public class CooperatorCore implements CooperatorPort {
   @Override
   public CooperatorModel create(CooperatorModel inModel) {
     this.checkDocumentNumberConflict(inModel);
-    return repo.create(inModel);
+    return coopJpa.create(inModel);
   }
 
   @LogAnnot
@@ -60,25 +60,23 @@ public class CooperatorCore implements CooperatorPort {
       update = true;
     }
     if (update) {
-      repo.update(upModel);
-    }else{
-      //!: Criar algum tipo de retorno
+      coopJpa.update(upModel);
     }
   }
 
   @LogAnnot
   @Override
   public void delete(CooperatorModel inModel) {
-    repo.delete(getById(inModel));
+    coopJpa.delete(getById(inModel));
   }
 
   private void checkDocumentNumberConflict(CooperatorModel inModel) {
     validMethod.validDocumentNumber(inModel.getDocumentNumber());
-    repo.findByDocumentNumber(inModel).ifPresent(e -> exMethod.throwConflictDocumentNumber());
+    coopJpa.findByDocumentNumber(inModel).ifPresent(e -> exMethod.throwConflictDocumentNumber());
   }
 
   private CooperatorModel getById(CooperatorModel inModel) {
-    return repo.findById(inModel).orElseThrow(exMethod::newNotFound);
+    return coopJpa.findById(inModel).orElseThrow(exMethod::newNotFound);
   }
 
 }

@@ -1,13 +1,13 @@
 package br.com.pegasus.api.rest.commerce.infra.config.bean;
 
-import br.com.pegasus.api.rest.commerce.domain.adapter.LogAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.ExceptionMethodAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.LogAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.ToolKitAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.ValidMethodAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.repo.CooperatorDBAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.repo.ProductDBAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.repo.TaxReceiptItemDBAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.repo.TaxReceiptDBAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.ValidMethodAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.repo.TaxReceiptItemDBAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +17,6 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class ToolKitAdapterBean implements ToolKitAdapter {
 
-  // LOG: gerado dinamicamente no método
-
   // DB
   private final CooperatorDBAdapter cooperatorJpa;
   private final ProductDBAdapter productJpa;
@@ -27,6 +25,7 @@ public class ToolKitAdapterBean implements ToolKitAdapter {
   // METHODS
   private final ExceptionMethodAdapter exceptionMethod;
   private final ValidMethodAdapter validMethod;
+  // LOG: gerado dinamicamente no método
 
   @Override
   public LogAdapter getLog(Class<?> c) {

@@ -3,9 +3,9 @@ package br.com.pegasus.api.rest.commerce.infra.exception;
 import br.com.pegasus.api.rest.commerce.infra.enums.BadRequestEnum;
 import br.com.pegasus.api.rest.commerce.infra.vo.CodeMessageVO;
 
+//400: Bad request
 public class BadRequestCoreException extends CoreRuntimeException {
 
-  //400: Bad request
   public BadRequestCoreException(CodeMessageVO type) {
     super(type);
   }

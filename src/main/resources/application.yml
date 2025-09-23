@@ -18,6 +18,9 @@ app.contact.email: sdadsa
 app.contact.phone: dasdasd
 app.name: dasdasdasda
 
+
+springdoc.swagger-ui.url: /openapi.yaml
+
 # [OUTRAS PROPRIEDADES] Arquivos de propriedades externas
 # ============================================================
 spring.config.import:

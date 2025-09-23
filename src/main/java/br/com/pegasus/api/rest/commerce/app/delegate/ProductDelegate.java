@@ -27,8 +27,7 @@ public class ProductDelegate implements ProductApiDelegate {
 
   @LogAnnot
   @Override
-  public CompletableFuture<ResponseEntity<ProductPageResponseType>> productGetPage(
-      Integer page, Integer size) {
+  public CompletableFuture<ResponseEntity<ProductPageResponseType>> productGetPage(Integer page, Integer size) {
 
     ValidTool.page(page, size);
     //!: ValidaToModel → Service → ToType
@@ -55,8 +54,7 @@ public class ProductDelegate implements ProductApiDelegate {
 
   @LogAnnot
   @Override
-  public CompletableFuture<ResponseEntity<Void>> productUpdate(
-      Integer id, ProductUpdateBodyType bodyType) {
+  public CompletableFuture<ResponseEntity<Void>> productUpdate(Integer id, ProductUpdateBodyType bodyType) {
 
     ValidTool.updateBody(id, bodyType);
     //!: ToModel → Service
