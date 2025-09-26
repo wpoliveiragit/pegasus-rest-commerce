@@ -3,12 +3,13 @@ package br.com.pegasus.api.rest.commerce.domain.adapter.repo;
 import br.com.pegasus.api.rest.commerce.domain.model.CooperatorModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
+import br.com.pegasus.api.rest.commerce.infra.vo.CheckLogVO;
 
 import java.util.Optional;
 
 public interface CooperatorDBAdapter {
 
-  PageableModel<CooperatorModel> findPage(PageModel page);
+  PageableModel<CooperatorModel> findPage(CheckLogVO getPagelog, PageModel page);
 
   Optional<CooperatorModel> findById(CooperatorModel inModel);
 

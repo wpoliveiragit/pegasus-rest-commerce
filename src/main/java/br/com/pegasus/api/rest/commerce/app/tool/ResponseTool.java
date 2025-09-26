@@ -21,25 +21,31 @@ public final class ResponseTool {
   }
 
   // Advice
-  public static <T> CompletableFuture<ResponseEntity<T>> internalServerError(T response) {
-    return createReponse(response, HttpStatus.INTERNAL_SERVER_ERROR);
+  public static <T> ResponseEntity<T> createResponseEntity(T response, HttpStatus httpStatus) {
+    return new ResponseEntity<>(response, httpStatus);
   }
 
-  public static <T> CompletableFuture<ResponseEntity<T>> badRequest(T response) {
-    return createReponse(response, HttpStatus.BAD_REQUEST);
+  public static <T> ResponseEntity<T> badRequest(T response) {
+    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
   }
 
-  public static <T> CompletableFuture<ResponseEntity<T>> conflict(T response) {
-    return createReponse(response, HttpStatus.CONFLICT);
+  public static <T> ResponseEntity<T> internalServerError(T response) {
+    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  public static <T> CompletableFuture<ResponseEntity<T>> notFound(T response) {
-    return createReponse(response, HttpStatus.NOT_FOUND);
+  public static <T> ResponseEntity<T> conflict(T response) {
+    return new ResponseEntity<>(response, HttpStatus.CONFLICT);
   }
 
-  public static <T> CompletableFuture<ResponseEntity<T>> unprocessableEntity(T response) {
-    return createReponse(response, HttpStatus.UNPROCESSABLE_ENTITY);
+  public static <T> ResponseEntity<T> notFound(T response) {
+    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
   }
+
+  public static <T> ResponseEntity<T> unprocessableEntity(T response) {
+    return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_ENTITY);
+  }
+
+
 
   // Create Response
   private static <T> CompletableFuture<ResponseEntity<T>> createReponse(T response, HttpStatus status) {

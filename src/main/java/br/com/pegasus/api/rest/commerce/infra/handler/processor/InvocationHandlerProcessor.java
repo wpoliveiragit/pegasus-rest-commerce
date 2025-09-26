@@ -4,6 +4,7 @@ import br.com.pegasus.api.rest.commerce.infra.handler.log.CorelLog;
 import lombok.AllArgsConstructor;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 @AllArgsConstructor
@@ -20,9 +21,14 @@ public class InvocationHandlerProcessor implements InvocationHandler {
       Object result = method.invoke(bean, args);
       log.endd();
       return result;
-    } catch (Exception ex) {
+    } catch (InvocationTargetException ite) {
       log.exceptionn();
-      throw ex;
+      Throwable cause = ite.getCause();
+      if (cause instanceof RuntimeException) throw (RuntimeException) cause;
+      throw new RuntimeException(cause); // evita UndeclaredThrowableException
+    } catch (Throwable t) {
+      log.exceptionn();
+      throw t;
     } finally {
       log.finallyy();
     }

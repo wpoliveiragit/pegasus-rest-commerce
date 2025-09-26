@@ -13,7 +13,7 @@ import br.com.pegasus.gen.openapi.type.TaxReceiptItemCreateBodyType;
 public final class ValidTool {
 
   public static void page(Integer page, Integer size) {
-    ValidatedUtil.positiveOrZero(page, BadRequestEnum.PAGE.getCodeMsg());
+    ValidatedUtil.positive(page, BadRequestEnum.PAGE.getCodeMsg());
     ValidatedUtil.positiveOrZero(size, BadRequestEnum.SIZE.getCodeMsg());
   }
 

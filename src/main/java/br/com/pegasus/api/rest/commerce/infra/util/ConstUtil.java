@@ -7,8 +7,8 @@ public final class ConstUtil {
   public static final String T_EMPTY = "";
   public static final String T_SEP = "#:#";// String de separação
   public static final String T_NULL = "null";
-  public static final String T_OPENAPI_INFO_CONTROLLER_INIT_SUCCESS = "OpenAPI contract file successfully uploaded";
-  public static final String T_OPENAPI_INFO_CONTROLLER_INIT_FAIL = "Problems loading the OpenAPI file: {}";
+  public static final String LOG_STARTED_METHOD = "FindPage ⇉ STARTED";
+  public static final String LOG_FINISHED_METHOD = "FindPage ⇉ FINISHED";
 
   public static final String T_LOG_ADVICE_INTERNAL_SERVER_ERROR = "Internal Server Error → Code: {} Message: {}";
   public static final String T_LOG_ADVICE_NOT_FOUND = "Not Found → Code: {} Message: {}";

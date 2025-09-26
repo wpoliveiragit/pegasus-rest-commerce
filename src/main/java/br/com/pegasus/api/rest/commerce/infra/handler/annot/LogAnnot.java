@@ -15,6 +15,6 @@ public @interface LogAnnot {
    *
    * ST:started EN:ending EX:exception FI:finally
    */
-  String value() default "start:started end:ending exception:exception finally:finally";
+  String value() default "ST:started EN:ending EX:exception FI:finally";
 
 }

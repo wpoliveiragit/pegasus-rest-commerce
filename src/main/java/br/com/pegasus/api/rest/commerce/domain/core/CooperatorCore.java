@@ -1,6 +1,7 @@
 package br.com.pegasus.api.rest.commerce.domain.core;
 
 import br.com.pegasus.api.rest.commerce.domain.adapter.ExceptionMethodAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.LogAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.ToolKitAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.ValidMethodAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.repo.CooperatorDBAdapter;
@@ -8,42 +9,50 @@ import br.com.pegasus.api.rest.commerce.domain.model.CooperatorModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.port.CooperatorPort;
-import br.com.pegasus.api.rest.commerce.infra.handler.annot.LogAnnot;
+import br.com.pegasus.api.rest.commerce.infra.vo.CheckLogVO;
 
 public class CooperatorCore implements CooperatorPort {
 
   private final CooperatorDBAdapter coopJpa;
   private final ExceptionMethodAdapter exMethod;
   private final ValidMethodAdapter validMethod;
+  private final LogAdapter log;
 
   public CooperatorCore(ToolKitAdapter tools) {
     this.coopJpa = tools.getCooperatorRepository();
     this.validMethod = tools.getValidMethod();
     this.exMethod = tools.getExceptionMethod();
+    this.log = tools.getLog(CooperatorCore.class);
   }
 
-  @LogAnnot
   @Override
-  public PageableModel<CooperatorModel> findPage(PageModel inModel) {
-    return coopJpa.findPage(inModel);
+  public PageableModel<CooperatorModel> findPage(CheckLogVO getPagelog, PageModel inModel) {
+    getPagelog.addMessage("Start Service");
+    var response = coopJpa.findPage(getPagelog, inModel);
+    getPagelog.addMessage("Finished Service");
+    return response;
   }
 
-  @LogAnnot
   @Override
   public CooperatorModel findById(CooperatorModel inModel) {
-    return this.getById(inModel);
+    log.info("findById ⇉ STARTED");
+    var response = this.getById(inModel);
+    log.info("findById ⇉ FINISHED");
+    return response;
   }
 
-  @LogAnnot
   @Override
   public CooperatorModel create(CooperatorModel inModel) {
+    log.info("create ⇉ STARTED");
+    var response = coopJpa.create(inModel);
     this.checkDocumentNumberConflict(inModel);
-    return coopJpa.create(inModel);
+    log.info("create ⇉ FINISHED");
+    return response;
   }
 
-  @LogAnnot
   @Override
   public void update(CooperatorModel inModel) {
+    log.info("update ⇉ STARTED");
     CooperatorModel upModel = this.getById(inModel);
     boolean update = false;
 
@@ -62,12 +71,14 @@ public class CooperatorCore implements CooperatorPort {
     if (update) {
       coopJpa.update(upModel);
     }
+    log.info("update ⇉ FINISHED");
   }
 
-  @LogAnnot
   @Override
   public void delete(CooperatorModel inModel) {
+    log.info("delete ⇉ STARTED");
     coopJpa.delete(getById(inModel));
+    log.info("delete ⇉ FINISHED");
   }
 
   private void checkDocumentNumberConflict(CooperatorModel inModel) {

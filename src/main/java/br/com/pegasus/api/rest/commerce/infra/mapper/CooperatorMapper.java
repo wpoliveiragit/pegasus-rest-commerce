@@ -52,7 +52,11 @@ public final class CooperatorMapper {
   }
 
   public CooperatorEntity toEntity(CooperatorModel obj) {
-    return CooperatorEntity.builder().id(obj.getId()).name(obj.getName()).documentNumber(obj.getDocumentNumber()).build();
+    return CooperatorEntity.builder()//
+        .id(obj.getId())//
+        .name(obj.getName())//
+        .documentNumber(obj.getDocumentNumber())//
+        .build();
   }
 
   public Pageable toEntity(PageModel obj) {
