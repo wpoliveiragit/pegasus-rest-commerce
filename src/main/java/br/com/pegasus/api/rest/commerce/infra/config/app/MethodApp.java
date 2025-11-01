@@ -25,8 +25,4 @@ public final class MethodApp {
     return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT), Runnable::run);
   }
 
-  public <T> ResponseEntity<T> conflict(T response) {
-    return new ResponseEntity<>(response, HttpStatus.CONFLICT);
-  }
-
 }

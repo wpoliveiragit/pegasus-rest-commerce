@@ -2,7 +2,7 @@ package br.com.pegasus.api.rest.commerce.infra.util;
 
 public final class ConstUtil {
 
-  // [Textos]
+  // [TEXTOS]
   public static final String T_EMPTY = "";
 
   // [CONSTANTES CARACTERES]
@@ -16,11 +16,9 @@ public final class ConstUtil {
 
   // [EXPRESSÕES RECULARES]
 
-  // Definição de caracteres não numéricos
+  /** Definição de caracteres não numéricos */
   public static final String REGEX_N_DIG = "\\D";
-  // Definição de um numero repetido de 0 a 10 na String (ex: 00000000000)
+  /** Definição de um numero repetido de 0 a 10 na String (ex: 00000000000) */
   public static final String REGEX_ALL_SAME_DIGITS = "(\\d)\\1{10}";
-  // Define padrões de email
-  public static final String REGEX_EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
 }

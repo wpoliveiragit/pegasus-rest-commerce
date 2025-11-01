@@ -41,8 +41,8 @@ public class ProductCore implements ProductPort {
   public ProductModel create(ProductModel inModel) {
     log.info("Service ⇉ create");
     checkNameConflict(inModel);
-    method.validPrice(inModel.getPrice());
-    method.validQuantity(inModel.getQuantity());
+    method.validPriceUpdate(inModel.getPrice());
+    method.validQualityUpdate(inModel.getQuantity());
     ProductModel response = productJpa.create(inModel);
     log.info("Service ⇇ create");
     return response;
@@ -51,32 +51,20 @@ public class ProductCore implements ProductPort {
   @Override
   public void update(ProductModel inModel) {
     log.info("Service ⇉ Update");
+
     ProductModel upModel = this.getById(inModel);
-    boolean update = false;
-    String name = inModel.getName();
-    if (method.isNotBlank(inModel.getName())) {
-      this.checkNameConflict(inModel);
-      upModel.setName(name);
-      update = true;
-    }
 
-    Float price = inModel.getPrice();
-    if (price != null) {
-      method.validPrice(price);
-      upModel.setPrice(price);
-      update = true;
-    }
+    final String name = method.validNameUpdate(inModel.getName());
+    this.checkNameConflict(inModel);
+    final Float price = method.validPriceUpdate(inModel.getPrice());
+    final Integer quantity = method.validQualityUpdate(inModel.getQuantity());
 
-    Integer quantity = inModel.getQuantity();
-    if (quantity != null) {
-      method.validQuantity(quantity);
-      upModel.setQuantity(quantity);
-      update = true;
-    }
+    upModel.setName(name);
+    upModel.setPrice(price);
+    upModel.setQuantity(quantity);
 
-    if (update) {
-      productJpa.update(upModel);
-    }
+    productJpa.update(upModel);
+
     log.info("Service ⇇ Update");
   }
 

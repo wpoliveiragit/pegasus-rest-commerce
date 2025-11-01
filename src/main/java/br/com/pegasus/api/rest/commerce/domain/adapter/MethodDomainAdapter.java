@@ -6,22 +6,12 @@ public interface MethodDomainAdapter {
 
   AppException newNotFound();
 
-  AppException newCooperatorNotFound();
-
-  AppException newTaxReceiptNotFound();
-
-  AppException newProductNotFound();
-
-  void throwConflictDocumentNumber();
-
   void throwConflictName();
 
-  boolean isNotBlank(String value);
+  String validNameUpdate(String value);
 
-  void validDocumentNumber(String documentNumber);
+  Float validPriceUpdate(Float value);
 
-  void validPrice(Number value);
-
-  void validQuantity(Number value);
+  Integer validQualityUpdate(Integer value);
 
 }

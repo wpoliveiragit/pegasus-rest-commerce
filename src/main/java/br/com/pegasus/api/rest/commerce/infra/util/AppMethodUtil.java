@@ -1,12 +1,8 @@
 package br.com.pegasus.api.rest.commerce.infra.util;
 
 import br.com.pegasus.api.rest.commerce.infra.enums.AppEnumException;
-import br.com.pegasus.gen.openapi.type.CooperatorCreateBodyType;
-import br.com.pegasus.gen.openapi.type.CooperatorUpdateBodyType;
 import br.com.pegasus.gen.openapi.type.ProductCreateBodyType;
 import br.com.pegasus.gen.openapi.type.ProductUpdateBodyType;
-import br.com.pegasus.gen.openapi.type.TaxReceiptCreateBodyType;
-import br.com.pegasus.gen.openapi.type.TaxReceiptItemCreateBodyType;
 import org.springframework.core.io.ClassPathResource;
 
 import java.nio.charset.StandardCharsets;
@@ -37,42 +33,11 @@ public final class AppMethodUtil {
     validId(id, AppEnumException.BAD_REQUEST_ID);
   }
 
-  public static void productId(Integer id) {
-    validId(id, AppEnumException.BAD_REQUEST_PRODUCT_ID);
-  }
-
-  public static void taxReceiptId(Integer id) {
-    validId(id, AppEnumException.BAD_REQUEST_TAX_RECEIPT_ID);
-  }
-
-  public static void createBody(CooperatorCreateBodyType body) {
-    notNullBody(body);
-    validName(body.getName());
-    validDocumentNumber(body.getDocumentNumber());
-  }
-
-  public static void createBody(TaxReceiptItemCreateBodyType body) {
-    notNullBody(body);
-    taxReceiptId(body.getTaxReceiptId());
-    productId(body.getProductId());
-    validQuantity(body.getQuantity());
-  }
-
   public static void createBody(ProductCreateBodyType body) {
     notNullBody(body);
     validName(body.getName());
     validPrice(body.getPrice());
     validQuantity(body.getQuantity());
-  }
-
-  public static void createBody(TaxReceiptCreateBodyType body) {
-    notNullBody(body);
-    commonId(body.getCooperatorId());
-  }
-
-  public static void updateBody(Integer id, CooperatorUpdateBodyType body) {
-    validId(id, AppEnumException.BAD_REQUEST_COOPERATOR_ID);
-    notNullBody(body);
   }
 
   public static void updateBody(Integer id, ProductUpdateBodyType body) {
@@ -82,10 +47,6 @@ public final class AppMethodUtil {
 
   private static void validName(String value) {
     ValidatedUtil.notBlank(value, AppEnumException.BAD_REQUEST_NAME);
-  }
-
-  private static void validDocumentNumber(String value) {
-    ValidatedUtil.notBlank(value, AppEnumException.BAD_REQUEST_DOCUMENT_NUMBER);
   }
 
   private static void validPrice(Number value) {

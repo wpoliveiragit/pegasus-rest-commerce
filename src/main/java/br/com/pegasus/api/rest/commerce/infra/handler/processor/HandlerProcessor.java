@@ -4,6 +4,9 @@ import br.com.pegasus.api.rest.commerce.infra.handler.annot.LogAnnot;
 import br.com.pegasus.api.rest.commerce.infra.handler.log.ClassLog;
 import br.com.pegasus.api.rest.commerce.infra.handler.log.CorelLog;
 import br.com.pegasus.api.rest.commerce.infra.handler.log.HandlerLog;
+import br.com.pegasus.api.rest.commerce.infra.log.AppBaseLog;
+import br.com.pegasus.api.rest.commerce.infra.log.AppFactoryLog;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -18,18 +21,21 @@ import java.util.Map;
 @Component
 public class HandlerProcessor implements BeanPostProcessor {
 
+  private final AppBaseLog log = AppFactoryLog.getCommonLog(HandlerProcessor.class);
+
   @Override
   public Object postProcessAfterInitialization(@NotNull Object bean, @NotNull String beanName) throws BeansException {
     HandlerLog handlerLog = log(bean);
 
     if(bean instanceof ClassLog){
       //encontra todos os methodos publicos da classe
-      System.out.println("Classe anotada com @ClassLogAnnot");
+      log.info("Criando proxy no bean: {}", bean.getClass().getSimpleName());
       Method[] methods = bean.getClass().getDeclaredMethods();
 
       for (Method method : methods) {
         if (Modifier.isPublic(method.getModifiers())) {
           System.out.println(method.getName());
+          log.info("- monitoring method: {}", bean.getClass().getSimpleName());
         }
       }
     }

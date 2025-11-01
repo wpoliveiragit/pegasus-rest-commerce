@@ -32,7 +32,7 @@ public class ProductDelegate implements ProductApiDelegate {
   private final MethodApp methodApp;
 
   @Override
-  public CompletableFuture<ResponseEntity<ProductPageResponseType>> productGetPage(UUID xRequestId, Integer page, Integer size) {
+  public CompletableFuture<ResponseEntity<ProductPageResponseType>> productGetPage(UUID xTraceId, Integer page, Integer size) {
     log.info("Delegate ⇉ getPage");
     AppMethodUtil.page(page, size);
     PageModel requestModel = mapper.toModelByPage(page, size);
@@ -43,7 +43,7 @@ public class ProductDelegate implements ProductApiDelegate {
   }
 
   @Override
-  public CompletableFuture<ResponseEntity<ProductType>> productGetOne(UUID xRequestId, Integer productId) {
+  public CompletableFuture<ResponseEntity<ProductType>> productGetOne(UUID xTraceId, Integer productId) {
     log.info("Delegate ⇉ getOne");
     AppMethodUtil.commonId(productId);
     ProductModel requestModel = mapper.toModelById(productId);
@@ -54,7 +54,7 @@ public class ProductDelegate implements ProductApiDelegate {
   }
 
   @Override
-  public CompletableFuture<ResponseEntity<ProductType>> productCreate(UUID xRequestId, ProductCreateBodyType productCreateBodyType) {
+  public CompletableFuture<ResponseEntity<ProductType>> productCreate(UUID xTraceId, ProductCreateBodyType productCreateBodyType) {
     log.info("Delegate ⇉ create");
     AppMethodUtil.createBody(productCreateBodyType);
     ProductModel requestModel = mapper.toModel(productCreateBodyType);
@@ -65,7 +65,7 @@ public class ProductDelegate implements ProductApiDelegate {
   }
 
   @Override
-  public CompletableFuture<ResponseEntity<Void>> productUpdate(UUID xRequestId, Integer productId, ProductUpdateBodyType productUpdateBodyType) {
+  public CompletableFuture<ResponseEntity<Void>> productUpdate(UUID xTraceId, Integer productId, ProductUpdateBodyType productUpdateBodyType) {
     log.info("Delegate ⇉ update");
     AppMethodUtil.updateBody(productId, productUpdateBodyType);
     ProductModel requestModel = mapper.toModel(productId, productUpdateBodyType);
@@ -75,7 +75,7 @@ public class ProductDelegate implements ProductApiDelegate {
   }
 
   @Override
-  public CompletableFuture<ResponseEntity<Void>> productDelete(UUID xRequestId, Integer productId) {
+  public CompletableFuture<ResponseEntity<Void>> productDelete(UUID xTraceId, Integer productId) {
     log.info("Delegate ⇉ delete");
     AppMethodUtil.commonId(productId);
     ProductModel requestModel = mapper.toModelById(productId);
