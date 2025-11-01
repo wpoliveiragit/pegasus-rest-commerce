@@ -3,11 +3,11 @@ package br.com.pegasus.api.rest.commerce.domain.port;
 import br.com.pegasus.api.rest.commerce.domain.model.CooperatorModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
-import br.com.pegasus.api.rest.commerce.infra.vo.CheckLogVO;
+import br.com.pegasus.api.rest.commerce.infra.handler.log.ClassLog;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface CooperatorPort {
+public interface CooperatorPort extends ClassLog {
 //TODO: criar o java doc informando todas as necessidade antes de passar.
 
   /**
@@ -21,7 +21,7 @@ public interface CooperatorPort {
    * @param inModel A paginação solicitada
    * @return Uma paginação de elementos.
    */
-  PageableModel<CooperatorModel> findPage(CheckLogVO getPagelog, PageModel inModel);
+  PageableModel<CooperatorModel> findPage(PageModel inModel);
 
   CooperatorModel findById(CooperatorModel inModel);
 

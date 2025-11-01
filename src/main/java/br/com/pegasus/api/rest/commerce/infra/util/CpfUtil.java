@@ -2,6 +2,7 @@ package br.com.pegasus.api.rest.commerce.infra.util;
 
 public final class CpfUtil {
 
+
   /**
    * Verifica se o cpf é valido:
    *

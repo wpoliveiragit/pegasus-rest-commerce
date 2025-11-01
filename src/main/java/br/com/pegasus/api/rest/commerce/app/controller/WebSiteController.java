@@ -1,48 +1,40 @@
 package br.com.pegasus.api.rest.commerce.app.controller;
 
-import br.com.pegasus.api.rest.commerce.infra.handler.annot.LogAnnot;
-import br.com.pegasus.api.rest.commerce.infra.util.StreamUtil;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Controller;
+import br.com.pegasus.api.rest.commerce.infra.util.AppMethodUtil;
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-@Controller
+@RestController
 public class WebSiteController {
 
-  private final Environment env;
-  private final Map<String, Object> prop;
+  private final String siteHome;
+  private final String siteLicense;
+  private final String siteTerms;
 
-  public WebSiteController(Environment env) {
-    this.env = env;
-    prop = new HashMap<>();
-    createPropDataBase(prop);
+  public WebSiteController() {
+    this.siteHome = AppMethodUtil.readResourceFileToStringUTF8("site/index.html");
+    this.siteLicense = AppMethodUtil.readResourceFileToStringUTF8("site/license.html");
+    this.siteTerms = AppMethodUtil.readResourceFileToStringUTF8("site/terms.html");
   }
 
-  @LogAnnot
-  @GetMapping("/")
-  public String home(Model model) {
-    model.addAttribute(prop);
-    return "index";
+  //!: SITE :: HOME
+  @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
+  public String getWebsiteHome(Model model) {
+    return siteHome;
   }
 
-  private void createPropDataBase(Map<String, Object> prop) {
-    final String err = "@ERR";
-
-    List<String> keys = List.of(//
-        "app.name", "name",//
-        "app.url", "url",//
-        "app.user", "user"//
-    );
-
-    prop.put("db", StreamUtil.of(keys)//
-        .map(key -> Map.entry(key, env.getProperty(key, err)))//
-        .filter(entry -> !entry.getValue().equals(err))//
-        .toMap(Map.Entry::getKey, Map.Entry::getValue)//
-    );
+  //!: Site :: licensa
+  @GetMapping(value = "/license", produces = MediaType.TEXT_HTML_VALUE)
+  public String getWebsiteLicense(Model model) {
+    return siteLicense;
   }
+
+  //!: Site :: Termos
+  @GetMapping(value = "/terms", produces = MediaType.TEXT_HTML_VALUE)
+  public String getWebsiteTerms(Model model) {
+    return siteTerms;
+  }
+
 }

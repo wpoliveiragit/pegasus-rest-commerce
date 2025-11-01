@@ -1,56 +1,60 @@
 package br.com.pegasus.api.rest.commerce.domain.core;
 
-import br.com.pegasus.api.rest.commerce.domain.adapter.ExceptionMethodAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.LogDomainAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.MethodDomainAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.ToolKitAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.ValidMethodAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.repo.ProductDBAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.ProductDomainAdaterJPA;
 import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 import br.com.pegasus.api.rest.commerce.domain.port.ProductPort;
-import br.com.pegasus.api.rest.commerce.infra.handler.annot.LogAnnot;
 
 public class ProductCore implements ProductPort {
 
-  private final ProductDBAdapter productJpa;
-  private final ExceptionMethodAdapter exMethod;
-  private final ValidMethodAdapter validMethod;
+  private final ProductDomainAdaterJPA productJpa;
+  private final MethodDomainAdapter method;
+  private final LogDomainAdapter log;
 
   public ProductCore(ToolKitAdapter tools) {
     this.productJpa = tools.getProductRepository();
-    this.validMethod = tools.getValidMethod();
-    this.exMethod = tools.getExceptionMethod();
+    this.method = tools.getMethod();
+    this.log = tools.getLog(ProductCore.class);
   }
 
-  @LogAnnot
   @Override
   public PageableModel<ProductModel> findPage(PageModel inModel) {
-    return productJpa.findPage(inModel);
+    log.info("Service ⇉ FindPage");
+    PageableModel<ProductModel> response = productJpa.findPage(inModel);
+    log.info("Service ⇇ FindPage");
+    return response;
   }
 
-  @LogAnnot
   @Override
   public ProductModel findById(ProductModel inModel) {
-    return this.getById(inModel);
+    log.info("Service ⇉ FindById");
+    ProductModel response = this.getById(inModel);
+    log.info("Service ⇇ FindById");
+    return response;
   }
 
-  @LogAnnot
   @Override
   public ProductModel create(ProductModel inModel) {
+    log.info("Service ⇉ create");
     checkNameConflict(inModel);
-    validMethod.validPrice(inModel.getPrice());
-    validMethod.validQuantity(inModel.getQuantity());
-    return productJpa.create(inModel);
+    method.validPrice(inModel.getPrice());
+    method.validQuantity(inModel.getQuantity());
+    ProductModel response = productJpa.create(inModel);
+    log.info("Service ⇇ create");
+    return response;
   }
 
-  @LogAnnot
   @Override
   public void update(ProductModel inModel) {
+    log.info("Service ⇉ Update");
     ProductModel upModel = this.getById(inModel);
     boolean update = false;
-
     String name = inModel.getName();
-    if (validMethod.isNotBlank(inModel.getName())) {
+    if (method.isNotBlank(inModel.getName())) {
       this.checkNameConflict(inModel);
       upModel.setName(name);
       update = true;
@@ -58,14 +62,14 @@ public class ProductCore implements ProductPort {
 
     Float price = inModel.getPrice();
     if (price != null) {
-      validMethod.validPrice(price);
+      method.validPrice(price);
       upModel.setPrice(price);
       update = true;
     }
 
     Integer quantity = inModel.getQuantity();
     if (quantity != null) {
-      validMethod.validQuantity(quantity);
+      method.validQuantity(quantity);
       upModel.setQuantity(quantity);
       update = true;
     }
@@ -73,20 +77,27 @@ public class ProductCore implements ProductPort {
     if (update) {
       productJpa.update(upModel);
     }
+    log.info("Service ⇇ Update");
   }
 
-  @LogAnnot
   @Override
   public void delete(ProductModel inModel) {
+    log.info("Service ⇉ Delete");
     productJpa.delete(getById(inModel));
+    log.info("Service ⇇ Delete");
   }
 
   private void checkNameConflict(ProductModel inModel) {
-    productJpa.findByName(inModel).ifPresent(obj -> exMethod.throwConflictName());
+    log.info("Service ⇉ CheckNameConflict");
+    productJpa.findByName(inModel).ifPresent(obj -> method.throwConflictName());
+    log.info("Service ⇇ CheckNameConflict");
   }
 
   private ProductModel getById(ProductModel inModel) {
-    return productJpa.findById(inModel).orElseThrow(exMethod::newNotFound);
+    log.info("Service ⇉ GetById");
+    ProductModel response = productJpa.findById(inModel).orElseThrow(method::newNotFound);
+    log.info("Service ⇇ GetById");
+    return response;
   }
 
 }

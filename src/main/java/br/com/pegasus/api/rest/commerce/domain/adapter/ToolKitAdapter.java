@@ -1,26 +1,24 @@
 package br.com.pegasus.api.rest.commerce.domain.adapter;
 
-import br.com.pegasus.api.rest.commerce.domain.adapter.repo.CooperatorDBAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.repo.ProductDBAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.repo.TaxReceiptDBAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.repo.TaxReceiptItemDBAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.CooperatorDomainAdapterJPA;
+import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.ProductDomainAdaterJPA;
+import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.TaxReceiptDomainAdapterJPA;
+import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.TaxReceiptItemDomainAdapterJPA;
 
 public interface ToolKitAdapter {
 
   // Repository
-  CooperatorDBAdapter getCooperatorRepository();
+  CooperatorDomainAdapterJPA getCooperatorRepository();
 
-  ProductDBAdapter getProductRepository();
+  ProductDomainAdaterJPA getProductRepository();
 
-  TaxReceiptItemDBAdapter getTaxReceiptItemRepository();
+  TaxReceiptItemDomainAdapterJPA getTaxReceiptItemRepository();
 
-  TaxReceiptDBAdapter getTaxReceiptRepository();
+  TaxReceiptDomainAdapterJPA getTaxReceiptRepository();
 
   // TOOL
-  LogAdapter getLog(Class<?> c);
+  LogDomainAdapter getLog(Class<?> c);
 
-  ValidMethodAdapter getValidMethod();
-
-  ExceptionMethodAdapter getExceptionMethod();
+  MethodDomainAdapter getMethod();
 
 }

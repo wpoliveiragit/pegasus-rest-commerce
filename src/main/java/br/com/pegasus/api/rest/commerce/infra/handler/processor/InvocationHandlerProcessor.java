@@ -29,8 +29,6 @@ public class InvocationHandlerProcessor implements InvocationHandler {
     } catch (Throwable t) {
       log.exceptionn();
       throw t;
-    } finally {
-      log.finallyy();
     }
   }
 

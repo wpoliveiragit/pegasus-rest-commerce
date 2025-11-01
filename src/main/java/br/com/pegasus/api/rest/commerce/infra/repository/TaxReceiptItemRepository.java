@@ -9,6 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TaxReceiptItemRepository extends JpaRepository<TaxReceiptItemEntity, TaxReceiptItemId> {
-
   Page<TaxReceiptItemEntity> findByIdTaxReceiptId(Integer taxReceiptId, Pageable pageable);
 }

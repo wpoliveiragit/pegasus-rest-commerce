@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.4</version>
+        <version>3.4.6</version>
         <relativePath/>
     </parent>
 
@@ -27,133 +27,94 @@
         <openapi.inputSpec>${path.resources}/openapi.yaml</openapi.inputSpec>
         <openapi.apiPackage>br.com.pegasus.gen.openapi.api</openapi.apiPackage>
         <openapi.modPackage>br.com.pegasus.gen.openapi.type</openapi.modPackage>
+        <kotlin.version>2.0.21</kotlin.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <!-- Fornece suporte para criar APIs REST e aplicações web usando Spring MVC.
-                 Inclui Tomcat embutido como servidor web, suporte a JSON via Jackson
-                 e outras integrações essenciais para construir endpoints RESTful. -->
+            <!-- MOTOR REST E APLICAÇÕES WEB -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
-            <!-- Biblioteca principal do Jackson para serialização e desserialização de objetos Java em JSON
-                 e vice-versa. Permite manipulação dinâmica de JSON. -->
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.18.2</version>
-        </dependency>
-
-        <dependency>
-            <!-- Extensão do Jackson para dar suporte a XML.
-                 Permite converter documentos XML em JSON e objetos Java, e também gerar XML a partir deles. -->
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-xml</artifactId>
-            <version>2.18.2</version>
-        </dependency>
-
-        <dependency>
-            <!-- Integração do OpenAPI 3 (Swagger) com Spring MVC.
-                 Gera automaticamente a documentação da API REST, incluindo interface Swagger UI para testes. -->
+            <!-- Integração do contrato OpenAPI 3: PLUGIN: openapi-generator-maven-plugin -->
+            <!-- Gera: Porta de entrada REST e DOCUMENTAÇÃO SWAGGER -->
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.8.9</version>
         </dependency>
 
         <dependency>
-            <!-- Biblioteca utilitária da Apache que fornece classes auxiliares para manipulação de Strings,
-                 números, datas, objetos e coleções, reduzindo vulnerabilidades comuns em implementações manuais. -->
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.18.0</version>
+            <!-- Serialização/desserialização JSON -->
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.18.2</version>
         </dependency>
-
         <dependency>
-            <!-- Extensão do Jackson que adiciona suporte para valores null em modelos gerados via OpenAPI.
-                 Garante compatibilidade ao lidar com propriedades opcionais em JSON. -->
+            <!-- Extensor jackson-databind: suporte a XML -->
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>2.18.2</version>
+        </dependency>
+        <dependency>
+            <!-- Extensor jackson-databind: suporte a valores nulos em modelos OpenAPI -->
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
             <version>0.2.2</version>
         </dependency>
 
         <dependency>
-            <!-- Define anotações padrão de Java (javax.annotation), como @Generated, @PostConstruct, @PreDestroy.
-                 Usadas em bibliotecas e frameworks para adicionar metadados em código. -->
+            <!-- Utilitário Apache: fornece suporte de manipulação para Strings, números, datas, objetos e coleções -->
+            <!-- REMOVE VULNERABILIDADE DE springdoc-openapi-starter-webmvc-ui-->
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.18.0</version>
+        </dependency>
+
+        <dependency>
+            <!-- javax.annotation: @Generated, @PostConstruct, @PreDestroy -->
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
             <version>1.3.2</version>
         </dependency>
 
         <dependency>
-            <!-- API de Servlets (javax.servlet) necessária para aplicações web baseadas em Java.
-                 Usada para manipular requisições HTTP, sessões e filtros. O escopo 'provided' indica
-                 que será fornecida pelo servidor de aplicação (Tomcat embutido no caso do Spring Boot). -->
+            <!-- API de Servlets (javax.servlet): Manipula requisições HTTP, sessões e filtros. -->
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.0.1</version>
-            <scope>provided</scope>
+            <scope>provided</scope> <!-- Indica que será fornecida pelo Tomcat embutido). -->
         </dependency>
 
         <dependency>
-            <!-- Fornece suporte a JPA (Java Persistence API) para persistência de dados.
-                 Inclui integração com Hibernate e abstrações de repositórios Spring Data. -->
+            <!-- Biblioteca JPA: persistência de dados. Hibernate e repositórios Spring Data integrado. -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
         <dependency>
-            <!-- Implementa validação de dados via Bean Validation (JSR 380).
-                 Usado em conjunto com anotações como @NotNull, @Size, @Email para validar entidades e DTOs. -->
+            <!-- Suporte de validação Hibernate via Bean Validation: @NotNull, @Size, @Email, ... -->
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>8.0.2.Final</version>
         </dependency>
 
         <dependency>
-            <!-- Banco de dados em memória H2, útil para testes e desenvolvimento.
-                 Suporta SQL padrão e console web para administração. -->
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <!-- Ferramenta para reduzir boilerplate em classes Java.
-                 Gera automaticamente getters, setters, construtores, equals/hashCode e builders via anotações. -->
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <!-- Núcleo do Log4j2, responsável por implementação de logging altamente configurável e performático. -->
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.22.0</version>
-        </dependency>
-
-        <dependency>
-            <!-- API do Log4j2 que define as interfaces de logging usadas pela aplicação
-                 e que são implementadas pelo log4j-core. -->
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.22.0</version>
-        </dependency>
-
-        <dependency>
-            <!-- Define a especificação Bean Validation (JSR 380).
-                 Fornece apenas a API, usada em conjunto com implementações como Hibernate Validator. -->
+            <!-- API Bean Validation: Fornece apenas a API para Hibernate Validator. -->
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>2.0.1.Final</version>
         </dependency>
 
         <dependency>
-            <!-- Anotações auxiliares da JetBrains (ex.: @NotNull, @Nullable).
-                 Melhoram a análise estática do código e integração com IDEs. -->
+            <!-- Banco de dados H2: útil para testes, pois oferece DB em memória e console web -->
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <!-- Anotações auxiliares: (ex.: @NotNull, @Nullable) -->
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>26.0.2</version>
@@ -161,13 +122,41 @@
         </dependency>
 
         <dependency>
-            <!-- Motor de templates Thymeleaf integrado ao Spring Boot.
-                 Permite renderizar páginas HTML dinâmicas no lado do servidor com suporte a expressões e fragmentos. -->
+            <!-- RENDERIZA PÁGINAS HTML DINÂMICAS -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
+        <!-- TELEMETRIA-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-observation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
 
+        <!-- UTIL -->
+        <dependency>
+            <!-- Reduzir boilerplate (códigos padrões) -->
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
+        <!-- TEST -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -179,6 +168,13 @@
             <version>0.14</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- XXXX -->
 
     </dependencies>
 
@@ -223,8 +219,69 @@
             </plugin>
 
             <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <source>src/main/java</source>
+                                <source>target/generated-sources/annotations</source>
+                                <source>target/generated-sources/openapi/src/main/java</source>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <source>src/test/java</source>
+                                <source>target/generated-test-sources/test-annotations</source>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jvmTarget>1.8</jvmTarget>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>

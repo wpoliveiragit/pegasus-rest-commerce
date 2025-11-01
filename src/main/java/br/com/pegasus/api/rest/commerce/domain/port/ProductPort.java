@@ -24,7 +24,7 @@ public interface ProductPort {
 
   ProductModel findById(ProductModel inModel);
 
-  ProductModel create(ProductModel inModel);
+  ProductModel create( ProductModel inModel);
 
   void update(ProductModel inModel);
 

@@ -1,28 +1,71 @@
-# XXXXX
-# XXXXX
-# XXXXX
-# XXXXX
-# XXXXX
 openapi: 3.0.0
 info:
   version: 1.0.0
   title: API de Produtos
   #  title: PEGASUS-SA → API de Produtos
-  termsOfService: http://localhost:8080/docs/terms.html
-  contact: { name: Enterprise, email: suporte@pegasus.com.br, url: http://localhost:8080/pegasus/website.html }
-  license: { name: License, url: http://localhost:8080/docs/license.html }
+  termsOfService: http://localhost:8080/terms
   description: |
     API de estudo para gerenciamento de produtos.  
     Contém operações de criação, consulta, atualização e exclusão de elementos do tipo produto.
     
-    **NOTAS DO DESENVOLVEDOR**<br>
+    ```text
+    NOTAS DO DESENVOLVEDOR
     
-    **Links**<br>
-    ● `Terms of service` → `resources/static/docs/terms.html`<br>
-    ● `Website` → `resources/static/pegasus/website.html`<br>
-    ● `License` → `resources/static/docs/terms.html`<br>
-    ● `Database` → `http://localhost:8080/h2-console`<br>
-
+    ╔════════════════════════════════════════════════════════════════════════════════════════════════
+    ║ BANCO DE DADOS
+    ╠════════════════════════════════════════════════════════════════════════════════════════════════
+    ║ → O banco escolhido é o H2
+    ║
+    ║ Acesse o banco de dados  pelo link abaixo
+    ║ → http://localhost:8080/h2-console
+    ║
+    ║ Driver class
+    ║ → spring.datasource.driver-class-name
+    ║
+    ║ JDBC URL
+    ║ → spring.datasource.url
+    ║
+    ║ User Name
+    ║ → spring.datasource.username
+    ║
+    ║ Password
+    ║ → spring.datasource.password
+    ╚════════════════════════════════════════════════════════════════════════════════════════════════
+    ╔════════════════════════════════════════════════════════════════════════════════════════════════
+    ║ SITE
+    ╠════════════════════════════════════════════════════════════════════════════════════════════════
+    ║ Home
+    ║ → http://localhost:8080/
+    ║
+    ║ License
+    ║ → http://localhost:8080/license
+    ║ 
+    ║ Terms of service
+    ║ → http://localhost:8080/terms
+    ╚════════════════════════════════════════════════════════════════════════════════════════════════
+    ╔════════════════════════════════════════════════════════════════════════════════════════════════
+    ║ TELEMETRIA                                                                                     
+    ╠════════════════════════════════════════════════════════════════════════════════════════════════
+    ║ Todas as métricas disponíveis
+    ║ → http://localhost:8080/actuator/metrics
+    ║
+    ║ Métrica customizada de contagem de requests
+    ║ → http://localhost:8080/actuator/metrics/http_requests_total
+    ║
+    ║ Métrica customizada de duração de requests
+    ║ → http://localhost:8080/actuator/metrics/http_request_duration_ms
+    ║
+    ║ Formato Prometheus (todas as métricas)
+    ║ → http://localhost:8080/actuator/prometheus
+    ╚════════════════════════════════════════════════════════════════════════════════════════════════
+    ```
+  contact:
+    name: Enterprise
+    email: suporte@pegasus.com.br
+    url: http://localhost:8080
+  license:
+    name: License
+    url: http://localhost:8080/license
 servers:
   - url: http://localhost:8080
     description: Servidor local para solicitações de produtos
@@ -36,6 +79,8 @@ tags:
 paths:
 
   /cooperator:
+    parameters:
+      - $ref: '#/components/parameters/_header_x_request_id'
 
     get:
       tags: [ cooperator ]
@@ -45,17 +90,23 @@ paths:
         - $ref: '#/components/parameters/_query_size'
       summary: Busca uma paginação de elementos
       description: |
-        Busca uma paginação de elementos.        
+        Busca uma paginação de elementos.
         
-        **Notas do Desenvolvedor**
-        ```
-        ♢♢ HTTP STATUS ♢♢
-        200: ok 
-        400: bad request
-        ● page/size: null - negativo
-        500: Internal server erro
-        ● erro ao executar uma query no banco de dado
-        ● banco de dados off-line
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ HTTP STATUS
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ 200: ok
+        ║ → Retorno esperado
+        ║
+        ║ 400: bad request
+        ║ → page/size: null - negativo
+        ║
+        ║ 500: Internal server erro
+        ║ → erro ao executar uma query no banco de dado
+        ║ → banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       responses:
         '200':
@@ -73,21 +124,27 @@ paths:
       description: |
         Cria um novo elemento
         
-        **Notas do Desenvolvedor**
-        ```
-        ● Documente number: campo único que representa o CPF
-        ```
-        ```
-        ♢♢ HTTP STATUS ♢♢
-        201: created
-        400: bad request
-        ● name: null - branco
-        ● document number: null - branco - invalido.
-        409: conflict
-        ● document number já cadastrado
-        500: Internal server erro
-        ● erro ao executar uma query no banco de dado
-        ● banco de dados off-line
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ HTTP STATUS
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ → Documente number: campo único que representa o CPF
+        ║
+        ║ 201: created
+        ║ → Retorno esperado
+        ║
+        ║ 400: bad request
+        ║ → name: null - branco
+        ║ → document number: null - branco - invalido.
+        ║
+        ║ 409: conflict
+        ║ → document number já cadastrado
+        ║
+        ║ 500: Internal server erro
+        ║ → erro ao executar uma query no banco de dado
+        ║ → banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       requestBody:
         required: true
@@ -106,6 +163,7 @@ paths:
 
   /cooperator/{id}:
     parameters:
+      - $ref: '#/components/parameters/_header_x_request_id'
       - $ref: '#/components/parameters/_path_id'
 
     get:
@@ -115,14 +173,21 @@ paths:
       description: |
         Busca um elemento pelo ID
         
-        **Notas do Desenvolvedor**
-        ```
-        ♢♢ HTTP STATUS ♢♢
-        200: ok 
-        404: not found
-        500: Internal server erro
-          ● erro ao executar uma query no banco de dado
-          ● banco de dados off-line
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ HTTP STATUS
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ 200: ok 
+        ║ → retorno esperado
+        ║
+        ║ 404: not found
+        ║ →
+        ║
+        ║ 500: Internal server erro
+        ║ → erro ao executar uma query no banco de dado
+        ║ → banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       responses:
         '200':
@@ -140,9 +205,12 @@ paths:
       description: |
         Atualiza elemento pelo ID
         
-        **Notas do Desenvolvedor**
-        ```
-        ♢♢ HTTP STATUS ♢♢
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             
+        HTTP STATUS
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         204: no content
         400: bad request
           ● document number: invalido
@@ -152,6 +220,8 @@ paths:
         500: Internal server erro
           ● erro ao executar uma query no banco de dado
           ● banco de dados off-line
+        ║                                                                                                
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       requestBody:
         required: true
@@ -172,14 +242,18 @@ paths:
       description: |
         Deleta um elemento pelo ID
         
-        **Notas do Desenvolvedor**
-        ```
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             ║
         ♢♢ HTTP STATUS ♢♢
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         204: no content
         404: not found
         500: Internal server erro
           ● erro ao executar uma query no banco de dado
           ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       responses:
         '204': { description: ok }
@@ -187,6 +261,8 @@ paths:
         "500": { $ref: '#/components/responses/internal-server-error-response' }
 
   /product:
+    parameters:
+      - $ref: '#/components/parameters/_header_x_request_id'
 
     get:
       tags: [ product ]
@@ -198,15 +274,27 @@ paths:
       description: |
         Busca uma paginação de elementos
         
-        **Notas do Desenvolvedor**
-        ```mark
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             ║
         ♢♢ HTTP STATUS ♢♢
-        200: ok 
-        400: bad request
-          ● page/size: null - negativo
-        500: Internal server erro
-          ● erro ao executar uma query no banco de dado
-          ● banco de dados off-line
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
+        <ul style="list-style-type: disc;">
+          <li><b>200 Ok</b></li>
+          <ul style="list-style-type: disc;">
+            <li><b>200 Ok</b></li>
+          </ul>
+        </ul>
+        - **200 Ok**
+          - Retorno esperado 
+        - **400 Bad-Request**
+          - **page** não pode ser nulo, em branco ou negativo
+          - **size** não pode ser nulo, em branco ou negativo
+        - **500 Internal server erro
+          - ● erro ao executar uma query no banco de dado
+          - ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       responses:
         '200':
@@ -224,12 +312,13 @@ paths:
       description: |
         Cria um novo elemento
         
-        **Notas do Desenvolvedor**
-        ```
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             ║
         ● name: campo único
-        ```
-        ```
         ♢♢ HTTP STATUS ♢♢
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         201: created
         400: bad request
           ● name: nulo - branco
@@ -240,6 +329,7 @@ paths:
         500: Internal server erro
           ● erro ao executar uma query no banco de dado
           ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       requestBody:
         required: true
@@ -258,7 +348,8 @@ paths:
 
   /product/{id}:
     parameters:
-      - $ref: '#/components/parameters/_path_product_id'
+      - $ref: '#/components/parameters/_header_x_request_id'
+      - $ref: '#/components/parameters/_path_id'
 
     get:
       tags: [ product ]
@@ -267,14 +358,18 @@ paths:
       description: |
         Busca um elemento pelo ID
         
-        **Notas do Desenvolvedor**
-        ```
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             ║
         ♢♢ HTTP STATUS ♢♢
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         200: ok
         404: not found
         500: Internal server erro
           ● erro ao executar uma query no banco de dado
           ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       responses:
         '200':
@@ -292,9 +387,12 @@ paths:
       description: |
         Atualiza um elemento pelo ID
         
-        **Notas do Desenvolvedor**
-        ```
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             ║
         ♢♢ HTTP STATUS ♢♢
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         200: ok 
         400: bad request
           ● price: negativo
@@ -305,6 +403,7 @@ paths:
         500: Internal server erro
           ● erro ao executar uma query no banco de dado
           ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       requestBody:
         required: true
@@ -325,14 +424,18 @@ paths:
       description: |
         Deleta um elemento pelo ID
         
-        **Notas do Desenvolvedor**
-        ```
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             ║
         ♢♢ HTTP STATUS ♢♢
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         204: no content
         404: not found
         500: Internal server erro
           ● erro ao executar uma query no banco de dado
           ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       responses:
         '204': { description: ok }
@@ -340,6 +443,8 @@ paths:
         "500": { $ref: '#/components/responses/internal-server-error-response' }
 
   /tax-receipt:
+    parameters:
+      - $ref: '#/components/parameters/_header_x_request_id'
 
     get:
       tags: [ tax-receipt ]
@@ -351,15 +456,19 @@ paths:
       description: |
         Busca uma paginação de elementos
         
-        **Notas do Desenvolvedor**
-        ```
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             ║
         ♢♢ HTTP STATUS ♢♢
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         200: ok 
         400: bad request
         ● page/size: null - branco
         500: Internal server erro
         ● erro ao executar uma query no banco de dado
         ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       responses:
         '200':
@@ -377,15 +486,19 @@ paths:
       description: |
         Cria um novo elemento
         
-        **Notas do Desenvolvedor**
-        ```
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             ║
         ♢♢ HTTP STATUS ♢♢
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         201: created
         400: bad request
         ● cooperatorId: null, negativo
         500: Internal server erro
         ● erro ao executar uma query no banco de dado
         ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       requestBody:
         required: true
@@ -403,6 +516,7 @@ paths:
 
   /tax-receipt/{id}:
     parameters:
+      - $ref: '#/components/parameters/_header_x_request_id'
       - $ref: '#/components/parameters/_path_id'
 
     get:
@@ -412,14 +526,18 @@ paths:
       description: |
         Busca um elemento pelo ID
         
-        **Notas do Desenvolvedor**
-        ```
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             ║
         ♢♢ HTTP STATUS ♢♢
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         200: ok 
         404: not found
         500: Internal server erro
         ● erro ao executar uma query no banco de dado
         ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       responses:
         '200':
@@ -431,6 +549,8 @@ paths:
         "500": { $ref: '#/components/responses/internal-server-error-response' }
 
   /tax-receipt-item:
+    parameters:
+      - $ref: '#/components/parameters/_header_x_request_id'
 
     get:
       tags: [ tax-receipt-item ]
@@ -442,15 +562,19 @@ paths:
       description: |
         Busca uma paginação de elementos
         
-        **Notas do Desenvolvedor**
-        ```
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             ║
         ♢♢ HTTP STATUS ♢♢
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         200: ok 
         400: bad request
         ● page/size: null - negativo
         500: Internal server erro
         ● erro ao executar uma query no banco de dado
         ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       responses:
         '200':
@@ -468,11 +592,12 @@ paths:
       description: |
         Cria um novo elemento
         
-        **Notas do Desenvolvedor**<br>
-        ```
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ HTTP STATUS →●                                                                                             ║
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         ● Em caso de conflito de ID, apena registre o somatório das quantidades
-        ```
-        ```
         ♢♢ HTTP STATUS ♢♢
         202: created
         400: bad request
@@ -482,6 +607,7 @@ paths:
         500: Internal server erro
         ● erro ao executar uma query no banco de dado
         ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       requestBody:
         required: true
@@ -500,6 +626,7 @@ paths:
 
   /tax-receipt-items/{taxReceiptId}/{productId}:
     parameters:
+      - $ref: '#/components/parameters/_header_x_request_id'
       - $ref: '#/components/parameters/_path_tax_receipt_id'
       - $ref: '#/components/parameters/_path_product_id'
 
@@ -510,14 +637,18 @@ paths:
       description: |
         Busca um elemento pelo ID
         
-        **Notas do Desenvolvedor**
-        ```
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             ║
         ♢♢ HTTP STATUS ♢♢
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         200: ok
         404: not found
         500: Internal server erro
         ● erro ao executar uma query no banco de dado
         ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       responses:
         '200':
@@ -530,6 +661,7 @@ paths:
 
   /tax-receipt-items/{taxReceiptId}:
     parameters:
+      - $ref: '#/components/parameters/_header_x_request_id'
       - $ref: '#/components/parameters/_path_tax_receipt_id'
 
     get:
@@ -541,16 +673,19 @@ paths:
       summary: Busca uma paginação de elementos
       description: |
         Busca uma paginação de elementos
-        
-        **Notas do Desenvolvedor**
-        ```
+        ```text
+        NOTAS DO DESENVOLVEDOR
+        ╔════════════════════════════════════════════════════════════════════════════════════════════════
+        ║ →●                                                                                             ║
         ♢♢ HTTP STATUS ♢♢
+        ╠════════════════════════════════════════════════════════════════════════════════════════════════
         200: ok 
         400: bad request
         ● page/size: null - negativo
         500: Internal server erro
         ● erro ao executar uma query no banco de dado
         ● banco de dados off-line
+        ╚════════════════════════════════════════════════════════════════════════════════════════════════
         ```
       responses:
         '200':
@@ -564,7 +699,12 @@ paths:
 components:
   schemas:
     # [ GERAL ]
-    att-id: { type: integer, example: 10 , description: Identificador do elemento }
+    att-id: { type: integer, example: 1000 , description: 'Identificador do elemento' }
+
+    # [EXCEPTION]
+    att-i-code: { type: integer, example: 'mensagem do tipo do erro', description: 'detalhes do erro' }
+    att-s-message: { type: string, example: 'mensagem do tipo do erro', description: 'detalhes do erro' }
+    att-s-message-detail: { type: string, example: 'mensagem', description: 'mensagem' }
 
     att-page: { type: integer, example: 10, description: Página atual (0-based) }
     att-size: { type: integer, example: 30, description: Tamanho da página }
@@ -573,6 +713,7 @@ components:
     att-next: { type: boolean, example: true, description: Se há página posterior }
     att-elements: { type: integer, format: int64, example: 300, description: Total de registros }
     att-name: { type: string, example: 'Wellington', description: Nome do elemento }
+    att-s-product-name: { type: string, example: 'Chocolate', description: Nome do produto }
     att-document-number: { type: string, example: '33344455512', description: Nome do cooperador }
     att-price: { type: number, format: float, example: '3.52', description: preço do elemento }
     att-quantity: { type: integer, example: 10, description: quantidade de elementos }
@@ -592,7 +733,9 @@ components:
     exception-type:
       type: object
       properties:
-        id: { $ref: '#/components/schemas/att-id' }
+        code: { $ref: '#/components/schemas/att-i-code' }
+        message: { $ref: '#/components/schemas/att-s-message' }
+        messageDetail: { $ref: '#/components/schemas/att-s-message-detail' }
 
     # [ COOPERATOR ]
     cooperator-type:
@@ -628,7 +771,7 @@ components:
       type: object
       properties:
         id: { $ref: '#/components/schemas/att-id' }
-        name: { $ref: '#/components/schemas/att-name' }
+        name: { $ref: '#/components/schemas/att-s-product-name' }
         price: { $ref: '#/components/schemas/att-price' }
         quantity: { $ref: '#/components/schemas/att-quantity' }
 
@@ -643,14 +786,14 @@ components:
     product-create-body-type:
       type: object
       properties:
-        name: { $ref: '#/components/schemas/att-name' }
+        name: { $ref: '#/components/schemas/att-s-product-name' }
         price: { $ref: '#/components/schemas/att-price' }
         quantity: { $ref: '#/components/schemas/att-quantity' }
 
     product-update-body-type:
       type: object
       properties:
-        name: { $ref: '#/components/schemas/att-name' }
+        name: { $ref: '#/components/schemas/att-s-product-name' }
         price: { $ref: '#/components/schemas/att-price' }
         quantity: { $ref: '#/components/schemas/att-quantity' }
 
@@ -703,11 +846,12 @@ components:
       type: object
       description: Modelo padrão para exceptions
       properties:
-        details:
-          type: array
-          items: { $ref: '#/components/schemas/exception-type' }
+        code: { $ref: '#/components/schemas/att-i-code' }
+        message: { $ref: '#/components/schemas/att-s-message' }
+        messageDetail: { $ref: '#/components/schemas/att-s-message-detail' }
 
   responses:
+
     bad-request-response:
       description: Requisição inválida
       content:
@@ -715,10 +859,9 @@ components:
           schema:
             $ref: '#/components/schemas/exception-response-type'
           example:
-            - id: 1001
-              msg: 400
-            - id: 1002
-              msg: 404
+            - code: 400
+              message: Bad Request
+              messageDetail: Invalid ParameterX
 
     not-found-response:
       description: Recurso não encontrado
@@ -726,6 +869,10 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/exception-response-type'
+          example:
+            - code: 404
+              message: Not Found
+              messageDetail: Element not found
 
     conflict-response:
       description: Elemento já Cadastrado
@@ -733,6 +880,10 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/exception-response-type'
+          example:
+            - code: 409
+              message: Conflict
+              messageDetail: Element already registered
 
     internal-server-error-response:
       description: Erro interno no servidor
@@ -740,10 +891,27 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/exception-response-type'
+          example:
+            - code: 500
+              message: Internal Server Error
+              messageDetail: PROBLEMS IN QUERYING THE DATABASE
 
   parameters:
+    _header_x_request_id:
+      name: X-Request-Id
+      in: header
+      description: >
+        Identificador único da requisição.  
+        Deve ser o mesmo em todas as chamadas do fluxo para permitir rastreabilidade entre sistemas.  
+        Caso não informado, o servidor pode gerar automaticamente um novo identificador.
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: "a12f3cde-45b6-7890-abc1-def234567890"
+
     _query_page:
-      description: não pode ser nulo, negativo ou em branco.
+      description: não pode ser nulo | negativo | branco.
       in: query
       name: page
       schema:
@@ -751,15 +919,15 @@ components:
         example: 0
 
     _query_size:
-      description: não pode ser nulo, negativo ou em branco.
+      description: não pode ser nulo | negativo | branco.
       in: query
       name: size
       schema:
         type: integer
-        example: 1
+        example: 10
 
     _path_id:
-      description: não pode ser nulo, negativo ou em branco.
+      description: não pode ser nulo | negativo | branco.
       in: path
       name: id
       required: true
@@ -767,7 +935,7 @@ components:
         type: integer
 
     _path_product_id:
-      description: não pode ser nulo, negativo ou em branco.
+      description: não pode ser nulo | negativo | branco.
       in: path
       name: productId
       required: true
@@ -775,15 +943,9 @@ components:
         type: integer
 
     _path_tax_receipt_id:
-      description: não pode ser nulo, negativo ou em branco.
+      description: não pode ser nulo | negativo | branco.
       in: path
       name: taxReceiptId
       required: true
       schema:
         type: integer
-
-# XXXXX
-# XXXXX
-# XXXXX
-# XXXXX
-# XXXXX

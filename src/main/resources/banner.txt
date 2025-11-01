@@ -10,10 +10,10 @@ __/ |                     /_/_/_/
 |# Project Data
 | java version   : ${project.property.java.version}
 + ---------------------------------------------------------------
-| app - name                : ${app.name}
-| app - version             : ${app.version}
-| app - artifact            : ${app.artifactId}
-| app - groupId             : ${app.groupId}
-| app - compilation.build   : ${app.property.compilation.build}
-| app - description         : ${app.description}
+| app - name                : ${app.banner.name}
+| app - version             : ${app.banner.version}
+| app - artifact            : ${app.banner.artifactId}
+| app - groupId             : ${app.banner.groupId}
+| app - compilation.build   : ${app.banner.property.compilation.build}
+| app - description         : ${app.banner.description}
 + ---------------------------------------------------------------
