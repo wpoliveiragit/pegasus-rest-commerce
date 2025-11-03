@@ -19,16 +19,6 @@ public class AppFactoryLog {
       }
 
       @Override
-      public void warn(String message) {
-        log.warn(message);
-      }
-
-      @Override
-      public void error(String message) {
-        log.error(message);
-      }
-
-      @Override
       public void info(String message, Object... objs) {
         log.info(message, objs);
       }
@@ -38,10 +28,6 @@ public class AppFactoryLog {
         log.warn(message, objs);
       }
 
-      @Override
-      public void error(String message, Object... objs) {
-        log.error(message, objs);
-      }
     };
   }
 

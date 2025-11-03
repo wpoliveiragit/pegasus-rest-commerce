@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder(toBuilder = true)
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageableModel<T> {

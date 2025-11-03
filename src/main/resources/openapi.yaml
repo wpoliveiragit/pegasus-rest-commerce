@@ -44,7 +44,7 @@ paths:
 
     get:
       tags: [ product ]
-      operationId: product-get-page
+      operationId: find-all-product
       parameters:
         - $ref: '#/components/parameters/_query_page'
         - $ref: '#/components/parameters/_query_size'
@@ -60,13 +60,8 @@ paths:
 
     post:
       tags: [ product ]
-      operationId: product-create
+      operationId: create-product
       summary: Cria um novo elemento
-      description: |
-        ### Regras de Negócios
-        - name: Deve ser único e não pode ser nulo ou branco
-        - price: Não pode ser nulo nem negativo
-        - quantity: Não pode ser nulo nem negativo
       requestBody:
         required: true
         content:
@@ -89,7 +84,7 @@ paths:
 
     get:
       tags: [ product ]
-      operationId: product-get-one
+      operationId: find-by-id-product
       summary: Busca um elemento pelo ID
       responses:
         '200':
@@ -102,13 +97,8 @@ paths:
 
     put:
       tags: [ product ]
-      operationId: product-update
+      operationId: update-product
       summary: Atualiza um elemento pelo ID (por completo)
-      description: |
-        ### Regras de Negócios
-        - name: Deve ser único e não pode ser nulo ou branco
-        - price: Não pode ser nulo nem negativo
-        - quantity: Não pode ser nulo nem negativo
       requestBody:
         required: true
         content:
@@ -123,7 +113,7 @@ paths:
 
     delete:
       tags: [ product ]
-      operationId: product-delete
+      operationId: delete-product
       summary: Deleta um elemento pelo ID
       responses:
         '204': { description: ok }
@@ -132,51 +122,17 @@ paths:
 
 components:
   schemas:
-    # [ GERAL ]
-    # [EXCEPTION]
+    att-product-name-create-update: { type: string, minLength: 1, example: Chocolate, description: Nome do produto. Obrigatório e não pode ser vazio }
+    att-product-price-create-update: { type: number, format: float, minimum: 0,multipleOf: 0.01, example: 3.52, description: Preço do produto. Obrigatório e não pode ser negativo. }
+    att-product-quantity-create-update: { type: integer, minimum: 0, example: 10, description: Quantidade do produto. Obrigatório e não pode ser negativo. }
 
-    att-ex-code: { type: integer, example: 'mensagem do tipo do erro', description: 'detalhes do erro' }
-    att-ex-message: { type: string, example: 'mensagem do tipo do erro', description: 'detalhes do erro' }
-    att-ex-message-detail: { type: string, example: 'mensagem', description: 'mensagem' }
-    
-    att-pagination-page: { type: integer, example: 10, description: Página atual (0-based) }
-    att-pagination-size: { type: integer, example: 30 }
-    att-pagination-pages: { type: integer, example: 10 }
-    att-pagination-elements: { type: integer, format: int64, example: 300 }
-    att-pagination-previous: { type: boolean, example: true }
-    att-pagination-next: { type: boolean, example: true }
-    
-    
-    att-product-id: { type: integer, example: 1000 }
-    att-product-name: { type: string, example: 'Chocolate' }
-    att-product-price: { type: number, format: float, example: 3.52 }
-    att-product-quantity: { type: integer, example: 10 }
-
-    pagination-type:
-      type: object
-      properties:
-        page: { $ref: '#/components/schemas/att-pagination-page' }
-        size: { $ref: '#/components/schemas/att-pagination-size' }
-        elements: { $ref: '#/components/schemas/att-pagination-elements' }
-        pages: { $ref: '#/components/schemas/att-pagination-pages' }
-        previous: { $ref: '#/components/schemas/att-pagination-previous' }
-        next: { $ref: '#/components/schemas/att-pagination-next' }
-
-    exception-type:
-      type: object
-      properties:
-        code: { $ref: '#/components/schemas/att-ex-code' }
-        message: { $ref: '#/components/schemas/att-ex-message' }
-        messageDetail: { $ref: '#/components/schemas/att-ex-message-detail' }
-
-    # [ PROCUCT ]
     product-type:
       type: object
       properties:
-        id: { $ref: '#/components/schemas/att-product-id' }
-        name: { $ref: '#/components/schemas/att-product-name' }
-        price: { $ref: '#/components/schemas/att-product-price' }
-        quantity: { $ref: '#/components/schemas/att-product-quantity' }
+        id: { type: integer }
+        name: { $ref: '#/components/schemas/att-product-name-create-update' }
+        price: { $ref: '#/components/schemas/att-product-price-create-update' }
+        quantity: { $ref: '#/components/schemas/att-product-quantity-create-update' }
 
     product-page-response-type:
       type: object
@@ -188,26 +144,41 @@ components:
 
     product-create-body-type:
       type: object
+      required: [ name, price, quantity ]
       properties:
-        name: { $ref: '#/components/schemas/att-product-name' }
-        price: { $ref: '#/components/schemas/att-product-price' }
-        quantity: { $ref: '#/components/schemas/att-product-quantity' }
+        name: { $ref: '#/components/schemas/att-product-name-create-update' }
+        price: { $ref: '#/components/schemas/att-product-price-create-update' }
+        quantity: { $ref: '#/components/schemas/att-product-quantity-create-update' }
 
     product-update-body-type:
       type: object
+      required: [ name, price, quantity ]
       properties:
-        name: { $ref: '#/components/schemas/att-product-name' }
-        price: { $ref: '#/components/schemas/att-product-price' }
-        quantity: { $ref: '#/components/schemas/att-product-quantity' }
+        name: { $ref: '#/components/schemas/att-product-name-create-update' }
+        price: { $ref: '#/components/schemas/att-product-price-create-update' }
+        quantity: { $ref: '#/components/schemas/att-product-quantity-create-update' }
 
-    # [ Exception ]
+    pagination-type:
+      type: object
+      properties:
+        page: { type: integer, example: 10, description: Página atual (0-based) }
+        size: { type: integer, example: 30, description: Quantidade de elementos por página }
+        elements: { type: integer, format: int64, example: 300, description: Quantidade de elementos retornados na página }
+        pages: { type: integer, example: 10, description: Quantidade de páginas disponíveis }
+        previous: { type: boolean, example: true, description: Verificação de existência de página anterior }
+        next: { type: boolean, example: true, description: Verificação de existência de página posterior }
+
     exception-response-type:
       type: object
-      description: Modelo padrão para exceptions
+      description: Estrutura padrão de erro da API
+      required: [ status, error, message ]
       properties:
-        code: { $ref: '#/components/schemas/att-ex-code' }
-        message: { $ref: '#/components/schemas/att-ex-message' }
-        messageDetail: { $ref: '#/components/schemas/att-ex-message-detail' }
+        traceId: { type: string, example: a12f3cde-45b6-7890-abc1-def234567890, description: TraceId enviado na request }
+        status: { type: integer, format: int32, example: 400 }
+        error: { type: string, example: "Bad Request", description: "Descrição curta do erro HTTP" }
+        message: { type: string, example: "Validation error", description: "Mensagem explicando o erro de forma geral" }
+        timestamp: { type: string, format: date-time, example: "2025-11-01T12:34:56Z", description: "Data/hora do erro em ISO-8601 (UTC recomendado)" }
+        path: { type: string, example: "/product", description: "URI do endpoint requisitado" }
 
   responses:
 

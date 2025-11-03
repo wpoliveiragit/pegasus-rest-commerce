@@ -1,10 +1,10 @@
 package br.com.pegasus.api.rest.commerce.domain.core;
 
+import br.com.pegasus.api.rest.commerce.domain.adapter.ExceptionMethodDomainAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.LogDomainAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.MethodDomainAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.ToolKitAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.ProductDomainAdaterJPA;
-import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
+import br.com.pegasus.api.rest.commerce.domain.model.DataModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 import br.com.pegasus.api.rest.commerce.domain.port.ProductPort;
@@ -12,80 +12,75 @@ import br.com.pegasus.api.rest.commerce.domain.port.ProductPort;
 public class ProductCore implements ProductPort {
 
   private final ProductDomainAdaterJPA productJpa;
-  private final MethodDomainAdapter method;
+  private final ExceptionMethodDomainAdapter exMethod;
   private final LogDomainAdapter log;
 
   public ProductCore(ToolKitAdapter tools) {
     this.productJpa = tools.getProductRepository();
-    this.method = tools.getMethod();
+    this.exMethod = tools.getMethod();
     this.log = tools.getLog(ProductCore.class);
   }
 
   @Override
-  public PageableModel<ProductModel> findPage(PageModel inModel) {
-    log.info("Service ⇉ FindPage");
-    PageableModel<ProductModel> response = productJpa.findPage(inModel);
-    log.info("Service ⇇ FindPage");
+  public PageableModel<ProductModel> findAll(DataModel request) {
+    String traceId = request.getXTraceId();
+    log.info("[{}] Service ⇉ findAll", traceId);
+    PageableModel<ProductModel> response = productJpa.findAll(request);
+    log.info("[{}] Service ⇇ findAll", traceId);
     return response;
   }
 
   @Override
-  public ProductModel findById(ProductModel inModel) {
-    log.info("Service ⇉ FindById");
-    ProductModel response = this.getById(inModel);
-    log.info("Service ⇇ FindById");
+  public ProductModel findById(DataModel request) {
+    String traceId = request.getXTraceId();
+    log.info("[{}] Service ⇉ findById", traceId);
+    ProductModel response = this.internalFindById(request);
+    log.info("[{}] Service ⇇ findById", traceId);
     return response;
   }
 
   @Override
-  public ProductModel create(ProductModel inModel) {
-    log.info("Service ⇉ create");
-    checkNameConflict(inModel);
-    method.validPriceUpdate(inModel.getPrice());
-    method.validQualityUpdate(inModel.getQuantity());
-    ProductModel response = productJpa.create(inModel);
-    log.info("Service ⇇ create");
+  public ProductModel create(DataModel request) {
+    String traceId = request.getXTraceId();
+    log.info("[{}] Service ⇉ create", traceId);
+    checkNameConflict(request);
+    ProductModel response = productJpa.create(request);
+    log.info("[{}] Service ⇇ create", traceId);
     return response;
   }
 
   @Override
-  public void update(ProductModel inModel) {
-    log.info("Service ⇉ Update");
-
-    ProductModel upModel = this.getById(inModel);
-
-    final String name = method.validNameUpdate(inModel.getName());
-    this.checkNameConflict(inModel);
-    final Float price = method.validPriceUpdate(inModel.getPrice());
-    final Integer quantity = method.validQualityUpdate(inModel.getQuantity());
-
-    upModel.setName(name);
-    upModel.setPrice(price);
-    upModel.setQuantity(quantity);
-
-    productJpa.update(upModel);
-
-    log.info("Service ⇇ Update");
+  public void update(DataModel request) {
+    String traceId = request.getXTraceId();
+    log.info("[{}] Service ⇉ Update", traceId);
+    this.internalFindById(request);
+    this.checkNameConflict(request);
+    productJpa.update(request);
+    log.info("[{}] Service ⇇ Update", traceId);
   }
 
   @Override
-  public void delete(ProductModel inModel) {
-    log.info("Service ⇉ Delete");
-    productJpa.delete(getById(inModel));
-    log.info("Service ⇇ Delete");
+  public void delete(DataModel request) {
+    String traceId = request.getXTraceId();
+    log.info("[{}] Service ⇉ Delete", traceId);
+    request.setProduct(internalFindById(request));
+    productJpa.delete(request);
+    log.info("[{}] Service ⇇ Delete", traceId);
   }
 
-  private void checkNameConflict(ProductModel inModel) {
-    log.info("Service ⇉ CheckNameConflict");
-    productJpa.findByName(inModel).ifPresent(obj -> method.throwConflictName());
-    log.info("Service ⇇ CheckNameConflict");
-  }
-
-  private ProductModel getById(ProductModel inModel) {
-    log.info("Service ⇉ GetById");
-    ProductModel response = productJpa.findById(inModel).orElseThrow(method::newNotFound);
-    log.info("Service ⇇ GetById");
+  private ProductModel internalFindById(DataModel request) {
+    String traceId = request.getXTraceId();
+    log.info("[{}] Service ⇉ internalFindById", traceId);
+    ProductModel response = productJpa.findById(request).orElseThrow(exMethod::newNotFound);
+    log.info("[{}] Service ⇇ internalFindById", traceId);
     return response;
+  }
+
+  private void checkNameConflict(DataModel request) {
+    String traceId = request.getXTraceId();
+    log.info("[{}] Service ⇉ checkNameConflict", traceId);
+    productJpa.findByName(request).ifPresent(obj -> exMethod.throwConflictName());
+    log.info("[{}] Service ⇇ checkNameConflict", traceId);
   }
 
 }

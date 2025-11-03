@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder(toBuilder = true)
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageModel {

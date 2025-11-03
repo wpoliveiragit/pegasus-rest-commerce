@@ -1,7 +1,7 @@
 package br.com.pegasus.api.rest.commerce.infra.config.domain.port;
 
 import br.com.pegasus.api.rest.commerce.domain.adapter.LogDomainAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.MethodDomainAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.ExceptionMethodDomainAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.ToolKitAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.ProductDomainAdaterJPA;
 import br.com.pegasus.api.rest.commerce.infra.config.domain.LogDomain;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ToolKitPort implements ToolKitAdapter {
 
-  private final MethodDomainAdapter validMethod;
+  private final ExceptionMethodDomainAdapter validMethod;
 
   private final ProductDomainAdaterJPA productJpa;
 
@@ -36,7 +36,7 @@ public class ToolKitPort implements ToolKitAdapter {
 
 
   @Override
-  public MethodDomainAdapter getMethod() {
+  public ExceptionMethodDomainAdapter getMethod() {
     return validMethod;
   }
 

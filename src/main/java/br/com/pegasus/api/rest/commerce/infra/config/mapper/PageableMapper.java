@@ -1,4 +1,4 @@
-package br.com.pegasus.api.rest.commerce.infra.util.mapper;
+package br.com.pegasus.api.rest.commerce.infra.config.mapper;
 
 import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;

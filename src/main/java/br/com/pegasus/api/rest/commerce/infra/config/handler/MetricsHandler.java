@@ -1,11 +1,7 @@
 package br.com.pegasus.api.rest.commerce.infra.config.handler;
 
 import br.com.pegasus.api.rest.commerce.infra.data.MetricData;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.DistributionSummary;
-import io.micrometer.core.instrument.Gauge;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.*;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,15 +16,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Handler de métricas HTTP para produção:
+ * Handler de métricas HTTP:
  * - Counter: total de requisições
  * - Timer: tempo de execução
- * - Gauge: requisições ativas
- * - DistributionSummary: tamanho do request e response
+ * - Gauge: requisições em andamento
+ * - DistributionSummary: tamanhos de request/response
  */
 @Configuration
 @RequiredArgsConstructor
@@ -40,14 +38,17 @@ public class MetricsHandler {
 
   private final MeterRegistry meterRegistry;
   private final RequestAttributeHandler requestAttributeHandler;
+
   private final AtomicInteger activeRequests = new AtomicInteger(0);
+  private final Map<String, DistributionSummary> responseSizeCache = new ConcurrentHashMap<>();
+  private final Map<String, DistributionSummary> requestSizeCache = new ConcurrentHashMap<>();
 
   @Bean
   public HttpExchangeRepository httpExchangeRepository() {
     return new InMemoryHttpExchangeRepository();
   }
 
-  /** Inicia métricas e armazena MetricData */
+  /** Inicia métricas e salva dados iniciais */
   public void starts(HttpServletRequest request, HttpServletResponse response) {
     MetricData metric = requestAttributeHandler.createNewMetrics();
     metric.setStartData(System.currentTimeMillis());
@@ -73,51 +74,56 @@ public class MetricsHandler {
     activeRequests.decrementAndGet();
   }
 
-  /** Contador cumulativo de requisições */
+  /** Contador de requisições */
   private void registerCounter(MetricData metric) {
-    Counter.builder("http_requests_total")//
-        .tag(TAG_METHOD, metric.getMethod())//
-        .tag(TAG_URL, metric.getRequestURI())//
-        .tag(TAG_STATUS, metric.getStatus())//
-        .register(meterRegistry)//
+    Counter.builder("http_requests_total")
+        .tag(TAG_METHOD, metric.getMethod())
+        .tag(TAG_URL, metric.getRequestURI())
+        .tag(TAG_STATUS, metric.getStatus())
+        .register(meterRegistry)
         .increment();
   }
 
-  /** Timer para medir duração da request */
+  /** Tempo da requisição */
   private void registerTimer(MetricData metric) {
-    Timer.builder("http_request_duration_ms")//
-        .tag(TAG_METHOD, metric.getMethod())//
-        .tag(TAG_URL, metric.getRequestURI())//
-        .tag(TAG_STATUS, metric.getStatus())//
-        .register(meterRegistry)//
+    Timer.builder("http_request_duration_ms")
+        .tag(TAG_METHOD, metric.getMethod())
+        .tag(TAG_URL, metric.getRequestURI())
+        .tag(TAG_STATUS, metric.getStatus())
+        .register(meterRegistry)
         .record(metric.getRuntime(), TimeUnit.MILLISECONDS);
   }
 
-  /** Gauge de requisições ativas */
+  /** Quantidade de requisições em andamento */
   private void registerGauge() {
-    Gauge.builder("http_active_requests", activeRequests, AtomicInteger::get)//
-        .description("Número de requisições HTTP em andamento")//
+    Gauge.builder("http_active_requests", activeRequests, AtomicInteger::get)
+        .description("Número de requisições HTTP em andamento")
         .register(meterRegistry);
   }
 
-  /** Distribuição do tamanho do request e response */
+  /** Request/Response size — com cache */
   private void registerDistributionSummary(MetricData metric) {
-    DistributionSummary.builder("http_response_size_bytes")//
-        .tag(TAG_METHOD, metric.getMethod())//
-        .tag(TAG_URL, metric.getRequestURI())//
-        .tag(TAG_STATUS, metric.getStatus())//
-        .register(meterRegistry)//
+    String key = metric.getMethod() + metric.getRequestURI() + metric.getStatus();
+
+    responseSizeCache
+        .computeIfAbsent(key, k -> createSummary("http_response_size_bytes", metric))
         .record(metric.getResponseSize() != null ? metric.getResponseSize() : 0);
 
-    DistributionSummary.builder("http_request_size_bytes")//
-        .tag(TAG_METHOD, metric.getMethod())//
-        .tag(TAG_URL, metric.getRequestURI())//
-        .tag(TAG_STATUS, metric.getStatus())//
-        .register(meterRegistry)//
+    requestSizeCache
+        .computeIfAbsent(key, k -> createSummary("http_request_size_bytes", metric))
         .record(metric.getRequestSize() != null ? metric.getRequestSize() : 0);
   }
 
-  /** Captura o tamanho real do response */
+  /** Cria um DistributionSummary com tags padrão */
+  private DistributionSummary createSummary(String name, MetricData metric) {
+    return DistributionSummary.builder(name)
+        .tag(TAG_METHOD, metric.getMethod())
+        .tag(TAG_URL, metric.getRequestURI())
+        .tag(TAG_STATUS, metric.getStatus())
+        .register(meterRegistry);
+  }
+
+  /** Obtém o tamanho real da resposta */
   private Long readResponseBytes(HttpServletResponse response) {
     if (response instanceof ResponseSizeWrapper wrapper) {
       try {
@@ -129,16 +135,14 @@ public class MetricsHandler {
     return 0L;
   }
 
-  /** Wrapper para medir resposta */
-  public static class ResponseSizeWrapper extends HttpServletResponseWrapper {
-    private final ByteArrayOutputStream buffer;
-    private final ServletOutputStream outputStream;
+  /** Wrapper de resposta para medir tamanho */
+  private static class ResponseSizeWrapper extends HttpServletResponseWrapper {
+    private final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    private final ServletOutputStream outputStream = createServletOutputStream(buffer);
     private PrintWriter writer;
 
     public ResponseSizeWrapper(HttpServletResponse response) {
       super(response);
-      buffer = new ByteArrayOutputStream();
-      this.outputStream = createServletOutputStream(buffer);
     }
 
     @Override

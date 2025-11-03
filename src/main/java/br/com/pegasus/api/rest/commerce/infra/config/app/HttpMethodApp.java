@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.CompletableFuture;
 
 @Component
-public final class MethodApp {
+public final class HttpMethodApp {
 
   public <T> CompletableFuture<ResponseEntity<T>> createReponse(HttpStatus status, T response) {
     return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(response, status), Runnable::run);
@@ -23,6 +23,10 @@ public final class MethodApp {
 
   public CompletableFuture<ResponseEntity<Void>> noContent() {
     return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT), Runnable::run);
+  }
+
+  public<T> ResponseEntity<T> adviceResponse(HttpStatus httpStatus, T response){
+    return new ResponseEntity<>(response, httpStatus);
   }
 
 }

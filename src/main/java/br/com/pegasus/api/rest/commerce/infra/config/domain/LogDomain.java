@@ -15,28 +15,13 @@ public class LogDomain implements LogDomainAdapter {
   }
 
   @Override
-  public void warn(String msg) {
-    log.warn(msg);
-  }
-
-  @Override
-  public void erro(String msg) {
-    log.error(msg);
-  }
-
-  @Override
   public void info(String msg, Object... values) {
     log.info(msg, values);
   }
 
   @Override
-  public void warn(String msg, Object... values) {
-    log.warn(msg, values);
-  }
-
-  @Override
-  public void erro(String msg, Object... values) {
-    log.error(msg, values);
+  public void info(String msg, Object values) {
+    log.info(msg, values);
   }
 
 }

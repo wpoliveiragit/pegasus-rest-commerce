@@ -4,12 +4,10 @@ import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.ProductDomainAdaterJP
 
 public interface ToolKitAdapter {
 
-  // Repository
   ProductDomainAdaterJPA getProductRepository();
 
-  // TOOL
   LogDomainAdapter getLog(Class<?> c);
 
-  MethodDomainAdapter getMethod();
+  ExceptionMethodDomainAdapter getMethod();
 
 }

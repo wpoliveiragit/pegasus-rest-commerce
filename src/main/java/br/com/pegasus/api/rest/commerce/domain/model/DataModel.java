@@ -11,9 +11,8 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductModel {
-  private Integer id;
-  private String name;
-  private Float price;
-  private Integer quantity;
+public class DataModel {
+  private String xTraceId;
+  private PageModel page;
+  private ProductModel product;
 }
