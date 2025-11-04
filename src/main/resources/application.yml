@@ -1,13 +1,10 @@
-# [INFO]
-# - Propriedades de uso locais, use o prefixo 'app'
-
 # [OUTRAS PROPRIEDADES] Arquivos de propriedades externas
 # ============================================================
 spring.config.import:
   - "classpath:properties/database-prop.yml"
   - "classpath:properties/swagger-prop.yml"
   - "classpath:properties/actuator-prop.yml"
+  - "classpath:properties/banner-prop.yml"
 
-#server.servlet.context-path: /pegasus
 
 
