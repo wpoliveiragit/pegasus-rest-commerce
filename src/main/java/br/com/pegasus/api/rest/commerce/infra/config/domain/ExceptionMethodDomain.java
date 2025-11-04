@@ -8,14 +8,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExceptionMethodDomain implements ExceptionMethodDomainAdapter {
 
+  private final static String CONFLICT_NAME_MESSAGE = "Name already registered";
+  private final static String NOT_FOUND_MESSAGE = "Element not found";
+
   @Override
   public void throwConflictName() {
-    throw new AppException(HttpStatus.CONFLICT, "Name already registered");
+    throw new AppException(HttpStatus.CONFLICT, CONFLICT_NAME_MESSAGE);
   }
 
   @Override
   public AppException newNotFound() {
-    return new AppException(HttpStatus.NOT_FOUND, "Element not found");
+    return new AppException(HttpStatus.NOT_FOUND, NOT_FOUND_MESSAGE);
   }
 
 }

@@ -1,4 +1,5 @@
 # TAREFAS
+- ajustar campos
 
 - remover fild all (sem page) de todos os endpoints do contrato
 - ajustar o sistema de Exceptions

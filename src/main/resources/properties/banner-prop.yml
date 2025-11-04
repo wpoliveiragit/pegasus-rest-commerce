@@ -1,0 +1,10 @@
+# [BANNER]
+# Informações do build incorporadas no banner de inicialização
+# ============================================================
+app.banner.property.java.version: '@java.version@'
+app.banner.property.compilation.build: '@compilation.build@'
+app.banner.groupId: '@project.groupId@'
+app.banner.artifactId: '@project.artifactId@'
+app.banner.version: '@project.version@'
+app.banner.name: '@project.name@'
+app.banner.description: '@project.description@'

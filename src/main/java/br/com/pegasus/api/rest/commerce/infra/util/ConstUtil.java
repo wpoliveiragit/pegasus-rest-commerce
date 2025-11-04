@@ -14,11 +14,4 @@ public final class ConstUtil {
   public static final int N_10 = 10;
   public static final int N_11 = 11;
 
-  // [EXPRESSÕES RECULARES]
-
-  /** Definição de caracteres não numéricos */
-  public static final String REGEX_N_DIG = "\\D";
-  /** Definição de um numero repetido de 0 a 10 na String (ex: 00000000000) */
-  public static final String REGEX_ALL_SAME_DIGITS = "(\\d)\\1{10}";
-
 }

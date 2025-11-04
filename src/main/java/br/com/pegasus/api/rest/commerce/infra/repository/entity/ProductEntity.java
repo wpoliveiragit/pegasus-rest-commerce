@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,10 +15,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder(toBuilder = true)
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 
@@ -27,15 +30,32 @@ public class ProductEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "ID")
-  private Integer id;
+  private Long id;
 
-  @Column(name = "NAME", nullable = false)
+  @Column(name = "NAME", nullable = false, length = 150)
   private String name;
 
-  @Column(name = "PRICE", nullable = false)
+  @Column(name = "PRICE", nullable = false, precision = 15, scale = 2)
   private BigDecimal price;
 
   @Column(name = "QUANTITY", nullable = false)
   private Integer quantity;
+
+  @Column(name = "CREATED_AT", nullable = false, updatable = false)
+  private LocalDateTime createdAt;
+
+  @Column(name = "UPDATED_AT")
+  private LocalDateTime updatedAt;
+
+  @PrePersist
+  public void prePersist() {
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
+  }
+
+  @PreUpdate
+  public void preUpdate() {
+    this.updatedAt = LocalDateTime.now();
+  }
 
 }

@@ -29,6 +29,7 @@ info:
   license:
     name: License
     url: http://localhost:8080/license
+
 servers:
   - url: http://localhost:8080
     description: Servidor local para solicitações de produtos
@@ -122,17 +123,26 @@ paths:
 
 components:
   schemas:
-    att-product-name-create-update: { type: string, minLength: 1, example: Chocolate, description: Nome do produto. Obrigatório e não pode ser vazio }
-    att-product-price-create-update: { type: number, format: float, minimum: 0,multipleOf: 0.01, example: 3.52, description: Preço do produto. Obrigatório e não pode ser negativo. }
-    att-product-quantity-create-update: { type: integer, minimum: 0, example: 10, description: Quantidade do produto. Obrigatório e não pode ser negativo. }
+    att-trace-id: { type: string, format: uuid, example: a12f3cde-45b6-7890-abc1-def234567890 }
+    att-page: { type: integer, example: 0, default: 0, description: Página atual (0-based) }
+    att-size: { type: integer, example: 10, default: 10, description: Quantidade de elementos por página }
+
+    att-id: { type: integer, format: int64, example: 9876543210, description: Identificador do produto }
+    att-name: { type: string, minLength: 1, example: Chocolate, description: Nome do produto. Obrigatório e não pode ser vazio }
+    att-price: { type: number, format: float, minimum: 0,multipleOf: 0.01, example: 3.52, description: Preço do produto. Obrigatório e não pode ser negativo. }
+    att-quantity: { type: integer, minimum: 0, example: 10, description: Quantidade do produto. Obrigatório e não pode ser negativo. }
+    att-createdAt: { type: string, format: date-time, example: "2025-01-31T10:15:30Z" }
+    att-updatedAt: { type: string, format: date-time, example: "2025-01-31T10:15:30Z" }
 
     product-type:
       type: object
       properties:
-        id: { type: integer }
-        name: { $ref: '#/components/schemas/att-product-name-create-update' }
-        price: { $ref: '#/components/schemas/att-product-price-create-update' }
-        quantity: { $ref: '#/components/schemas/att-product-quantity-create-update' }
+        id: { $ref: '#/components/schemas/att-id' }
+        name: { $ref: '#/components/schemas/att-name' }
+        price: { $ref: '#/components/schemas/att-price' }
+        quantity: { $ref: '#/components/schemas/att-quantity' }
+        createdAt: { $ref: '#/components/schemas/att-createdAt' }
+        updatedAt: { $ref: '#/components/schemas/att-updatedAt' }
 
     product-page-response-type:
       type: object
@@ -146,23 +156,23 @@ components:
       type: object
       required: [ name, price, quantity ]
       properties:
-        name: { $ref: '#/components/schemas/att-product-name-create-update' }
-        price: { $ref: '#/components/schemas/att-product-price-create-update' }
-        quantity: { $ref: '#/components/schemas/att-product-quantity-create-update' }
+        name: { $ref: '#/components/schemas/att-name' }
+        price: { $ref: '#/components/schemas/att-price' }
+        quantity: { $ref: '#/components/schemas/att-quantity' }
 
     product-update-body-type:
       type: object
       required: [ name, price, quantity ]
       properties:
-        name: { $ref: '#/components/schemas/att-product-name-create-update' }
-        price: { $ref: '#/components/schemas/att-product-price-create-update' }
-        quantity: { $ref: '#/components/schemas/att-product-quantity-create-update' }
+        name: { $ref: '#/components/schemas/att-name' }
+        price: { $ref: '#/components/schemas/att-price' }
+        quantity: { $ref: '#/components/schemas/att-quantity' }
 
     pagination-type:
       type: object
       properties:
-        page: { type: integer, example: 10, description: Página atual (0-based) }
-        size: { type: integer, example: 30, description: Quantidade de elementos por página }
+        page: { $ref: '#/components/schemas/att-page' }
+        size: { $ref: '#/components/schemas/att-size' }
         elements: { type: integer, format: int64, example: 300, description: Quantidade de elementos retornados na página }
         pages: { type: integer, example: 10, description: Quantidade de páginas disponíveis }
         previous: { type: boolean, example: true, description: Verificação de existência de página anterior }
@@ -173,7 +183,7 @@ components:
       description: Estrutura padrão de erro da API
       required: [ status, error, message ]
       properties:
-        traceId: { type: string, example: a12f3cde-45b6-7890-abc1-def234567890, description: TraceId enviado na request }
+        traceId: { $ref: '#/components/schemas/att-trace-id' }
         status: { type: integer, format: int32, example: 400 }
         error: { type: string, example: "Bad Request", description: "Descrição curta do erro HTTP" }
         message: { type: string, example: "Validation error", description: "Mensagem explicando o erro de forma geral" }
@@ -222,9 +232,7 @@ components:
           schema:
             $ref: '#/components/schemas/exception-response-type'
           example:
-            - code: 500
-              message: Internal Server Error
-              messageDetail: PROBLEMS IN QUERYING THE DATABASE
+            - { code: 500, message: Internal Server Error, messageDetail: PROBLEMS IN QUERYING THE DATABASE }
 
   parameters:
     _header_x_trace_id:
@@ -232,33 +240,25 @@ components:
       in: header
       description: Id da requisição
       required: true
-      schema:
-        type: string
-        format: uuid
-        example: "a12f3cde-45b6-7890-abc1-def234567890"
-
-    _query_page:
-      description: Não pode ser negativo
-      in: query
-      name: page
-      schema:
-        type: integer
-        example: 0
-        default: 0
-
-    _query_size:
-      description: Não pode ser negativo
-      in: query
-      name: size
-      schema:
-        type: integer
-        example: 10
-        default: 10
+      schema: { $ref: '#/components/schemas/att-trace-id' }
 
     _path_id:
-      description: Não pode ser nulo, negativo ou em branco
+      description: Identificador do item. `id > 0`
       in: path
       name: id
       required: true
-      schema:
-        type: integer
+      schema: { $ref: '#/components/schemas/att-id' }
+
+    _query_page:
+      description: >
+        Página atual (0-based) `page >= 0`
+      in: query
+      name: page
+      schema: { $ref: '#/components/schemas/att-page' }
+
+    _query_size:
+      description: >
+        Quantidade de itens  da paginação `size > 0`
+      in: query
+      name: size
+      schema: { $ref: '#/components/schemas/att-size' }

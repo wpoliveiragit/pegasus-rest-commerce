@@ -41,7 +41,7 @@ public class ProductDelegate implements ProductApiDelegate {
   }
 
   @Override
-  public CompletableFuture<ResponseEntity<ProductType>> findByIdProduct(UUID xTraceId, Integer id) {
+  public CompletableFuture<ResponseEntity<ProductType>> findByIdProduct(UUID xTraceId, Long id) {
     log.info("[{}] Delegate ⇉ findById", xTraceId);
     DataModel dataModel = mapper.findByIdToModel(xTraceId, id);
     ProductModel responseModel = service.findById(dataModel);
@@ -61,7 +61,7 @@ public class ProductDelegate implements ProductApiDelegate {
   }
 
   @Override
-  public CompletableFuture<ResponseEntity<Void>> updateProduct(UUID xTraceId, Integer id, ProductUpdateBodyType productUpdateBodyType) {
+  public CompletableFuture<ResponseEntity<Void>> updateProduct(UUID xTraceId, Long id, ProductUpdateBodyType productUpdateBodyType) {
     log.info("[{}] Delegate ⇉ update", xTraceId);
     DataModel dataModel = mapper.updateToModel(xTraceId, id, productUpdateBodyType);
     service.update(dataModel);
@@ -70,7 +70,7 @@ public class ProductDelegate implements ProductApiDelegate {
   }
 
   @Override
-  public CompletableFuture<ResponseEntity<Void>> deleteProduct(UUID xTraceId, Integer id) {
+  public CompletableFuture<ResponseEntity<Void>> deleteProduct(UUID xTraceId, Long id) {
     log.info("[{}] Delegate ⇉ delete", xTraceId);
     DataModel requestModel = mapper.deleteModel(xTraceId, id);
     service.delete(requestModel);

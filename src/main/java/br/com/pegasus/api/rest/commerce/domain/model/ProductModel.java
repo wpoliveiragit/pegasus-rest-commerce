@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductModel {
-  private Integer id;
+  private Long id;
   private String name;
   private Float price;
   private Integer quantity;

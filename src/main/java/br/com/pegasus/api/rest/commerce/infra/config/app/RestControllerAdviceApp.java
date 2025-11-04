@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -65,7 +66,7 @@ public class RestControllerAdviceApp {
   public ResponseEntity<ExceptionResponseType> response(HttpStatus httpStatus, String traceId, String message, String path, String messageLog) {
 
     ExceptionResponseType resp = ExceptionResponseType.builder()//
-        .traceId(traceId) // TraceId enviado na request para rastreamento em log (UUID)
+        .traceId(UUID.fromString(traceId)) // TraceId enviado na request para rastreamento em log (UUID)
         .status(httpStatus.value()) // codifo do tipo do erro (400, 404...)
         .error(httpStatus.getReasonPhrase()) // Nome do erro padrão HTTP (Bad Request, Not Found…)
         .timestamp(OffsetDateTime.now(ZoneOffset.UTC)) // Momento do problema ("2025-11-01T10:15:30")

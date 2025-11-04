@@ -30,7 +30,7 @@ public final class ProductMapper {
         .build();
   }
 
-  public DataModel findByIdToModel(UUID xTraceId, Integer id) {
+  public DataModel findByIdToModel(UUID xTraceId, Long id) {
     ProductModel product = ProductModel.builder()//
         .id(id)//
         .build();//
@@ -40,7 +40,7 @@ public final class ProductMapper {
         .build();
   }
 
-  public DataModel deleteModel(UUID xTraceId, Integer id) {
+  public DataModel deleteModel(UUID xTraceId, Long id) {
     ProductModel product = ProductModel.builder().id(id).build();
     return DataModel.builder()//
         .xTraceId(xTraceId.toString())//
@@ -60,7 +60,7 @@ public final class ProductMapper {
         .build();
   }
 
-  public DataModel updateToModel(UUID xTraceId, Integer id, ProductUpdateBodyType body) {
+  public DataModel updateToModel(UUID xTraceId, Long id, ProductUpdateBodyType body) {
     ProductModel product = ProductModel.builder()//
         .id(id)//
         .name(body.getName())//

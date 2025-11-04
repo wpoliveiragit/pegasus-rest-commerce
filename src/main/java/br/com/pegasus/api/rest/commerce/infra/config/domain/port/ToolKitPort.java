@@ -17,12 +17,6 @@ public class ToolKitPort implements ToolKitAdapter {
 
   private final ProductDomainAdaterJPA productJpa;
 
-  /**
-   * Retorna um {@link LogDomainAdapter} para a classe informada.
-   *
-   * @param clazz classe alvo do log
-   * @return logger da classe
-   */
   @Override
   public LogDomainAdapter getLog(Class<?> clazz) {
     return new LogDomain(LogManager.getLogger(clazz.getSimpleName()));
@@ -33,7 +27,6 @@ public class ToolKitPort implements ToolKitAdapter {
   public ProductDomainAdaterJPA getProductRepository() {
     return productJpa;
   }
-
 
   @Override
   public ExceptionMethodDomainAdapter getMethod() {
