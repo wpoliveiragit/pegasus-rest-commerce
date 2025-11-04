@@ -53,8 +53,12 @@ public class ProductCore implements ProductPort {
   public void update(DataModel request) {
     String traceId = request.getXTraceId();
     log.info("[{}] Service ⇉ Update", traceId);
-    this.internalFindById(request);
-    this.checkNameConflict(request);
+    ProductModel originalModel = this.internalFindById(request);
+    ProductModel updateModel = request.getProduct();
+    if(!originalModel.getName().equalsIgnoreCase(updateModel.getName())){
+      this.checkNameConflict(request);
+    }
+    updateModel.setCreatedAt(originalModel.getCreatedAt());
     productJpa.update(request);
     log.info("[{}] Service ⇇ Update", traceId);
   }

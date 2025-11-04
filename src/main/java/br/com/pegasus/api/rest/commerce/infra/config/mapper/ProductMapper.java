@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 @Component
@@ -84,6 +85,8 @@ public final class ProductMapper {
         .name(obj.getName())//
         .price(obj.getPrice().floatValue())//
         .quantity(obj.getQuantity())//
+        .createdAt(obj.getCreatedAt().atOffset(ZoneOffset.UTC))//
+        .updatedAt(obj.getUpdatedAt().atOffset(ZoneOffset.UTC))//
         .build();
   }
 
@@ -94,6 +97,8 @@ public final class ProductMapper {
         .name(obj.getName())//
         .price(obj.getPrice())//
         .quantity(obj.getQuantity())//
+        .createdAt(obj.getCreatedAt())//
+        .updatedAt(obj.getUpdatedAt())//
         .build();
   }
 
@@ -112,6 +117,8 @@ public final class ProductMapper {
         .name(obj.getName())//
         .price(BigDecimal.valueOf(obj.getPrice()))//
         .quantity(obj.getQuantity())//
+        .createdAt(obj.getCreatedAt().toLocalDateTime())
+        .updatedAt(obj.getUpdatedAt().toLocalDateTime())
         .build();
   }
 
