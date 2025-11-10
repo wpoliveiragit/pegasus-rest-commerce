@@ -11,7 +11,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DataModel {
+public class RequestModel {
   private String xTraceId;
   private PageModel page;
   private ProductModel product;

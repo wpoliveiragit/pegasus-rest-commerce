@@ -12,7 +12,7 @@ public class StartScheduler {
 
   @Scheduled(fixedRate = 1000)
   public void schedyledMethod() {
-    System.out.println("Scheduled " + i++);
+//    System.out.println("Scheduled " + i++);
   }
 
 }

@@ -1,8 +1,6 @@
 package br.com.pegasus.api.rest.commerce.infra.config.app;
 
 import br.com.pegasus.api.rest.commerce.infra.exception.AppException;
-import br.com.pegasus.api.rest.commerce.infra.log.AppBaseLog;
-import br.com.pegasus.api.rest.commerce.infra.log.AppFactoryLog;
 import br.com.pegasus.gen.openapi.type.ExceptionResponseType;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +19,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class RestControllerAdviceApp {
 
-  // [traceId] [code : typeError] → message. Exception: exception.getMessage()
-  private static final String LOG_MESSAGE = "[{}] [{} : {}] → {}. Exception: {}";
-
-  private static final AppBaseLog LOG = AppFactoryLog.getCommonLog(RestControllerAdviceApp.class);
   private static final String HEADER_X_TRACE_ID = "X-Trace-Id";
 
   private final HttpMethodApp httpMethodApp;
@@ -42,19 +36,12 @@ public class RestControllerAdviceApp {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ExceptionResponseType> handlesErro(MethodArgumentNotValidException ex, HttpServletRequest request) {
-
     String details = ex.getBindingResult()//
         .getFieldErrors()//
         .stream()//
         .map(error -> error.getField() + ": " + error.getDefaultMessage())//
         .collect(Collectors.joining("; "));
-
-    return response(//
-        HttpStatus.BAD_REQUEST, //
-        request.getHeader(HEADER_X_TRACE_ID), //
-        details, //
-        request.getRequestURI(), //
-        ex.getMessage()//
+    return response(HttpStatus.BAD_REQUEST, request.getHeader(HEADER_X_TRACE_ID), details, request.getRequestURI(), ex.getMessage()//
     );
   }
 
@@ -63,18 +50,15 @@ public class RestControllerAdviceApp {
     return response(ex.getHttpStatus(), request.getHeader(HEADER_X_TRACE_ID), ex.getMsg(), request.getRequestURI(), ex.getMessage());
   }
 
-  public ResponseEntity<ExceptionResponseType> response(HttpStatus httpStatus, String traceId, String message, String path, String messageLog) {
-
+  public ResponseEntity<ExceptionResponseType> response(HttpStatus httpStatus, String traceId, String messageResp, String path, String messageLog) {
     ExceptionResponseType resp = ExceptionResponseType.builder()//
-        .traceId(UUID.fromString(traceId)) // TraceId enviado na request para rastreamento em log (UUID)
-        .status(httpStatus.value()) // codifo do tipo do erro (400, 404...)
-        .error(httpStatus.getReasonPhrase()) // Nome do erro padrão HTTP (Bad Request, Not Found…)
-        .timestamp(OffsetDateTime.now(ZoneOffset.UTC)) // Momento do problema ("2025-11-01T10:15:30")
-        .message(message) // Motivo do problema ("Invalid field 'price'")
-        .path(path) // Endpoint que causou o erro ("/product")
+        .traceId(UUID.fromString(traceId)) //
+        .status(httpStatus.value()) //
+        .error(httpStatus.getReasonPhrase()) //
+        .timestamp(OffsetDateTime.now(ZoneOffset.UTC)) //
+        .message(messageResp) //
+        .path(path) //
         .build();
-
-    LOG.warn(LOG_MESSAGE, resp.getTraceId(), resp.getStatus(), resp.getError(), resp.getMessage(), messageLog);
     return httpMethodApp.adviceResponse(httpStatus, resp);
   }
 

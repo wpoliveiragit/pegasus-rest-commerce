@@ -1,15 +1,9 @@
 # TAREFAS
-- ajustar campos
-
-- remover fild all (sem page) de todos os endpoints do contrato
-- ajustar o sistema de Exceptions
-    - simplificar as classes exceptions
-    - ajustar retorno rest
+- Remover todos os builds
 - criar um sistema de anotação pra log em métodos ou na classe onde ao iniciar ou
   finalizar um método deve se criado um log
-- Banco de dados
-    - Revisão
-    - criaçãode imagens e arquivo para draw.io
+- resources
+    - criar a imagem do DER – Diagrama Entidade-Relacionamento (ou ERD – Entity Relationship Diagram).
     - Fazer a criação do script de criação do banco de dados
     - fazer comandos basicos de consulta e alteração no banco de dados
 

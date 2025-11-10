@@ -1,4 +1,4 @@
-package br.com.pegasus.api.rest.commerce.infra.config.mapper;
+package br.com.pegasus.api.rest.commerce.infra.mapper;
 
 import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
@@ -13,15 +13,17 @@ import java.util.List;
 @Component
 public final class PageableMapper {
 
-  public PaginationType toType(PageableModel<?> obj) {
-    if (obj == null) return null;
+  public PaginationType toType(PageableModel<?> model) {
+    if (model == null) {
+      return null;
+    }
     return PaginationType.builder()
-        .page(obj.getPage())
-        .size(obj.getSize())
-        .elements(obj.getElements())
-        .pages(obj.getPages())
-        .previous(obj.isPrevious())
-        .next(obj.isNext())
+        .page(model.getPage())
+        .size(model.getSize())
+        .elements(model.getElements())
+        .pages(model.getPages())
+        .previous(model.isPrevious())
+        .next(model.isNext())
         .build();
   }
 
@@ -33,7 +35,9 @@ public final class PageableMapper {
   }
 
   public <T> PageableModel<T> toModel(Page<?> page, List<T> list) {
-    if (page == null) return null;
+    if (page == null) {
+      return null;
+    }
     return PageableModel.<T>builder()
         .page(page.getNumber())               // número da página atual (0-based)
         .size(page.getSize())                 // tamanho da página
@@ -45,9 +49,11 @@ public final class PageableMapper {
         .build();
   }
 
-  public Pageable toEntity(PageModel obj) {
-    if (obj == null) return null;
-    return PageRequest.of(obj.getNumber(), obj.getSize());
+  public Pageable toEntity(PageModel model) {
+    if (model == null) {
+      return null;
+    }
+    return PageRequest.of(model.getNumber(), model.getSize());
   }
 
 }

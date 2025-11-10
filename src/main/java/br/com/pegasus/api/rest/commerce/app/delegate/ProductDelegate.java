@@ -1,13 +1,13 @@
 package br.com.pegasus.api.rest.commerce.app.delegate;
 
-import br.com.pegasus.api.rest.commerce.domain.model.DataModel;
+import br.com.pegasus.api.rest.commerce.domain.model.RequestModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 import br.com.pegasus.api.rest.commerce.domain.port.ProductPort;
 import br.com.pegasus.api.rest.commerce.infra.config.app.HttpMethodApp;
-import br.com.pegasus.api.rest.commerce.infra.log.AppBaseLog;
-import br.com.pegasus.api.rest.commerce.infra.log.AppFactoryLog;
-import br.com.pegasus.api.rest.commerce.infra.config.mapper.ProductMapper;
+import br.com.pegasus.api.rest.commerce.infra.handler.annotation.LogProxyAnnotation;
+import br.com.pegasus.api.rest.commerce.infra.handler.log.TrackLogHandler;
+import br.com.pegasus.api.rest.commerce.infra.mapper.ProductMapper;
 import br.com.pegasus.gen.openapi.api.ProductApiDelegate;
 import br.com.pegasus.gen.openapi.type.ProductCreateBodyType;
 import br.com.pegasus.gen.openapi.type.ProductPageResponseType;
@@ -20,61 +20,61 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+@LogProxyAnnotation("Delegate")
 @Component
 @RequiredArgsConstructor
 public class ProductDelegate implements ProductApiDelegate {
 
-  private static final AppBaseLog log = AppFactoryLog.getCommonLog(ProductDelegate.class);
-
   private final ProductPort service;
   private final ProductMapper mapper;
   private final HttpMethodApp httpMethodApp;
+  private final TrackLogHandler requestLog;
 
   @Override
   public CompletableFuture<ResponseEntity<ProductPageResponseType>> findAllProduct(UUID xTraceId, Integer page, Integer size) {
-    log.info("[{}] Delegate ⇉ findAll", xTraceId);
-    DataModel dataModel = mapper.findAlltoModel(xTraceId, page, size);
-    PageableModel<ProductModel> responseModel = service.findAll(dataModel);
-    ProductPageResponseType responseType = mapper.toType(responseModel);
-    log.info("[{}] Delegate ⇇ findAll", xTraceId);
+//    requestLog.appendMessageLog("[{}] Delegate ⇉ findAll", xTraceId);
+    RequestModel requestModel = mapper.delegateToService(xTraceId, page, size);
+    PageableModel<ProductModel> responseModel = service.findAll(requestModel);
+    ProductPageResponseType responseType = mapper.serviceToDelegate(responseModel);
+//    requestLog.appendMessageLog("[{}] Delegate ⇇ findAll", xTraceId);
     return httpMethodApp.ok(responseType);
   }
 
   @Override
   public CompletableFuture<ResponseEntity<ProductType>> findByIdProduct(UUID xTraceId, Long id) {
-    log.info("[{}] Delegate ⇉ findById", xTraceId);
-    DataModel dataModel = mapper.findByIdToModel(xTraceId, id);
-    ProductModel responseModel = service.findById(dataModel);
-    ProductType responseType = mapper.toType(responseModel);
-    log.info("[{}] Delegate ⇇ findById", xTraceId);
+//    requestLog.appendMessageLog("[{}] Delegate ⇉ findById", xTraceId);
+    RequestModel requestModel = mapper.delegateToService(xTraceId, id);
+    ProductModel responseModel = service.findById(requestModel);
+    ProductType responseType = mapper.serviceToDelegate(responseModel);
+//    requestLog.appendMessageLog("[{}] Delegate ⇇ findById", xTraceId);
     return httpMethodApp.ok(responseType);
   }
 
   @Override
   public CompletableFuture<ResponseEntity<ProductType>> createProduct(UUID xTraceId, ProductCreateBodyType productCreateBodyType) {
-    log.info("[{}] Delegate ⇉ create", xTraceId);
-    DataModel dataModel = mapper.createToModel(xTraceId, productCreateBodyType);
-    ProductModel responseModel = service.create(dataModel);
-    ProductType response = mapper.toType(responseModel);
-    log.info("[{}] Delegate ⇇ create", xTraceId);
+//    requestLog.appendMessageLog("⇉ Delegate.create");
+    RequestModel requestModel = mapper.delegateToService(xTraceId, productCreateBodyType);
+    ProductModel responseModel = service.create(requestModel);
+    ProductType response = mapper.serviceToDelegate(responseModel);
+//    requestLog.appendMessageLog("⇇ Delegate.create");
     return httpMethodApp.created(response);
   }
 
   @Override
   public CompletableFuture<ResponseEntity<Void>> updateProduct(UUID xTraceId, Long id, ProductUpdateBodyType productUpdateBodyType) {
-    log.info("[{}] Delegate ⇉ update", xTraceId);
-    DataModel dataModel = mapper.updateToModel(xTraceId, id, productUpdateBodyType);
-    service.update(dataModel);
-    log.info("[{}] Delegate ⇇ update", xTraceId);
+//    requestLog.appendMessageLog("[{}] Delegate ⇉ update", xTraceId);
+    RequestModel requestModel = mapper.delegateToService(xTraceId, id, productUpdateBodyType);
+    service.update(requestModel);
+//    requestLog.appendMessageLog("[{}] Delegate ⇇ update", xTraceId);
     return httpMethodApp.noContent();
   }
 
   @Override
   public CompletableFuture<ResponseEntity<Void>> deleteProduct(UUID xTraceId, Long id) {
-    log.info("[{}] Delegate ⇉ delete", xTraceId);
-    DataModel requestModel = mapper.deleteModel(xTraceId, id);
+//    requestLog.appendMessageLog("[{}] Delegate ⇉ delete", xTraceId);
+    RequestModel requestModel = mapper.deleteToService(xTraceId, id);
     service.delete(requestModel);
-    log.info("[{}] Delegate ⇇ delete", xTraceId);
+//    requestLog.appendMessageLog("[{}] Delegate ⇇ delete", xTraceId);
     return httpMethodApp.noContent();
   }
 

@@ -1,6 +1,6 @@
 package br.com.pegasus.api.rest.commerce.domain.port;
 
-import br.com.pegasus.api.rest.commerce.domain.model.DataModel;
+import br.com.pegasus.api.rest.commerce.domain.model.RequestModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 import org.springframework.stereotype.Service;
@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ProductPort {
 
-  PageableModel<ProductModel> findAll(DataModel request);
+  PageableModel<ProductModel> findAll(RequestModel request);
 
-  ProductModel findById(DataModel request);
+  ProductModel findById(RequestModel request);
 
-  ProductModel create(DataModel request);
+  ProductModel create(RequestModel request);
 
-  void update(DataModel request);
+  void update(RequestModel request);
 
-  void delete(DataModel request);
+  void delete(RequestModel request);
 }

@@ -124,15 +124,26 @@ paths:
 components:
   schemas:
     att-trace-id: { type: string, format: uuid, example: a12f3cde-45b6-7890-abc1-def234567890 }
+
+    att-ex-status: { type: integer, format: int32, example: 400, description: código do erro padrão HTTP }
+    att-ex-error: { type: string, example: Bad Request, description: Nome do erro padrão HTTP }
+    att-ex-message: { type: string, example: Validation error, description: Motivo do problema }
+    att-ex-timestamp: { type: string, format: date-time, example: 2025-11-01T12:34:56Z, description: DMomento do problema }
+    att-ex-path: { type: string, example: "/product", description: Endpoint que causou o erro }
+
     att-page: { type: integer, example: 0, default: 0, description: Página atual (0-based) }
     att-size: { type: integer, example: 10, default: 10, description: Quantidade de elementos por página }
+    att-elements: { type: integer, format: int64, example: 300, description: Quantidade de elementos retornados na página }
+    att-pages: { type: integer, example: 10, description: Quantidade de páginas disponíveis }
+    att-previous: { type: boolean, example: true, description: Verificação de existência de página anterior }
+    att-next: { type: boolean, example: true, description: Verificação de existência de página posterior }
 
     att-id: { type: integer, format: int64, example: 9876543210, description: Identificador do produto }
     att-name: { type: string, minLength: 1, example: Chocolate, description: Nome do produto. Obrigatório e não pode ser vazio }
-    att-price: { type: number, format: float, minimum: 0,multipleOf: 0.01, example: 3.52, description: Preço do produto. Obrigatório e não pode ser negativo. }
+    att-price: { type: number, format: float, minimum: 0, multipleOf: 0.01, example: 3.52, description: Preço do produto. Obrigatório e não pode ser negativo. }
     att-quantity: { type: integer, minimum: 0, example: 10, description: Quantidade do produto. Obrigatório e não pode ser negativo. }
-    att-createdAt: { type: string, format: date-time, example: "2025-01-31T10:15:30Z" }
-    att-updatedAt: { type: string, format: date-time, example: "2025-01-31T10:15:30Z" }
+    att-createdAt: { type: string, format: date-time, example: 2025-01-31T10:15:30Z, description: Data/Hora em que o registro foi criado. }
+    att-updatedAt: { type: string, format: date-time, example: 2025-01-31T10:15:30Z, description: Data/Hora em que o registro foi modificado pela última vez. }
 
     product-type:
       type: object
@@ -173,10 +184,10 @@ components:
       properties:
         page: { $ref: '#/components/schemas/att-page' }
         size: { $ref: '#/components/schemas/att-size' }
-        elements: { type: integer, format: int64, example: 300, description: Quantidade de elementos retornados na página }
-        pages: { type: integer, example: 10, description: Quantidade de páginas disponíveis }
-        previous: { type: boolean, example: true, description: Verificação de existência de página anterior }
-        next: { type: boolean, example: true, description: Verificação de existência de página posterior }
+        elements: { $ref: '#/components/schemas/att-elements' }
+        pages: { $ref: '#/components/schemas/att-pages' }
+        previous: { $ref: '#/components/schemas/att-previous' }
+        next: { $ref: '#/components/schemas/att-next' }
 
     exception-response-type:
       type: object
@@ -184,11 +195,11 @@ components:
       required: [ status, error, message ]
       properties:
         traceId: { $ref: '#/components/schemas/att-trace-id' }
-        status: { type: integer, format: int32, example: 400 }
-        error: { type: string, example: "Bad Request", description: "Descrição curta do erro HTTP" }
-        message: { type: string, example: "Validation error", description: "Mensagem explicando o erro de forma geral" }
-        timestamp: { type: string, format: date-time, example: "2025-11-01T12:34:56Z", description: "Data/hora do erro em ISO-8601 (UTC recomendado)" }
-        path: { type: string, example: "/product", description: "URI do endpoint requisitado" }
+        status: { $ref: '#/components/schemas/att-ex-status' }
+        error: { $ref: '#/components/schemas/att-ex-error' }
+        message: { $ref: '#/components/schemas/att-ex-message' }
+        timestamp: { $ref: '#/components/schemas/att-ex-timestamp' }
+        path: { $ref: '#/components/schemas/att-ex-path' }
 
   responses:
 

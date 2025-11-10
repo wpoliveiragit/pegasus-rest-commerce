@@ -1,6 +1,6 @@
 package br.com.pegasus.api.rest.commerce.domain.adapter.jpa;
 
-import br.com.pegasus.api.rest.commerce.domain.model.DataModel;
+import br.com.pegasus.api.rest.commerce.domain.model.RequestModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 
@@ -8,16 +8,16 @@ import java.util.Optional;
 
 public interface ProductDomainAdaterJPA {
 
-  PageableModel<ProductModel> findAll(DataModel request);
+  PageableModel<ProductModel> findAll(RequestModel request);
 
-  Optional<ProductModel> findById(DataModel request);
+  Optional<ProductModel> findById(RequestModel request);
 
-  ProductModel create(DataModel request);
+  ProductModel create(RequestModel request);
 
-  ProductModel update(DataModel request);
+  ProductModel update(RequestModel request);
 
-  void delete(DataModel request);
+  void delete(RequestModel request);
 
-  Optional<ProductModel> findByName(DataModel request);
+  Optional<ProductModel> findByName(RequestModel request);
 
 }

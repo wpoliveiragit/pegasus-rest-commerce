@@ -36,8 +36,8 @@ public class AppStatusConfig {
     NodeList docDependencies = DocumentBuilderFactory.newInstance().newDocumentBuilder()//
         .parse(new File("pom.xml")).getElementsByTagName("dependency");
 
-    // Imprime todas as informações coletadas
-    System.out.println("\n╔ ◎ DEPENDÊNCIAS DO PROJETO");
+    // Imprime  todas as informações coletadas
+    System.out.println("\n╔/ ◎ DEPENDÊNCIAS DO PROJETO");
 
     IntStream.range(0, docDependencies.getLength()).mapToObj(i -> {
       Element elem = (Element) docDependencies.item(i);
