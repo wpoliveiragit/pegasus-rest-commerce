@@ -21,7 +21,7 @@ public class TrackLogHandler {
   private static final String MESSAGE_LOG_PATTERN_FAIL = "[x-trace-id: {}]\n[Url: {} {}] [size request: {}]\n[trace]{}";
 
   public void appendMessageLog(String message) {
-    appendMessageLogCheck().append(ConstUtil.T_SPACE).append(message);
+    appendMessageLogCheck().append(ConstUtil.SPACE).append(message);
   }
 
   public void log() {

@@ -2,23 +2,21 @@ package br.com.pegasus.api.rest.commerce.infra.config.domain;
 
 import br.com.pegasus.api.rest.commerce.domain.adapter.ExceptionMethodDomainAdapter;
 import br.com.pegasus.api.rest.commerce.infra.exception.AppException;
+import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ExceptionMethodDomain implements ExceptionMethodDomainAdapter {
 
-  private final static String CONFLICT_NAME_MESSAGE = "Name already registered";
-  private final static String NOT_FOUND_MESSAGE = "Element not found";
-
   @Override
   public void throwConflictName() {
-    throw new AppException(HttpStatus.CONFLICT, CONFLICT_NAME_MESSAGE);
+    throw new AppException(HttpStatus.CONFLICT, ConstUtil.EXCEPTION_CONFLICT_NAME_MESSAGE);
   }
 
   @Override
   public AppException newNotFound() {
-    return new AppException(HttpStatus.NOT_FOUND, NOT_FOUND_MESSAGE);
+    return new AppException(HttpStatus.NOT_FOUND, ConstUtil.EXCEPTION_NOT_FOUND_MESSAGE);
   }
 
 }

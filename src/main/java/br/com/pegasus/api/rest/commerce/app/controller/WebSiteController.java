@@ -1,6 +1,6 @@
 package br.com.pegasus.api.rest.commerce.app.controller;
 
-import br.com.pegasus.api.rest.commerce.infra.util.AppMethodUtil;
+import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
 import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +14,9 @@ public class WebSiteController {
   private final String siteTerms;
 
   public WebSiteController() {
-    this.siteHome = AppMethodUtil.readResourceFileToStringUTF8("site/index.html");
-    this.siteLicense = AppMethodUtil.readResourceFileToStringUTF8("site/license.html");
-    this.siteTerms = AppMethodUtil.readResourceFileToStringUTF8("site/terms.html");
+    this.siteHome = MethodUtil.readResourceFileToStringUTF8("site/index.html");
+    this.siteLicense = MethodUtil.readResourceFileToStringUTF8("site/license.html");
+    this.siteTerms = MethodUtil.readResourceFileToStringUTF8("site/terms.html");
   }
 
   //!: SITE :: HOME

@@ -2,11 +2,16 @@ package br.com.pegasus.api.rest.commerce.infra.util;
 
 public final class ConstUtil {
 
+  // [APP EXCEPTION]
+  public final static String EXCEPTION_CONFLICT_NAME_MESSAGE = "Name already registered";
+  public final static String EXCEPTION_NOT_FOUND_MESSAGE = "Element not found";
+
   // [TEXTOS]
-  public static final String T_SPACE = " ";
+  public static final String SPACE = " ";
+  public static final String KEY_VALUE_SEP = ": ";
+  public static final String ENTRY_SEP = "; ";
 
   // [CONSTANTES CARACTERES]
-  public static final char CHAR_0 = '0';
 
   // [CONSTANTES NUMÉRICOS]
   public static final int INT_0 = 0;

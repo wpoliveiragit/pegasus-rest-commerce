@@ -3,8 +3,10 @@ package br.com.pegasus.api.rest.commerce.infra.util;
 import org.springframework.core.io.ClassPathResource;
 
 import java.nio.charset.StandardCharsets;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
-public final class AppMethodUtil {
+public final class MethodUtil {
 
   /**
    * Lê um arquivo do classpath e retorna seu conteúdo como {@link String} em UTF-8.
@@ -19,6 +21,19 @@ public final class AppMethodUtil {
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
+  }
+
+  public static final class Date {
+
+    /**
+     * Retorna a data e hora atual no fuso UTC.
+     *
+     * @return A data e hora atual no fuso UTC.
+     */
+    public static OffsetDateTime getOffsetDateTimeNow() {
+      return OffsetDateTime.now(ZoneOffset.UTC);
+    }
+
   }
 
 }
