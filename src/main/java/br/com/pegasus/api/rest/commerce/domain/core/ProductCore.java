@@ -1,26 +1,26 @@
 package br.com.pegasus.api.rest.commerce.domain.core;
 
-import br.com.pegasus.api.rest.commerce.domain.adapter.ExceptionMethodDomainAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.LogDomainAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.ToolKitAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.ProductDomainAdaterJPA;
+import br.com.pegasus.api.rest.commerce.domain.adapter.ExceptionMethodAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.LogAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.ToolAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.ProductAdaterJPA;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 import br.com.pegasus.api.rest.commerce.domain.model.RequestModel;
 import br.com.pegasus.api.rest.commerce.domain.port.ProductPort;
 import br.com.pegasus.api.rest.commerce.infra.exception.AppException;
-import br.com.pegasus.api.rest.commerce.infra.handler.annotation.LogProxyAnnotation;
+import br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark.TelemetryComponentMark;
 
 import java.time.OffsetDateTime;
 
-@LogProxyAnnotation("Service")
+@TelemetryComponentMark("Service.Product")
 public class ProductCore implements ProductPort {
 
-  private final ProductDomainAdaterJPA productJpa;
-  private final ExceptionMethodDomainAdapter exMethod;
-  private final LogDomainAdapter log;
+  private final ProductAdaterJPA productJpa;
+  private final ExceptionMethodAdapter exMethod;
+  private final LogAdapter log;
 
-  public ProductCore(ToolKitAdapter tools) {
+  public ProductCore(ToolAdapter tools) {
     this.productJpa = tools.getProductRepository();
     this.exMethod = tools.getMethod();
     this.log = tools.getLog(ProductCore.class);
@@ -49,10 +49,11 @@ public class ProductCore implements ProductPort {
   public void update(RequestModel request) {
     ProductModel originalModel = this.internalFindById(request);
     ProductModel updateModel = request.getProduct();
-    if (!originalModel.getName().equalsIgnoreCase(updateModel.getName())) {
+    if (!originalModel.getName().equalsIgnoreCase(updateModel.getName())) {// nome diferente
       this.checkNameConflict(request);
     }
     updateModel.setCreatedAt(originalModel.getCreatedAt());
+    updateModel.setUpdatedAt(OffsetDateTime.now());
     productJpa.update(request);
   }
 
@@ -63,11 +64,18 @@ public class ProductCore implements ProductPort {
   }
 
   private ProductModel internalFindById(RequestModel request) {
-    return productJpa.findById(request).orElseThrow(exMethod::newNotFound);
+    log.track("● Service.Product.(internalFindById)");
+    log.info("● Service.Product.(internalFindById)");
+    ProductModel model = productJpa.findById(request).orElseThrow(exMethod::newNotFound);
+    log.track("◎ Service.Product.(internalFindById)");
+    log.info("◎ Service.Product.(internalFindById)");
+    return model;
   }
 
   private void checkNameConflict(RequestModel request) throws AppException {
+    log.track("● Service.Product(checkNameConflict)");
     productJpa.findByName(request).ifPresent(obj -> exMethod.throwConflictName());
+    log.track("◎ Service.Product(checkNameConflict)");
   }
 
 }

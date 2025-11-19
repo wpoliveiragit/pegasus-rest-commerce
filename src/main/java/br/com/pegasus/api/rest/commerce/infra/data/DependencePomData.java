@@ -6,6 +6,7 @@ import org.w3c.dom.Node;
 
 @RequiredArgsConstructor
 public class DependencePomData {
+
   private final Element elem;
 
   public String getGroupId() {
@@ -18,7 +19,7 @@ public class DependencePomData {
 
   public String getVersion() {
     Node versionNode = elem.getElementsByTagName("version").item(0);
-    return (versionNode == null) ? null : versionNode.getTextContent();
+    return (versionNode == null) ? "VERSÃO PARENT" : versionNode.getTextContent();
   }
 
 }

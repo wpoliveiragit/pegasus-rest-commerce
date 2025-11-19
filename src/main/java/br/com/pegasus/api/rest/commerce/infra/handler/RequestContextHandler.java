@@ -1,6 +1,7 @@
 package br.com.pegasus.api.rest.commerce.infra.handler;
 
 import br.com.pegasus.api.rest.commerce.infra.data.MetricData;
+import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,21 +16,23 @@ public class RequestContextHandler {
   public HttpServletRequest getCurrentRequest() throws ServletException {
     ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
     if (attrs == null) {
-      throw new ServletException("Nenhuma requisição HTTP ativa no contexto atual. Request sem metrica de 'track'");
+      throw new ServletException(ConstUtil.METRIC_NO_ACTIVE_REQUEST_MESSAGE);
     }
     return attrs.getRequest();
   }
 
   public HttpServletResponse getCurrentResponse() {
     ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-    return (attrs == null) ? new MockHttpServletResponse() : attrs.getResponse();
+    return (attrs == null) ?
+        new MockHttpServletResponse() :
+        attrs.getResponse();
   }
 
-  public void setMetricData(MetricData metricData) throws ServletException{
+  public void setMetricData(MetricData metricData) throws ServletException {
     this.getCurrentRequest().setAttribute(MetricData.class.getSimpleName(), metricData);
   }
 
-  public MetricData getMetricData() throws ServletException{
+  public MetricData getMetricData() throws ServletException {
     return (MetricData) this.getCurrentRequest().getAttribute(MetricData.class.getSimpleName());
   }
 

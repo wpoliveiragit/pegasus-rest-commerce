@@ -1,5 +1,6 @@
 package br.com.pegasus.api.rest.commerce.app.controller;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,9 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class OpenApiController {
 
-  private final ClassPathResource contractOpenAPI;
+  private ClassPathResource contractOpenAPI;
 
-  public OpenApiController() {
+  @PostConstruct
+  public void init() {
     this.contractOpenAPI = new ClassPathResource("openapi.yaml");
   }
 

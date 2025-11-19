@@ -1,9 +1,9 @@
 package br.com.pegasus.api.rest.commerce.infra.mapper;
 
-import br.com.pegasus.api.rest.commerce.domain.model.RequestModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
+import br.com.pegasus.api.rest.commerce.domain.model.RequestModel;
 import br.com.pegasus.api.rest.commerce.infra.repository.entity.ProductEntity;
 import br.com.pegasus.gen.openapi.type.ProductCreateBodyType;
 import br.com.pegasus.gen.openapi.type.ProductPageResponseType;
@@ -55,7 +55,7 @@ public final class ProductMapper {
   public RequestModel delegateToService(UUID xTraceId, Long id, ProductUpdateBodyType body) {
     return RequestModel.builder()//
         .xTraceId(xTraceId.toString())//
-        .product(toModel(id,body))//
+        .product(toModel(id, body))//
         .build();
   }
 
@@ -114,9 +114,7 @@ public final class ProductMapper {
         .name(obj.getName())//
         .price(BigDecimal.valueOf(obj.getPrice()))//
         .quantity(obj.getQuantity())//
-        .createdAt(obj.getCreatedAt().toLocalDateTime())
-        .updatedAt(obj.getUpdatedAt().toLocalDateTime())
-        .build();
+        .createdAt(obj.getCreatedAt().toLocalDateTime()).updatedAt(obj.getUpdatedAt().toLocalDateTime()).build();
   }
 
   // --
@@ -126,28 +124,12 @@ public final class ProductMapper {
 
   private ProductModel toModel(Long id, ProductUpdateBodyType body) {
     return ProductModel.builder()//
-        .id(id)
-        .name(body.getName())//
+        .id(id).name(body.getName())//
         .price(body.getPrice())//
         .quantity(body.getQuantity())//
         .build();
   }
 
-  private ProductModel toModel(ProductUpdateBodyType body) {
-    return ProductModel.builder()//
-        .name(body.getName())//
-        .price(body.getPrice())//
-        .quantity(body.getQuantity())//
-        .build();
-  }
-
-  private ProductModel toModel(ProductType type) {
-    return ProductModel.builder()//
-        .name(type.getName())//
-        .price(type.getPrice())//
-        .quantity(type.getQuantity())//
-        .build();
-  }
   private ProductModel toModel(ProductCreateBodyType type) {
     return ProductModel.builder()//
         .name(type.getName())//

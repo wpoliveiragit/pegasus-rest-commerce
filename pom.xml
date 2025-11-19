@@ -51,6 +51,11 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
         <dependency> <!-- Integração do contrato OpenAPI 3: PLUGIN: openapi-generator-maven-plugin -->
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -97,7 +102,7 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency> <!-- Suporte de validação Hibernate via Bean Validation: @NotNull, @Size, @Email, ... -->
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>8.0.2.Final</version>
         </dependency>
@@ -127,7 +132,7 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
 
-        <dependency> <!-- RENDERIZA PÁGINAS HTML DINÂMICAS -->
+        <dependency> <!-- RENDERIZADOR DE PÁGINAS HTML DINÂMICAS -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
@@ -141,7 +146,6 @@
         </dependency>
 
         <!-- TEST -->
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>

@@ -6,16 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MetricData {
-  private String method;
-  private String requestURI;
-  private String status;
-  private long runtime;
-  private Long requestSize;
-  private Long responseSize;
-  private String url;
-  private long startRequest;
-  private String xTraceId;
-  private long currentRequestSize; // "CURRENT REQUEST SIZE: {}: {}B"
+  private MetricRequestData request;
+  private MetricResponseData response;
   private StringBuilder messageBuild = new StringBuilder();
-  private String keyDistributionSummary;
 }

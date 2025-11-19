@@ -14,45 +14,39 @@ import java.util.List;
 public final class PageableMapper {
 
   public PaginationType toType(PageableModel<?> model) {
-    if (model == null) {
-      return null;
-    }
-    return PaginationType.builder()
-        .page(model.getPage())
-        .size(model.getSize())
-        .elements(model.getElements())
-        .pages(model.getPages())
-        .previous(model.isPrevious())
-        .next(model.isNext())
+    if (model == null) return null;
+    return PaginationType.builder()//
+        .page(model.getPage())//
+        .size(model.getSize())//
+        .elements(model.getElements())//
+        .pages(model.getPages())//
+        .previous(model.isPrevious())//
+        .next(model.isNext())//
         .build();
   }
 
   public PageModel toModel(Integer page, Integer size) {
-    return PageModel.builder()
-        .number(page)
-        .size(size)
+    return PageModel.builder()//
+        .number(page)//
+        .size(size)//
         .build();
   }
 
   public <T> PageableModel<T> toModel(Page<?> page, List<T> list) {
-    if (page == null) {
-      return null;
-    }
-    return PageableModel.<T>builder()
-        .page(page.getNumber())               // número da página atual (0-based)
-        .size(page.getSize())                 // tamanho da página
-        .elements(page.getTotalElements())    // total de elementos
-        .pages(page.getTotalPages())          // total de páginas
-        .previous(page.hasPrevious())         // se tem página anterior
-        .next(page.hasNext())                 // se tem próxima página
-        .list(list)                           // lista convertida
+    if (page == null) return null;
+    return PageableModel.<T>builder()//
+        .page(page.getNumber())//
+        .size(page.getSize())//
+        .elements(page.getTotalElements())//
+        .pages(page.getTotalPages())//
+        .previous(page.hasPrevious())//
+        .next(page.hasNext())//
+        .list(list)//
         .build();
   }
 
   public Pageable toEntity(PageModel model) {
-    if (model == null) {
-      return null;
-    }
+    if (model == null) return null;
     return PageRequest.of(model.getNumber(), model.getSize());
   }
 

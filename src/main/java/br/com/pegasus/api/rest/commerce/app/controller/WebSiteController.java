@@ -19,19 +19,16 @@ public class WebSiteController {
     this.siteTerms = MethodUtil.readResourceFileToStringUTF8("site/terms.html");
   }
 
-  //!: SITE :: HOME
   @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
   public String getWebsiteHome(Model model) {
     return siteHome;
   }
 
-  //!: Site :: licensa
   @GetMapping(value = "/license", produces = MediaType.TEXT_HTML_VALUE)
   public String getWebsiteLicense(Model model) {
     return siteLicense;
   }
 
-  //!: Site :: Termos
   @GetMapping(value = "/terms", produces = MediaType.TEXT_HTML_VALUE)
   public String getWebsiteTerms(Model model) {
     return siteTerms;
