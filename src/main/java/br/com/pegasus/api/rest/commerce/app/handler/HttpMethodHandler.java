@@ -13,10 +13,6 @@ import java.util.stream.Collectors;
 @Component
 public final class HttpMethodHandler {
 
-  public <T> CompletableFuture<ResponseEntity<T>> createReponse(HttpStatus status, T response) {
-    return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(response, status), Runnable::run);
-  }
-
   public <T> CompletableFuture<ResponseEntity<T>> ok(T response) {
     return createReponse(HttpStatus.OK, response);
   }
@@ -37,6 +33,10 @@ public final class HttpMethodHandler {
     return list.stream()//
         .map(error -> error.getField() + ConstUtil.KEY_VALUE_SEP + error.getDefaultMessage())//
         .collect(Collectors.joining(ConstUtil.ENTRY_SEP));
+  }
+
+  private <T> CompletableFuture<ResponseEntity<T>> createReponse(HttpStatus status, T response) {
+    return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(response, status), Runnable::run);
   }
 
 }

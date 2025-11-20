@@ -8,10 +8,8 @@
 # httpexchanges → endpoint de tracing
 management.endpoints.web.exposure.include: health, info, metrics, prometheus, httpexchanges
 
-
 # health.show-details: always → sempre mostra detalhes da saúde.
 management.endpoint.health.show-details: always
-
 
 # limitam o tamanho de upload de arquivos; útil para medir requestSize corretamente.
 spring.servlet.multipart.max-file-size: 10MB
@@ -25,6 +23,3 @@ management.endpoint.httptrace.enabled: true
 
 # Ativa logs com traceId/spanId
 logging.pattern.level: "%5p [traceId=%X{traceId:-}, spanId=%X{spanId:-}]"
-
-
-

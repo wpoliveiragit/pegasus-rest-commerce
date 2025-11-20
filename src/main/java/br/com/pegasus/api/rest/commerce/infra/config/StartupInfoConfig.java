@@ -15,7 +15,6 @@ import br.com.pegasus.api.rest.commerce.infra.config.domain.adapter.ExceptionMet
 import br.com.pegasus.api.rest.commerce.infra.config.domain.adapter.ToolConfigAdapter;
 import br.com.pegasus.api.rest.commerce.infra.config.domain.adapter.jpa.ProductAdaterConfigJPA;
 import br.com.pegasus.api.rest.commerce.infra.config.domain.port.BeansPort;
-import br.com.pegasus.api.rest.commerce.infra.data.DependencePomData;
 import br.com.pegasus.api.rest.commerce.infra.handler.RequestContextHandler;
 import br.com.pegasus.api.rest.commerce.infra.mapper.PageableMapper;
 import br.com.pegasus.api.rest.commerce.infra.mapper.ProductMapper;
@@ -32,6 +31,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -67,7 +67,7 @@ public class StartupInfoConfig {
         .parse(new File("pom.xml")).getElementsByTagName("dependency");
 
     return Stream.concat(Stream.of("◎ DEPENDÊNCIAS DO PROJETO"), IntStream.range(0, docDeps.getLength())//
-        .mapToObj(i -> createDependencyLine(new DependencePomData((Element) docDeps.item(i))))//
+        .mapToObj(i -> createDependencyLine((Element) docDeps.item(i)))//
     ).toList();
   }
 
@@ -109,8 +109,13 @@ public class StartupInfoConfig {
     return (ctx.getBeanNamesForType(beanClass).length > 0) ? "\t[X] " : "\t[ ] ";
   }
 
-  private String createDependencyLine(DependencePomData dep) {
-    return "\t- " + dep.getArtifactId() + ", " + dep.getGroupId() + ", " + "[" + dep.getVersion() + "]";
+  private String createDependencyLine(Element elem) {
+    String groupId = elem.getElementsByTagName("groupId").item(0).getTextContent();
+    String artifactId = elem.getElementsByTagName("artifactId").item(0).getTextContent();
+    Node versionNode = elem.getElementsByTagName("version").item(0);
+    String version = (versionNode == null) ? "VERSÃO PARENT" : versionNode.getTextContent();
+
+    return "\t- " + groupId + ", " + artifactId + ", " + "[" + version + "]";
   }
 
 }

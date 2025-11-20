@@ -1,5 +1,3 @@
-# [OUTRAS PROPRIEDADES] Arquivos de propriedades externas
-# ============================================================
 spring.config.import:
   - "classpath:properties/database-prop.yml"
   - "classpath:properties/swagger-prop.yml"

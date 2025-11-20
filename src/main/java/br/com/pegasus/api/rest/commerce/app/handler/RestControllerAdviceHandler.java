@@ -1,7 +1,7 @@
 package br.com.pegasus.api.rest.commerce.app.handler;
 
 import br.com.pegasus.api.rest.commerce.infra.exception.AppException;
-import br.com.pegasus.api.rest.commerce.infra.record.ResponseExceptionRecord;
+import br.com.pegasus.api.rest.commerce.infra.data.ResponseExceptionRecord;
 import br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark.TelemetryAdviceMark;
 import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
@@ -53,15 +53,15 @@ public class RestControllerAdviceHandler {
         request);
   }
 
-  public ResponseEntity<ExceptionResponseType> response(ResponseExceptionRecord respEx, HttpServletRequest request) {
-    HttpStatus httpStatus = respEx.httpStatus();
+  private ResponseEntity<ExceptionResponseType> response(ResponseExceptionRecord respEx, HttpServletRequest request) {
+    HttpStatus httpStatus = respEx.getHttpStatus();
     OffsetDateTime offsetDateTimeNow = MethodUtil.Date.getOffsetDateTimeNow();
     ExceptionResponseType resp = ExceptionResponseType.builder()//
         .traceId(UUID.fromString(request.getHeader(ConstUtil.HEADER_X_TRACE_ID)))//
         .status(httpStatus.value())//
         .error(httpStatus.getReasonPhrase())//
         .timestamp(offsetDateTimeNow)//
-        .message(respEx.message())//
+        .message(respEx.getMessage())//
         .path(request.getRequestURI())//
         .build();//
     return httpMethod.adviceResponse(httpStatus, resp);

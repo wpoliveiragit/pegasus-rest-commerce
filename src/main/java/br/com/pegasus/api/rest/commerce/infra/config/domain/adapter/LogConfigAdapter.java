@@ -3,7 +3,7 @@ package br.com.pegasus.api.rest.commerce.infra.config.domain.adapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.LogAdapter;
 import br.com.pegasus.api.rest.commerce.infra.telemetry.logger.TrackLogger;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 @RequiredArgsConstructor
 public class LogConfigAdapter implements LogAdapter {

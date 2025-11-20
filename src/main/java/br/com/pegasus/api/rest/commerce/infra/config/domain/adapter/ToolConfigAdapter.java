@@ -6,7 +6,6 @@ import br.com.pegasus.api.rest.commerce.domain.adapter.ToolAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.ProductAdaterJPA;
 import br.com.pegasus.api.rest.commerce.infra.telemetry.logger.TrackLogger;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,7 +18,7 @@ public class ToolConfigAdapter implements ToolAdapter {
 
   @Override
   public LogAdapter getLog(Class<?> clazz) {
-    return new LogConfigAdapter(trackLog, LogManager.getLogger(clazz.getSimpleName()));
+    return new LogConfigAdapter(trackLog, trackLog.getLogger(clazz));
   }
 
   @Override

@@ -55,10 +55,6 @@ public class MetricsTelemetry {
     return new InMemoryHttpExchangeRepository();
   }
 
-  public void addTraceMessage(String message) {
-    trackLog.append(message);
-  }
-
   public void addTraceMessage(String message, Object... args) {
     trackLog.append(message, args);
   }

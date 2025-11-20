@@ -15,17 +15,13 @@ public class RequestContextHandler {
 
   public HttpServletRequest getCurrentRequest() throws ServletException {
     ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-    if (attrs == null) {
-      throw new ServletException(ConstUtil.METRIC_NO_ACTIVE_REQUEST_MESSAGE);
-    }
+    if (attrs == null) throw new ServletException(ConstUtil.METRIC_NO_ACTIVE_REQUEST_MESSAGE);
     return attrs.getRequest();
   }
 
   public HttpServletResponse getCurrentResponse() {
     ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-    return (attrs == null) ?
-        new MockHttpServletResponse() :
-        attrs.getResponse();
+    return (attrs == null) ? new MockHttpServletResponse() : attrs.getResponse();
   }
 
   public void setMetricData(MetricData metricData) throws ServletException {

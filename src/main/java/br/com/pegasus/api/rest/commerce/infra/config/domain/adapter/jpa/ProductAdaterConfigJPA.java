@@ -9,6 +9,7 @@ import br.com.pegasus.api.rest.commerce.infra.mapper.ProductMapper;
 import br.com.pegasus.api.rest.commerce.infra.repository.ProductRepository;
 import br.com.pegasus.api.rest.commerce.infra.repository.entity.ProductEntity;
 import br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark.TelemetryComponentMark;
+import br.com.pegasus.api.rest.commerce.infra.telemetry.logger.TrackLogger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public class ProductAdaterConfigJPA implements ProductAdaterJPA {
 
   private final ProductMapper mapper;
   private final ProductRepository repo;
+  private final TrackLogger trackLog;
 
   @Override
   public PageableModel<ProductModel> findAll(RequestModel request) {
@@ -46,12 +48,16 @@ public class ProductAdaterConfigJPA implements ProductAdaterJPA {
 
   @Override
   public ProductModel create(RequestModel request) {
-    return save(request);
+    ProductModel responseModel = save(request);
+    trackLog.append("element created successfully");
+    return responseModel;
   }
 
   @Override
   public ProductModel update(RequestModel request) {
-    return save(request);
+    ProductModel responseModel = save(request);
+    trackLog.append("element updated successfully");
+    return responseModel;
   }
 
   @Override
@@ -62,10 +68,13 @@ public class ProductAdaterConfigJPA implements ProductAdaterJPA {
   }
 
   private ProductModel save(RequestModel request) {
+    trackLog.append("● JPA.Product(save)");
     ProductModel product = request.getProduct();
     ProductEntity productEntity = mapper.serviceToJpa(product);
     ProductEntity response = repo.save(productEntity);
-    return mapper.jpaToService(response);
+    ProductModel responseModel = mapper.jpaToService(response);
+    trackLog.append("◎ JPA.Product(save)");
+    return responseModel;
   }
 
 }
