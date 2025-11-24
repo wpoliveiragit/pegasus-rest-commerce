@@ -12,6 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageModel {
+  /** Número da página */
   private Integer number;
+  /** Quantidade de itens desejado */
   private Integer size;
 }

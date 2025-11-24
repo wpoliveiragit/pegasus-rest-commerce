@@ -18,19 +18,11 @@ import org.springframework.stereotype.Component;
 public class TrackLogger {
 
   private final RequestContextHandler requestContext;
-  private Logger customLog;
+  private Logger trackLog;
 
   @PostConstruct
   public void init() {
-    customLog = getCustomLogger();
-  }
-
-  public Logger getLogger(Class<?> clazz) {
-    return LoggerFactory.getLogger(clazz);
-  }
-
-  public Logger getCustomLogger() {
-    return LoggerFactory.getLogger("CUSTOM_LOG");
+    trackLog = LoggerFactory.getLogger("TRACE_LOG");
   }
 
   public void append(String message) {
@@ -43,10 +35,10 @@ public class TrackLogger {
 
   public void log(MetricData metric) {
     if ((Integer.parseInt(metric.getResponse().getStatus()) / ConstUtil.INT_100) == 2) {
-      customLog.info(createLogMessage(metric, ConstUtil.METRIC_TRACK_LOG_PATTERN_OK));
+      trackLog.info(createLogMessage(metric, ConstUtil.METRIC_TRACK_LOG_PATTERN_OK));
       return;
     }
-    customLog.warn(createLogMessage(metric, ConstUtil.METRIC_TRACK_LOG_PATTERN_FAIL).replaceFirst(" ✕", "\n ✕"));
+    trackLog.warn(createLogMessage(metric, ConstUtil.METRIC_TRACK_LOG_PATTERN_FAIL).replaceFirst(" ✕", "\n ✕"));
   }
 
   private StringBuilder getMessage() {
@@ -59,11 +51,11 @@ public class TrackLogger {
 
   private static String createLogMessage(MetricData metric, String pattern) {
     MetricRequestData request = metric.getRequest();
-    return format(pattern, //
-        request.getXTraceId(),// x-trace-id
-        request.getMethod(), request.getUrl(),// url
-        request.getRequestSize(),// size request
-        metric.getMessageBuild().toString()// message
+    return format(pattern,//
+        request.getXTraceId(),//
+        request.getMethod(), request.getUrl(),//
+        request.getRequestSize(),//
+        metric.getMessageBuild().toString()//
     );
   }
 

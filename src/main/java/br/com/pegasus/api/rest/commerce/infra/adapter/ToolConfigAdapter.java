@@ -1,4 +1,4 @@
-package br.com.pegasus.api.rest.commerce.infra.config.domain.adapter;
+package br.com.pegasus.api.rest.commerce.infra.adapter;
 
 import br.com.pegasus.api.rest.commerce.domain.adapter.ExceptionMethodAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.LogAdapter;
@@ -14,11 +14,16 @@ public class ToolConfigAdapter implements ToolAdapter {
 
   private final ExceptionMethodAdapter validMethod;
   private final ProductAdaterJPA productJpa;
-  private final TrackLogger trackLog;
+  private final TrackLogger trackLogger;
 
   @Override
   public LogAdapter getLog(Class<?> clazz) {
-    return new LogConfigAdapter(trackLog, trackLog.getLogger(clazz));
+    return new LogAdapter() {
+      @Override
+      public void track(String msg) {
+        trackLogger.append(msg);
+      }
+    };
   }
 
   @Override

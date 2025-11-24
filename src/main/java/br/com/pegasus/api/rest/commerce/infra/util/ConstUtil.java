@@ -2,6 +2,14 @@ package br.com.pegasus.api.rest.commerce.infra.util;
 
 public final class ConstUtil {
 
+  // ANSI COLOR
+  public static final String COLOR_RESET = "\u001B[0m";
+  public static final String COLOR_CYAN = "\u001B[36m";
+  public static final String COLOR_YELLOW = "\u001B[33m";
+  public static final String COLOR_RED = "\u001B[31m";
+  public static final String COLOR_GREEN = "\u001B[32m";
+  public static final String COLOR_WHITE = "\u001B[37m";
+
   // [APP EXCEPTION]
   public final static String EXCEPTION_CONFLICT_NAME_MESSAGE = "Name already registered";
   public final static String EXCEPTION_NOT_FOUND_MESSAGE = "Element not found";

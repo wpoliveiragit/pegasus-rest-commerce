@@ -1,18 +1,5 @@
-<configuration>
+<included>
 
-    <conversionRule conversionWord="levelColor"
-                    class="br.com.pegasus.api.rest.commerce.infra.telemetry.logger.LevelColorConverter"/>
-
-    <logger name="CUSTOM_LOG" additivity="false" level="INFO">
-        <appender-ref ref="CUSTOM_APPENDER"/>
-    </logger>
-    <appender name="CUSTOM_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%levelColor(⬤ AUDIT) %levelColor(%level) [%magenta(%d{HH:mm:ss.SSS})] %levelColor(%msg) %n</pattern>
-        </encoder>
-    </appender>
-
-    <!-- LOG CONVENCIONAL -->
     <root level="info">
         <appender-ref ref="INFO_APPENDER"/>
         <appender-ref ref="WARN_APPENDER"/>
@@ -29,6 +16,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
+
     <appender name="WARN_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%yellow(⬤ WARN) [%magenta(%d{HH:mm:ss.SSS})] [%magenta(%logger{36})] → %yellow(%msg%n)</pattern>
@@ -39,10 +27,10 @@
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
+
     <appender name="ERROR_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%red(⬤ ERRO) [%magenta(%d{HH:mm:ss.SSS})] [%magenta(%logger{36})] → %red(%msg%n)\r%caller%n
-            </pattern>
+            <pattern>%red(⬤ ERRO) [%magenta(%d{HH:mm:ss.SSS})] [%magenta(%logger{36})] → %red(%msg%n)\r%caller%n</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
@@ -51,4 +39,4 @@
         </filter>
     </appender>
 
-</configuration>
+</included>

@@ -23,21 +23,35 @@ public class TelemetryAspect {
   @Around("@within(br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark.TelemetryControllerMark)")
   public Object controller(ProceedingJoinPoint pjp) throws Throwable {
     metricsTelemetry.starts();
+
     String method = getMethodName(pjp);
-    metricsTelemetry.addTraceMessage(" ● {}.{}", getAnnotationClass(pjp, TelemetryControllerMark.class).value(), method);
+    String value = getAnnotationClass(pjp, TelemetryControllerMark.class).value();
+
+    beforeProceed(method, value);
     CompletableFuture<ResponseEntity<?>> future = (CompletableFuture<ResponseEntity<?>>) pjp.proceed();
+    afterProceed(method, value);
+
     return future.thenApply(response -> {
-      int status = response.getStatusCode().value();
-      metricsTelemetry.addTraceMessage("◎ {}({})", getAnnotationClass(pjp, TelemetryControllerMark.class).value(), method);
-      metricsTelemetry.send(status);
+      metricsTelemetry.send(response.getStatusCode().value());
       return response;
     });
+  }
+
+  @Around("@within(br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark.TelemetryComponentMark)")
+  public Object component(ProceedingJoinPoint pjp) throws Throwable {
+    String method = getMethodName(pjp);
+    String value = getAnnotationClass(pjp, TelemetryComponentMark.class).value();
+
+    beforeProceed(method, value);
+    Object ret = pjp.proceed();
+    afterProceed(method, value);
+    return ret;
   }
 
   @Around("@within(br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark.TelemetryAdviceMark)")
   public Object advice(ProceedingJoinPoint pjp) throws Throwable {
     ResponseEntity<?> exBody = (ResponseEntity<?>) pjp.proceed();
-    for (Object arg : getMethodArgs(pjp)) {
+    for (Object arg : pjp.getArgs()) {
       if (arg instanceof Throwable param) {
         metricsTelemetry.addTraceMessage("★ Advice({}): {}", getMethodName(pjp), param.getMessage());
         break;
@@ -47,17 +61,12 @@ public class TelemetryAspect {
     return exBody;
   }
 
-  @Around("@within(br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark.TelemetryComponentMark)")
-  public Object method(ProceedingJoinPoint pjp) throws Throwable {
-    String method = getMethodName(pjp);
-    metricsTelemetry.addTraceMessage(" ● {}.{}", getAnnotationClass(pjp, TelemetryComponentMark.class).value(), method);
-    Object ret = pjp.proceed();
-    metricsTelemetry.addTraceMessage(" ◎ {}.{}", getAnnotationClass(pjp, TelemetryComponentMark.class).value(), method);
-    return ret;
+  private void beforeProceed(String method, String value) {
+    metricsTelemetry.addTraceMessage("● {}({})", value, method);
   }
 
-  private Object[] getMethodArgs(ProceedingJoinPoint pjp) {
-    return pjp.getArgs();
+  private void afterProceed(String method, String value) {
+    metricsTelemetry.addTraceMessage("◎ {}({})", value, method);
   }
 
   private String getMethodName(ProceedingJoinPoint pjp) {
@@ -67,5 +76,6 @@ public class TelemetryAspect {
   private <T extends Annotation> T getAnnotationClass(ProceedingJoinPoint pjp, Class<T> annotationClass) {
     return pjp.getTarget().getClass().getAnnotation(annotationClass);
   }
+
 
 }

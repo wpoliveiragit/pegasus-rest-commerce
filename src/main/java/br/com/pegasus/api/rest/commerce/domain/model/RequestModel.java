@@ -12,7 +12,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestModel {
+  /** Identificado da request */
   private String xTraceId;
+  /** Pagina desejada da lista */
   private PageModel page;
+  /** Dados ou parte de dados do produto desejado */
   private ProductModel product;
 }

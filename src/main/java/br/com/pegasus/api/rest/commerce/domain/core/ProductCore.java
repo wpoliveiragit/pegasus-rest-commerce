@@ -9,11 +9,9 @@ import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 import br.com.pegasus.api.rest.commerce.domain.model.RequestModel;
 import br.com.pegasus.api.rest.commerce.domain.port.ProductPort;
 import br.com.pegasus.api.rest.commerce.infra.exception.AppException;
-import br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark.TelemetryComponentMark;
 
 import java.time.OffsetDateTime;
 
-@TelemetryComponentMark("Service.Product")
 public class ProductCore implements ProductPort {
 
   private final ProductAdaterJPA productJpa;
@@ -49,7 +47,7 @@ public class ProductCore implements ProductPort {
   public void update(RequestModel request) {
     ProductModel originalModel = this.internalFindById(request);
     ProductModel updateModel = request.getProduct();
-    if (!originalModel.getName().equalsIgnoreCase(updateModel.getName())) {// nome diferente
+    if (!originalModel.getName().equalsIgnoreCase(updateModel.getName())) {// update do nome
       this.checkNameConflict(request);
     }
     updateModel.setCreatedAt(originalModel.getCreatedAt());
@@ -65,10 +63,8 @@ public class ProductCore implements ProductPort {
 
   private ProductModel internalFindById(RequestModel request) {
     log.track("● Service.Product.(internalFindById)");
-    log.info("● Service.Product.(internalFindById)");
     ProductModel model = productJpa.findById(request).orElseThrow(exMethod::newNotFound);
     log.track("◎ Service.Product.(internalFindById)");
-    log.info("◎ Service.Product.(internalFindById)");
     return model;
   }
 

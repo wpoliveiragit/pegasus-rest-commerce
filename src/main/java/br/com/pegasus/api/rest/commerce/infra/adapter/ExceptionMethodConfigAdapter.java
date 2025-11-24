@@ -1,4 +1,4 @@
-package br.com.pegasus.api.rest.commerce.infra.config.domain.adapter;
+package br.com.pegasus.api.rest.commerce.infra.adapter;
 
 import br.com.pegasus.api.rest.commerce.domain.adapter.ExceptionMethodAdapter;
 import br.com.pegasus.api.rest.commerce.infra.exception.AppException;

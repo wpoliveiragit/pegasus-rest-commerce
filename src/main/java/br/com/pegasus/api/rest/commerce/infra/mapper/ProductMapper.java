@@ -5,6 +5,7 @@ import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 import br.com.pegasus.api.rest.commerce.domain.model.RequestModel;
 import br.com.pegasus.api.rest.commerce.infra.repository.entity.ProductEntity;
+import br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark.TelemetryComponentMark;
 import br.com.pegasus.gen.openapi.type.ProductCreateBodyType;
 import br.com.pegasus.gen.openapi.type.ProductPageResponseType;
 import br.com.pegasus.gen.openapi.type.ProductType;
@@ -20,7 +21,8 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public final class ProductMapper {
+@TelemetryComponentMark("Mapper.Product")
+public class ProductMapper {
 
   private final PageableMapper pageableMapper;
 
@@ -117,7 +119,6 @@ public final class ProductMapper {
         .createdAt(obj.getCreatedAt().toLocalDateTime()).updatedAt(obj.getUpdatedAt().toLocalDateTime()).build();
   }
 
-  // --
   private ProductModel toModel(Long id) {
     return ProductModel.builder().id(id).build();
   }

@@ -1,8 +1,9 @@
 spring.config.import:
-  - "classpath:properties/database-prop.yml"
-  - "classpath:properties/swagger-prop.yml"
   - "classpath:properties/actuator-prop.yml"
   - "classpath:properties/banner-prop.yml"
+  - "classpath:properties/cache-prop.yml"
+  - "classpath:properties/database-prop.yml"
+  - "classpath:properties/swagger-prop.yml"
 
-
-
+# Propriedades locais
+api.security.controller: false

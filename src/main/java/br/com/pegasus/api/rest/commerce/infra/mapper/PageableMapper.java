@@ -2,6 +2,7 @@ package br.com.pegasus.api.rest.commerce.infra.mapper;
 
 import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
+import br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark.TelemetryComponentMark;
 import br.com.pegasus.gen.openapi.type.PaginationType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,7 +12,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public final class PageableMapper {
+@TelemetryComponentMark("Mapper.Pageable")
+public class PageableMapper {
 
   public PaginationType toType(PageableModel<?> model) {
     if (model == null) return null;

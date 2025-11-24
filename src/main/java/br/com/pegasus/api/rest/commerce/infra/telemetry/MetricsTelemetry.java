@@ -104,10 +104,6 @@ public class MetricsTelemetry {
     }
   }
 
-  public void advice(Throwable ex) {
-    trackLog.append(" ✕ ", ex.getCause().getMessage());
-  }
-
   /** Obtém o tamanho real da resposta */
   private Long readResponseBytes() {
     HttpServletResponse response = requestContext.getCurrentResponse();

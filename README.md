@@ -1,17 +1,125 @@
 # TAREFAS
-- Remover todos os builds
-- criar um sistema de anotação pra log em métodos ou na classe onde ao iniciar ou
-  finalizar um método deve se criado um log
+
+- Documentar todo o projeto
 - resources
     - criar a imagem do DER – Diagrama Entidade-Relacionamento (ou ERD – Entity Relationship Diagram).
     - Fazer a criação do script de criação do banco de dados
-    - fazer comandos basicos de consulta e alteração no banco de dados
+    - Fazer comandos basicos de consulta e alteração no banco de dados
+
+# CACHE
+
+## pom.xml
+
+```xml
+
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-cache</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.github.ben-manes.caffeine</groupId>
+        <artifactId>caffeine</artifactId>
+        <version>3.1.6</version>
+    </dependency>
+</dependencies>
+```
+
+## Classe de colnfiguração de comportamento do cache com Caffeine
+
+```java
+import br.com.pegasus.api.rest.commerce.infra.telemetry.logger.TrackLogger;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCache;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+
+import java.util.concurrent.TimeUnit;
+
+/** Configurador de comportamento do cache com Caffeine */
+@Configuration
+@EnableCaching
+@RequiredArgsConstructor
+public class CacheConfig {
+
+  private final TrackLogger trackLog;
+
+  @Bean
+  public CacheManager cacheManager(Environment env) {
+    return new CaffeineCacheManager() {
+
+      @Override
+      protected @NotNull Cache<Object, Object> createNativeCaffeineCache(@NotNull String name) {
+        return Caffeine.newBuilder()//
+            .maximumSize(1000)//
+            .expireAfterWrite(10, TimeUnit.MINUTES)//
+            .recordStats()//
+            .build();
+      }
+
+      @Override
+      protected @NotNull org.springframework.cache.Cache adaptCaffeineCache(@NotNull String name, @NotNull Cache<Object, Object> cache) {
+        return new CaffeineCache(name, cache) {
+          @Override
+          public ValueWrapper get(@NotNull Object key) {
+            ValueWrapper value = super.get(key);
+            if (value == null) {
+              return null;
+            }
+            System.out.println("✪ cache(↻)");
+            return value;
+          }
+        };
+      }
+    };
+  }
+
+}
+```
+
+## Anotações de métodos do cache
+
+- `@Cacheable(value="", key="")`: usa e atualiza cache
+- `@CacheEvict(value="", allEntries=true )`: limpa cache
+- `@value`: nome do cache normalmente
+- `@key`: chave única do item
+- `@allEntries`: remove tudo
+
+```java
+public class NomeClass {
+
+  @Cacheable(value = "Cache-Name", key = "'all:' + #request.page.number + ':' + #request.page.size")
+  PageableModel<ObjectModel> findAll(RequestModel request) {
+  }
+
+  @Cacheable(value = "Cache-Name", key = "'id:' + #request.id")
+  ObjectModel findById(RequestModel request) {
+  }
+
+  @CacheEvict(value = "Cache-Name", allEntries = true)
+  ObjectModel create(RequestModel request) {
+  }
+
+  @CacheEvict(value = "Cache-Name", allEntries = true)
+  void update(RequestModel request) {
+  }
+
+  @CacheEvict(value = "Cache-Name", allEntries = true)
+  void delete(RequestModel request) {
+  }
+}
+```
 
 # Telemetria
 
-## Configuração
-
-### Dependências
+## POM
 
 Telemetria: habilita endpoints /actuator para expor métricas, saúde e informações da aplicação, baseando-se no
 Micrometer para coleta e exportação de dados para Prometheus, Grafana etc.
@@ -79,9 +187,10 @@ ferramentas de observação e visualização como Grafana.
 ```
 
 ### Application.yaml
- Essa configuração garante que você consiga acessar todas as métricas via /actuator/metrics e /actuator/prometheus.
 
+Essa configuração garante que você consiga acessar todas as métricas via /actuator/metrics e /actuator/prometheus.
 `management.endpoints.web.exposure.include: health, info, metrics, prometheus, httpexchanges`
+
 - health → endpoint de saúde da aplicação.
 - info → informações gerais do app.
 - metrics → exposição de métricas.
@@ -89,18 +198,23 @@ ferramentas de observação e visualização como Grafana.
 - httpexchanges → endpoint de tracing
 
 `management.endpoint.health.show-details: always`
+
 - health.show-details: always → sempre mostra detalhes da saúde.
 
 `spring.servlet.multipart.max-file-size: 10MB` e `spring.servlet.multipart.max-request-size: 10MB`
+
 - limitam o tamanho de upload de arquivos; útil para medir requestSize corretamente.
 
 `management.endpoint.metrics.enabled: true`
+
 - metrics.enabled: true → garante que métricas estão habilitadas.
 
 `management.endpoint.httptrace.enabled: true`
+
 - httptrace.enabled: true -> garante que trace visual apareça por completo
 
 `logging.pattern.level: "%5p [traceId=%X{traceId:-}, spanId=%X{spanId:-}]"`
+
 - Ativa logs com traceId/spanId
 
 ```yaml
@@ -112,15 +226,6 @@ management.endpoint.metrics.enabled: true
 management.endpoint.httptrace.enabled: true
 logging.pattern.level: "%5p [traceId=%X{traceId:-}, spanId=%X{spanId:-}]"
 ```
-
-```java
-
-
-```
-
-
-
-
 
 URLs disponíveis para métricas
 

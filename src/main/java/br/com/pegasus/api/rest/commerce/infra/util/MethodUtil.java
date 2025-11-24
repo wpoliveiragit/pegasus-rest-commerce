@@ -36,4 +36,8 @@ public final class MethodUtil {
 
   }
 
+  public static String addColorGreenText(String text){
+    return ConstUtil.COLOR_GREEN + text + ConstUtil.COLOR_RESET;
+  }
+
 }

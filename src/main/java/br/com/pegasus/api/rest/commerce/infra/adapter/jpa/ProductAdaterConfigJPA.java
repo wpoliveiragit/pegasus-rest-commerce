@@ -1,4 +1,4 @@
-package br.com.pegasus.api.rest.commerce.infra.config.domain.adapter.jpa;
+package br.com.pegasus.api.rest.commerce.infra.adapter.jpa;
 
 import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.ProductAdaterJPA;
 import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
@@ -17,13 +17,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@TelemetryComponentMark("JPA.Product")
+@TelemetryComponentMark("Repository.Product")
 @Component
 @RequiredArgsConstructor
 public class ProductAdaterConfigJPA implements ProductAdaterJPA {
 
-  private final ProductMapper mapper;
   private final ProductRepository repo;
+  private final ProductMapper mapper;
   private final TrackLogger trackLog;
 
   @Override
@@ -56,7 +56,7 @@ public class ProductAdaterConfigJPA implements ProductAdaterJPA {
   @Override
   public ProductModel update(RequestModel request) {
     ProductModel responseModel = save(request);
-    trackLog.append("element updated successfully");
+    trackLog.append("(element updated successfully)");
     return responseModel;
   }
 

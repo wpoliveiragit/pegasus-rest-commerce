@@ -63,7 +63,7 @@ public class RestControllerAdviceHandler {
         .timestamp(offsetDateTimeNow)//
         .message(respEx.getMessage())//
         .path(request.getRequestURI())//
-        .build();//
+        .build();
     return httpMethod.adviceResponse(httpStatus, resp);
   }
 

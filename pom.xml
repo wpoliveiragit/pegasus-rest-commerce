@@ -27,6 +27,7 @@
         <!-- Versões -->
         <java.version>17</java.version>
         <jackson.version>2.18.2</jackson.version>
+        <jjwt.version>0.11.5</jjwt.version>
 
         <!-- OpenAPI -->
         <openapi.inputSpec>${project.basedir}/src/main/resources/openapi.yaml</openapi.inputSpec>
@@ -135,6 +136,40 @@
         <dependency> <!-- RENDERIZADOR DE PÁGINAS HTML DINÂMICAS -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <!-- Cache Caffeine -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>3.1.6</version>
+        </dependency>
+
+        <!-- Spring Security Resource Server, OAuth2 local + JWT -->
+        <dependency> <!-- Resource Server (validação de JWT, autorização, etc) -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <dependency> <!-- Opcional: Emissor token -->
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency> <!-- Opcional: Gerador manual de token -->
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency><!-- Opcional: Suporte JSON (claims) p/ JJWT -->
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- UTIL -->
