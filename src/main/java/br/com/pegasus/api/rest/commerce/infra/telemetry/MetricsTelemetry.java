@@ -68,7 +68,7 @@ public class MetricsTelemetry {
       MetricRequestData metricRequest = new MetricRequestData();
       metricRequest.setStart(System.currentTimeMillis());
       metricRequest.setRequestSize(request.getContentLengthLong());
-      metricRequest.setXTraceId(request.getHeader(ConstUtil.HEADER_X_TRACE_ID));
+      metricRequest.setXTraceId(request.getHeader(ConstUtil.REST_HEADER_X_TRACE_ID));
       metricRequest.setMethod(request.getMethod());
       metricRequest.setUrl(request.getRequestURI());
 

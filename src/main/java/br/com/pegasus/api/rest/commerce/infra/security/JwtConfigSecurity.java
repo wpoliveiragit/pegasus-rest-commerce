@@ -1,5 +1,6 @@
 package br.com.pegasus.api.rest.commerce.infra.security;
 
+import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -16,21 +17,20 @@ public class JwtConfigSecurity {
 
   @Bean
   public SecurityFilterChain securityFilterChain(Environment env, HttpSecurity http) throws Exception {
-    boolean securityController = env.getProperty("api.security.controller", Boolean.class, true);
+    boolean securityController = env.getProperty("api.security.controller", Boolean.class, ConstUtil.BOOLEAN_TRUE);
 
-    // hambiente funcional
-    String[] withToken = {"/oauth/token"};
+    String[] withToken = {"/oauth/token"}; // hambiente funcional
+    String[] withOutToken = {"/**"}; //ambiente para testes rapidos e locais
 
-    //ambiente para testes rapidos e locais
-    String[] withOutToken = {"/**"};
-
-    return http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> {
+    return http.csrf(AbstractHttpConfigurer::disable) //
+        .authorizeHttpRequests(auth -> {
           auth.requestMatchers((securityController) ? withToken : withOutToken)//
-              .permitAll().anyRequest().authenticated();
+              .permitAll()//
+              .anyRequest()//
+              .authenticated();
         }).oauth2ResourceServer(oauth2 -> {
           oauth2.jwt(jwt -> jwt.decoder(configSecurity.jwtDecoder()));
-        })//
-        .build();
+        }).build();
   }
 
 }

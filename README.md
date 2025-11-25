@@ -25,6 +25,11 @@
 </dependencies>
 ```
 
+## application.yaml
+```yaml
+cache.type: caffeine
+```
+
 ## Classe de colnfiguração de comportamento do cache com Caffeine
 
 ```java

@@ -57,7 +57,7 @@ public class RestControllerAdviceHandler {
     HttpStatus httpStatus = respEx.getHttpStatus();
     OffsetDateTime offsetDateTimeNow = MethodUtil.Date.getOffsetDateTimeNow();
     ExceptionResponseType resp = ExceptionResponseType.builder()//
-        .traceId(UUID.fromString(request.getHeader(ConstUtil.HEADER_X_TRACE_ID)))//
+        .traceId(UUID.fromString(request.getHeader(ConstUtil.REST_HEADER_X_TRACE_ID)))//
         .status(httpStatus.value())//
         .error(httpStatus.getReasonPhrase())//
         .timestamp(offsetDateTimeNow)//

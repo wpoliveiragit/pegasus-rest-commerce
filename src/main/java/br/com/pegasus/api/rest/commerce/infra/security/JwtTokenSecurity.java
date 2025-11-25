@@ -1,5 +1,6 @@
 package br.com.pegasus.api.rest.commerce.infra.security;
 
+import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -25,8 +26,8 @@ public class JwtTokenSecurity {
 
   public JwtTokenSecurity() throws Exception {
     // Gera um par de chaves RSA de 2048 bits
-    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-    keyPairGenerator.initialize(2048);
+    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(ConstUtil.SECURITY_ALGORITHM);
+    keyPairGenerator.initialize(ConstUtil.INT_2048);
     KeyPair keyPair = keyPairGenerator.generateKeyPair();
 
     this.publicKey = (RSAPublicKey) keyPair.getPublic();

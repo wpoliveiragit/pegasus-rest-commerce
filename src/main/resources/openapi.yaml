@@ -34,10 +34,42 @@ servers:
   - url: http://localhost:8080
     description: Servidor local para solicitações de produtos
 
+security:
+  - bearerAuth: [ ]
+
 tags:
   - { name: product, description: produto }
+  - { name: token, description: token }
 
 paths:
+
+  /oauth/token:
+    post:
+      tags: [ token ]
+      operationId: create-token
+      summary: Gera um token JWT
+      security: [ ]   # sem autenticação
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+              required:
+                - username
+      responses:
+        '200':
+          description: Token gerado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
 
   /product:
     parameters:
@@ -122,6 +154,11 @@ paths:
         "500": { $ref: '#/components/responses/internal-server-error-response' }
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     att-trace-id: { type: string, format: uuid, example: a12f3cde-45b6-7890-abc1-def234567890 }
 
