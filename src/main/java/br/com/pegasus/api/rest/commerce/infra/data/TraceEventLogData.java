@@ -1,10 +1,6 @@
 package br.com.pegasus.api.rest.commerce.infra.data;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import java.time.Instant;
 
-@RequiredArgsConstructor
-@Getter
-public class TracelogData {
-  private final int order;
+public record TraceEventLogData(int order, Instant timestamp, String message) {
 }

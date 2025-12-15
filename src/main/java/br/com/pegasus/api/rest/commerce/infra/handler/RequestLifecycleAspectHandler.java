@@ -22,7 +22,7 @@ public class RequestLifecycleAspectHandler {
 
   @Around("@within(br.com.pegasus.api.rest.commerce.infra.handler.marker.ControllerLayerMarker)")
   public Object controller(ProceedingJoinPoint pjp) throws Throwable {
-    return new ControllerLifeCycle(pjp,metricsTelemetry).LifeCycle();
+    return new ControllerLifeCycle(pjp, metricsTelemetry).LifeCycle();
   }
 
   @Around("@within(br.com.pegasus.api.rest.commerce.infra.handler.marker.ComponentLayerMarker)")

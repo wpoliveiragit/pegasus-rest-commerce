@@ -9,15 +9,23 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.concurrent.CompletableFuture;
 
-@RequiredArgsConstructor
 public class ControllerLifeCycle implements ContractLifeCycle {
 
   private final ProceedingJoinPoint pjp;
   private final MetricsTelemetry metricsTelemetry;
 
+  private final String methodName;
+  private final String valueAnn;
+
   private CompletableFuture<ResponseEntity<?>> responseCompletableFuture;
-  private String methodName;
-  private String valueAnn;
+
+  public ControllerLifeCycle(ProceedingJoinPoint pjp, MetricsTelemetry metricsTelemetry) {
+    this.metricsTelemetry = metricsTelemetry;
+    this.pjp = pjp;
+
+    this.methodName = pjp.getSignature().getName();
+    this.valueAnn = pjp.getTarget().getClass().getAnnotation(ControllerLayerMarker.class).value();
+  }
 
   public Object LifeCycle() throws Throwable {
     start();
@@ -26,8 +34,6 @@ public class ControllerLifeCycle implements ContractLifeCycle {
   }
 
   private void start() {
-    methodName = pjp.getSignature().getName();
-    valueAnn = pjp.getTarget().getClass().getAnnotation(ControllerLayerMarker.class).value();
     metricsTelemetry.starts();
     metricsTelemetry.addTraceMessage(ConstUtil.REGEX_TRACE_CONTROLLER_INIT, valueAnn, methodName);
   }

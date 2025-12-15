@@ -32,14 +32,14 @@ import java.util.concurrent.atomic.LongAdder;
  */
 @Log4j2
 @Configuration
-public class MetricsTelemetry {
+public class MetricsTelemetry2 {
 
   private final RegisterMetricsTelemetry registerMetrics;
   private final RequestContextHandler requestContext;
   private final LongAdder activeRequests;
   private final TrackLogger trackLog;
 
-  public MetricsTelemetry(MeterRegistry meterRegistry, RequestContextHandler requestContext, TrackLogger trackLog) {
+  public MetricsTelemetry2(MeterRegistry meterRegistry, RequestContextHandler requestContext, TrackLogger trackLog) {
     this.registerMetrics = new RegisterMetricsTelemetry(meterRegistry);
     this.activeRequests = new LongAdder();
     this.requestContext = requestContext;
