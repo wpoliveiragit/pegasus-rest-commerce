@@ -4,8 +4,8 @@ import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 import br.com.pegasus.api.rest.commerce.domain.model.RequestModel;
+import br.com.pegasus.api.rest.commerce.infra.handler.marker.ComponentLayerMarker;
 import br.com.pegasus.api.rest.commerce.infra.repository.entity.ProductEntity;
-import br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark.TelemetryComponentMark;
 import br.com.pegasus.gen.openapi.type.ProductCreateBodyType;
 import br.com.pegasus.gen.openapi.type.ProductPageResponseType;
 import br.com.pegasus.gen.openapi.type.ProductType;
@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-@TelemetryComponentMark("Mapper.Product")
+@ComponentLayerMarker("Mapper.Product")
 public class ProductMapper {
 
   private final PageableMapper pageableMapper;
@@ -66,13 +66,13 @@ public class ProductMapper {
   }
 
   public PageableModel<ProductModel> jpaToService(Page<ProductEntity> obj) {
-    return pageableMapper.toModel(obj, obj.get().map(this::jpaToService).toList());
+    return pageableMapper.toModel(obj, obj.get()//
+        .map(this::jpaToService)//
+        .toList());
   }
 
   public ProductModel jpaToService(ProductEntity obj) {
-    if (obj == null || obj.getPrice() == null) {
-      return null;
-    }
+    if (obj == null || obj.getPrice() == null) return null;
     return ProductModel.builder()//
         .id(obj.getId())//
         .name(obj.getName())//
@@ -84,9 +84,7 @@ public class ProductMapper {
   }
 
   public ProductType serviceToDelegate(ProductModel obj) {
-    if (obj == null) {
-      return null;
-    }
+    if (obj == null) return null;
     return ProductType.builder()//
         .id(obj.getId())//
         .name(obj.getName())//
@@ -98,9 +96,7 @@ public class ProductMapper {
   }
 
   public ProductPageResponseType serviceToDelegate(PageableModel<ProductModel> obj) {
-    if (obj == null || obj.getList() == null) {
-      return null;
-    }
+    if (obj == null || obj.getList() == null) return null;
     return ProductPageResponseType.builder()//
         .pagination(pageableMapper.toType(obj))//
         .data(obj.getList().stream().map(this::serviceToDelegate).toList())//
@@ -108,19 +104,21 @@ public class ProductMapper {
   }
 
   public ProductEntity serviceToJpa(ProductModel obj) {
-    if (obj == null || obj.getPrice() == null) {
-      return null;
-    }
+    if (obj == null || obj.getPrice() == null) return null;
     return ProductEntity.builder()//
         .id(obj.getId())//
         .name(obj.getName())//
         .price(BigDecimal.valueOf(obj.getPrice()))//
         .quantity(obj.getQuantity())//
-        .createdAt(obj.getCreatedAt().toLocalDateTime()).updatedAt(obj.getUpdatedAt().toLocalDateTime()).build();
+        .createdAt(obj.getCreatedAt().toLocalDateTime())//
+        .updatedAt(obj.getUpdatedAt().toLocalDateTime())//
+        .build();
   }
 
   private ProductModel toModel(Long id) {
-    return ProductModel.builder().id(id).build();
+    return ProductModel.builder()//
+        .id(id)//
+        .build();
   }
 
   private ProductModel toModel(Long id, ProductUpdateBodyType body) {

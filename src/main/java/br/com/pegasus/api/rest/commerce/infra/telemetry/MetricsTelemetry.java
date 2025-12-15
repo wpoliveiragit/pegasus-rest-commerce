@@ -14,9 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletResponseWrapper;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.actuate.web.exchanges.HttpExchangeRepository;
-import org.springframework.boot.actuate.web.exchanges.InMemoryHttpExchangeRepository;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.ByteArrayOutputStream;
@@ -50,11 +47,6 @@ public class MetricsTelemetry {
     this.registerMetrics.registerGauge(activeRequests);
   }
 
-  @Bean
-  public HttpExchangeRepository createHttpExchangeRepository() {
-    return new InMemoryHttpExchangeRepository();
-  }
-
   public void addTraceMessage(String message, Object... args) {
     trackLog.append(message, args);
   }
@@ -65,16 +57,13 @@ public class MetricsTelemetry {
       activeRequests.increment();
       HttpServletRequest request = requestContext.getCurrentRequest();
 
-      MetricRequestData metricRequest = new MetricRequestData();
-      metricRequest.setStart(System.currentTimeMillis());
-      metricRequest.setRequestSize(request.getContentLengthLong());
+      MetricRequestData metricRequest = new MetricRequestData(request, System.currentTimeMillis());
       metricRequest.setXTraceId(request.getHeader(ConstUtil.REST_HEADER_X_TRACE_ID));
-      metricRequest.setMethod(request.getMethod());
+      metricRequest.setRequestSize(request.getContentLengthLong());
       metricRequest.setUrl(request.getRequestURI());
+      metricRequest.setMethod(request.getMethod());
 
-      MetricData metric = new MetricData();
-      metric.setRequest(metricRequest);
-      requestContext.setMetricData(metric);
+      requestContext.setMetricData(new MetricData(metricRequest));
     } catch (ServletException ex) {
       log.error(ex.getMessage());
     }
@@ -128,7 +117,7 @@ public class MetricsTelemetry {
     MetricResponseData response = new MetricResponseData();
     response.setKeyDistributionSummary(method + request.getUrl() + httpResp.getStatus());
     response.setStatus(status + "");
-    response.setRuntime(System.currentTimeMillis() - request.getStart());
+    response.setRuntime(System.currentTimeMillis() - request.getRequestStartTime());
     response.setResponseSize(readResponseBytes());
 
     metric.setResponse(response);
@@ -157,13 +146,13 @@ public class MetricsTelemetry {
           ? (writer = new PrintWriter(outputStream, true, StandardCharsets.UTF_8)) : writer;
     }
 
-    public long getContentSize() {
-      return buffer.size();
-    }
-
     public void flushToResponse() throws IOException {
       super.getOutputStream().write(buffer.toByteArray());
       super.getOutputStream().flush();
+    }
+
+    public long getContentSize() {
+      return buffer.size();
     }
 
     private static ServletOutputStream createServletOutputStream(ByteArrayOutputStream buffer) {

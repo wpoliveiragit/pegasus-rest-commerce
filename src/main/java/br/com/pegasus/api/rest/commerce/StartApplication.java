@@ -22,7 +22,6 @@ public class StartApplication implements ApplicationRunner {
   @Override
   public void run(ApplicationArguments args) throws Exception {
     double seconds = (System.currentTimeMillis() - StartApplication.START_TIME) / 1000.0;
-    System.out.printf("Started %s in %.3f seconds (process running for %.3f)%n",
-        StartApplication.class.getSimpleName(), seconds, seconds);
+    System.out.printf("Started %s in %.3f seconds (process running for %.3f)%n", StartApplication.class.getSimpleName(), seconds, seconds);
   }
 }

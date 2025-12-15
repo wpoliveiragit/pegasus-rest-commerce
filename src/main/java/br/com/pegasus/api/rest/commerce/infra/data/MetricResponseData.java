@@ -6,8 +6,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MetricResponseData {
+
   private String keyDistributionSummary;
   private String status;
   private long runtime;
   private Long responseSize;
+
 }

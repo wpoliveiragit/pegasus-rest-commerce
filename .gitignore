@@ -1,4 +1,7 @@
-## Project Specific ###
+# Specific Project Settings
+/datasource/
+
+# Project Specific ###
 logs/
 pom_.xml
 app.properties

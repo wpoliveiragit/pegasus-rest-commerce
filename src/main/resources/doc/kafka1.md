@@ -1,4 +1,17 @@
 # Docker - Kafka
+```json
+{
+   "name-controller": {
+      "method-name-in": "started",
+      "service": {
+         "repository": {
+            "valor": "exemplo"
+         }
+      }
+      "method-name-out": "ok"
+   }
+}
+```
 
 ## docker-compose.yml
 
@@ -228,3 +241,22 @@ docker exec -it kafka bash -c "kafka-topics --bootstrap-server localhost:9092 --
   comando pra enviar uma mensagem, que tudo fosse em uma só
 - É possivel enviar varias mensagens de uma vez?
 - o que pe offset e como resetar ele?
+
+
+```
+# DATABASE - Configurações do Banco de Dados H2
+spring.datasource.url: 'jdbc:h2:mem:banco-dados-h2'  # URL do banco de dados
+spring.datasource.driver-class-name: 'org.h2.Driver'  # Driver do banco de dados H2
+spring.datasource.username: 'sa'  # Usuário do banco de dados
+spring.datasource.password: ''  # Senha do banco de dados
+
+# CONSOLE H2 - Acesso ao Console do H2 via Navegador
+spring.h2.console.enabled: true  # Habilita o console do H2
+spring.h2.console.path: /h2-console  # Define o caminho para acessar o console no navegador (ex: http://localhost:8080/h2-console)
+
+# JPA - Configurações de Persistência
+spring.jpa.show-sql: false  # Exibe as consultas SQL geradas pelo JPA no console
+spring.jpa.hibernate.ddl-auto: create  # Define o comportamento do Hibernate em relação ao esquema do banco (no caso, cria o esquema e apaga os dados existentes)
+hibernate.dialect: org.hibernate.dialect.H2Dialect  # Dialeto específico do H2 para o Hibernate (H2 não precisa)
+
+```

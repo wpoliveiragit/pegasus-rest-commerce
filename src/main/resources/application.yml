@@ -1,9 +1,17 @@
+# PROPRIEDADES GERAIS
+
+# Redireciona o local do arquivo. O nome do arquivo pode ser alterado
+spring.banner.location: classpath:/other/banner.txt
+logging.config: classpath:other/logback-spring.xml
+
+# PROPRIEDADES LOCAIS: centralize aqui todas as propriedades usadas apenas neste projeto
+api.security.controller: false
+
+# PROPRIEDADES IMPORTADAS
 spring.config.import:
   - "classpath:properties/actuator-prop.yml"
   - "classpath:properties/banner-prop.yml"
   - "classpath:properties/cache-prop.yml"
   - "classpath:properties/database-prop.yml"
   - "classpath:properties/swagger-prop.yml"
-
-# Propriedades locais
-api.security.controller: false
+  - "classpath:properties/kafka-prop.yml"

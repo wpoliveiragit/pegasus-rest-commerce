@@ -17,12 +17,18 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TrackLogger {
 
+  private static final String TRACE_LOG = "TRACE_LOG";
+
   private final RequestContextHandler requestContext;
   private Logger trackLog;
 
   @PostConstruct
   public void init() {
-    trackLog = LoggerFactory.getLogger("TRACE_LOG");
+    trackLog = LoggerFactory.getLogger(TRACE_LOG);
+  }
+
+  public void appendTest(String trace) {
+    getMessage().append(trace);
   }
 
   public void append(String message) {

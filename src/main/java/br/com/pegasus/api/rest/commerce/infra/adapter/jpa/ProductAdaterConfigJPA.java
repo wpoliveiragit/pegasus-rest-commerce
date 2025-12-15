@@ -5,10 +5,10 @@ import br.com.pegasus.api.rest.commerce.domain.model.PageModel;
 import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 import br.com.pegasus.api.rest.commerce.domain.model.RequestModel;
+import br.com.pegasus.api.rest.commerce.infra.handler.marker.ComponentLayerMarker;
 import br.com.pegasus.api.rest.commerce.infra.mapper.ProductMapper;
 import br.com.pegasus.api.rest.commerce.infra.repository.ProductRepository;
 import br.com.pegasus.api.rest.commerce.infra.repository.entity.ProductEntity;
-import br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark.TelemetryComponentMark;
 import br.com.pegasus.api.rest.commerce.infra.telemetry.logger.TrackLogger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,14 +17,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@TelemetryComponentMark("Repository.Product")
+@ComponentLayerMarker("Repository.Product")
 @Component
 @RequiredArgsConstructor
 public class ProductAdaterConfigJPA implements ProductAdaterJPA {
 
   private final ProductRepository repo;
-  private final ProductMapper mapper;
   private final TrackLogger trackLog;
+  private final ProductMapper mapper;
 
   @Override
   public PageableModel<ProductModel> findAll(RequestModel request) {

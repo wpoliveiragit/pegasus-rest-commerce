@@ -1,6 +1,8 @@
 package br.com.pegasus.api.rest.commerce.infra.config;
 
 import br.com.pegasus.api.rest.commerce.StartApplication;
+import br.com.pegasus.api.rest.commerce.app.delegate.ProductDelegate;
+import br.com.pegasus.api.rest.commerce.infra.handler.RequestLifecycleAspectHandler;
 import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -56,7 +58,10 @@ public class StartupInfoConfig {
   }
 
   public List<String> checkBeans() {
-    List<Class<?>> beans = List.of();
+    List<Class<?>> beans = List.of(
+        ProductDelegate.class,
+        RequestLifecycleAspectHandler.class
+    );
 
     return Stream.concat(Stream.of("◎ CHECK BEANS"),//
         beans.stream().map(bean -> checkBean(bean) + bean.getSimpleName())//

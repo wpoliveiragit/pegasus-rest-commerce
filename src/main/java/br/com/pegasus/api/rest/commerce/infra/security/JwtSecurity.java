@@ -15,7 +15,7 @@ public class JwtSecurity {
 
   private final JwtEncoder encoder;
 
-  public String createToken(String username){
+  public String createToken(String username) {
     Instant now = Instant.now();
     JwtClaimsSet claims = JwtClaimsSet.builder()//
         .subject(username)//

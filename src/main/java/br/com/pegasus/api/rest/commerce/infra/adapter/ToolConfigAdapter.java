@@ -1,7 +1,8 @@
 package br.com.pegasus.api.rest.commerce.infra.adapter;
 
-import br.com.pegasus.api.rest.commerce.domain.adapter.ExceptionMethodAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.KafkaAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.LogAdapter;
+import br.com.pegasus.api.rest.commerce.domain.adapter.MethodAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.ToolAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.ProductAdaterJPA;
 import br.com.pegasus.api.rest.commerce.infra.telemetry.logger.TrackLogger;
@@ -12,19 +13,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ToolConfigAdapter implements ToolAdapter {
 
-  private final ExceptionMethodAdapter validMethod;
+  private final MethodAdapter validMethod;
   private final ProductAdaterJPA productJpa;
   private final TrackLogger trackLogger;
-
-  @Override
-  public LogAdapter getLog(Class<?> clazz) {
-    return new LogAdapter() {
-      @Override
-      public void track(String msg) {
-        trackLogger.append(msg);
-      }
-    };
-  }
+  private final KafkaAdapter kafka;
 
   @Override
   public ProductAdaterJPA getProductRepository() {
@@ -32,8 +24,29 @@ public class ToolConfigAdapter implements ToolAdapter {
   }
 
   @Override
-  public ExceptionMethodAdapter getMethod() {
+  public MethodAdapter getMethod() {
     return validMethod;
+  }
+
+  @Override
+  public KafkaAdapter getKafka() {
+    return kafka;
+  }
+
+  @Override
+  public LogAdapter getLog(Class<?> clazz) {
+    return new LogAdapter() {
+
+      @Override
+      public void startedTrack(Class<?> clazz, String nameMethod) {
+        trackLogger.appendTest(" [★ INICIOU]" + clazz.getSimpleName() + "#" + nameMethod);
+      }
+
+      @Override
+      public void endedTrack(Class<?> clazz, String nameMethod) {
+        trackLogger.appendTest(" [☆  FINALIZOU]" + clazz.getSimpleName() + "#" + nameMethod + " [VOLTOU]");
+      }
+    };
   }
 
 }

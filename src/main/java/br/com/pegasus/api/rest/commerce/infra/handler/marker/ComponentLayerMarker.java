@@ -1,4 +1,4 @@
-package br.com.pegasus.api.rest.commerce.infra.telemetry.aspect.mark;
+package br.com.pegasus.api.rest.commerce.infra.handler.marker;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TelemetryComponentMark {
+public @interface ComponentLayerMarker {
   String value() default "";
 }
