@@ -1,12 +1,14 @@
 package br.com.pegasus.api.rest.commerce.infra.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.ClassPathResource;
 
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
+@Log4j2
 public final class MethodUtil {
 
   private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -21,6 +23,7 @@ public final class MethodUtil {
     try {
       return objectMapper.writeValueAsString(obj);
     } catch (Exception e) {
+      log.error(e.getMessage());
       return "{}";
     }
   }

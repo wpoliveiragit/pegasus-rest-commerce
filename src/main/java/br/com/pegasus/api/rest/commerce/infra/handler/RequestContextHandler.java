@@ -1,6 +1,5 @@
 package br.com.pegasus.api.rest.commerce.infra.handler;
 
-import br.com.pegasus.api.rest.commerce.infra.data.MetricData;
 import br.com.pegasus.api.rest.commerce.infra.data.TraceEventLogListData;
 import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import jakarta.servlet.ServletException;
@@ -23,14 +22,6 @@ public class RequestContextHandler {
   public HttpServletResponse getCurrentResponse() {
     ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
     return (attrs == null) ? new MockHttpServletResponse() : attrs.getResponse();
-  }
-
-  public void setMetricData(MetricData metricData) throws ServletException {
-    this.getCurrentRequest().setAttribute(MetricData.class.getSimpleName(), metricData);
-  }
-
-  public MetricData getMetricData() throws ServletException {
-    return (MetricData) this.getCurrentRequest().getAttribute(MetricData.class.getSimpleName());
   }
 
   public void setTraceEventLogListData(TraceEventLogListData traceEventLogList) throws ServletException {

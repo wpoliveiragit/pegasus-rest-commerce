@@ -1,7 +1,6 @@
 package br.com.pegasus.api.rest.commerce.infra.handler.lifecycle;
 
-import br.com.pegasus.api.rest.commerce.infra.telemetry.MetricsTelemetry;
-import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
+import br.com.pegasus.api.rest.commerce.infra.telemetry.HandlerTelemetry;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 public class AdviceLifeCycle implements ContractLifeCycle {
 
   private final ProceedingJoinPoint pjp;
-  private final MetricsTelemetry metricsTelemetry;
+  private final HandlerTelemetry handlerTelemetry;
   private ResponseEntity<?> exBody;
 
   public Object LifeCycle() throws Throwable {
@@ -22,7 +21,7 @@ public class AdviceLifeCycle implements ContractLifeCycle {
   private void start() {
     for (Object arg : pjp.getArgs()) {
       if (arg instanceof Throwable exParam) {
-        metricsTelemetry.addTraceMessage(ConstUtil.REGEX_TRACE_ADVICE, exParam.getMessage());
+        handlerTelemetry.addTraceEvent("FAIL: " + exParam.getMessage());
         break;
       }
     }
@@ -33,7 +32,8 @@ public class AdviceLifeCycle implements ContractLifeCycle {
   }
 
   private Object end() {
-    metricsTelemetry.send(exBody.getStatusCode().value());
+    handlerTelemetry.ends(exBody.getStatusCode().value());
+    handlerTelemetry.send();
     return exBody;
   }
 

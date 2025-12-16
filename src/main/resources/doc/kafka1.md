@@ -1,15 +1,82 @@
 # Docker - Kafka
 ```json
 {
-   "name-controller": {
-      "method-name-in": "started",
-      "service": {
-         "repository": {
-            "valor": "exemplo"
-         }
-      }
-      "method-name-out": "ok"
-   }
+  "orderSequence": 10,
+  "trace": [
+    {
+      "order": 1,
+      "timestamp": "2025-12-16T00:22:33.265713Z",
+      "message": "START: Delegate.Product#createProduct"
+    },
+    {
+      "order": 2,
+      "timestamp": "2025-12-16T00:22:33.269296500Z",
+      "message": "START: Mapper.Product#delegateToService"
+    },
+    {
+      "order": 3,
+      "timestamp": "2025-12-16T00:22:33.272296Z",
+      "message": "END: Mapper.Product#delegateToService"
+    },
+    {
+      "order": 4,
+      "timestamp": "2025-12-16T00:22:33.318358900Z",
+      "message": "START: Service.Product#create"
+    },
+    {
+      "order": 5,
+      "timestamp": "2025-12-16T00:22:33.320378800Z",
+      "message": " [★ INICIOU]ProductRestCore#checkNameConflict"
+    },
+    {
+      "order": 6,
+      "timestamp": "2025-12-16T00:22:33.322905200Z",
+      "message": "START: Repository.Product#findByName"
+    },
+    {
+      "order": 7,
+      "timestamp": "2025-12-16T00:22:33.665678400Z",
+      "message": "START: Mapper.Product#jpaToService"
+    },
+    {
+      "order": 8,
+      "timestamp": "2025-12-16T00:22:33.665678400Z",
+      "message": "END: Mapper.Product#jpaToService"
+    },
+    {
+      "order": 9,
+      "timestamp": "2025-12-16T00:22:33.665678400Z",
+      "message": "END: Repository.Product#findByName"
+    },
+    {
+      "order": 10,
+      "timestamp": "2025-12-16T00:22:33.672404200Z",
+      "message": "FAIL: Name already registered"
+    }
+  ],
+  "traceId": "a12f3cde-45b6-7890-abc1-def234567890",
+  "method": "POST",
+  "url": "/product",
+  "requestSize": 61,
+  "requestStartTime": 1765844553256,
+  "keyDistributionSummary": "POST/product409",
+  "status": "409",
+  "runtime": 422,
+  "responseSize": 0,
+  "tags": [
+    {
+      "key": "method",
+      "value": "POST"
+    },
+    {
+      "key": "url",
+      "value": "/product"
+    },
+    {
+      "key": "status",
+      "value": "409"
+    }
+  ]
 }
 ```
 

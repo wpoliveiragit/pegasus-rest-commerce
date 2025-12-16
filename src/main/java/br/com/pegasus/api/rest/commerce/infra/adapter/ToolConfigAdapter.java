@@ -39,12 +39,12 @@ public class ToolConfigAdapter implements ToolAdapter {
 
       @Override
       public void startedTrack(Class<?> clazz, String nameMethod) {
-        trackLogger.appendTest(" [★ INICIOU]" + clazz.getSimpleName() + "#" + nameMethod);
+        trackLogger.append(" [★ INICIOU]" + clazz.getSimpleName() + "#" + nameMethod);
       }
 
       @Override
       public void endedTrack(Class<?> clazz, String nameMethod) {
-        trackLogger.appendTest(" [☆  FINALIZOU]" + clazz.getSimpleName() + "#" + nameMethod + " [VOLTOU]");
+        trackLogger.append(" [☆  FINALIZOU]" + clazz.getSimpleName() + "#" + nameMethod + " [VOLTOU]");
       }
     };
   }

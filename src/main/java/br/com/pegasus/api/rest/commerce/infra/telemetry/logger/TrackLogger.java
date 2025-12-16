@@ -2,6 +2,7 @@ package br.com.pegasus.api.rest.commerce.infra.telemetry.logger;
 
 import br.com.pegasus.api.rest.commerce.infra.data.MetricData;
 import br.com.pegasus.api.rest.commerce.infra.data.MetricRequestData;
+import br.com.pegasus.api.rest.commerce.infra.data.TraceEventLogListData;
 import br.com.pegasus.api.rest.commerce.infra.handler.RequestContextHandler;
 import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import jakarta.annotation.PostConstruct;
@@ -17,26 +18,24 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TrackLogger {
 
-  private static final String TRACE_LOG = "TRACE_LOG";
+  private static final String LOGBACK_TRACE_LOG = "TRACE_LOG";
+  public static final Logger TRACE_LOG = LoggerFactory.getLogger(LOGBACK_TRACE_LOG);
 
   private final RequestContextHandler requestContext;
   private Logger trackLog;
 
   @PostConstruct
   public void init() {
-    trackLog = LoggerFactory.getLogger(TRACE_LOG);
+    trackLog = LoggerFactory.getLogger(LOGBACK_TRACE_LOG);
   }
 
-  public void appendTest(String trace) {
-    getMessage().append(trace);
-  }
 
   public void append(String message) {
-    getMessage().append(ConstUtil.SPACE).append(message);
+    getMessage().addEvent(message);
   }
 
   public void append(String message, Object... args) {
-    getMessage().append(ConstUtil.SPACE).append(format(message, args));
+    getMessage().addEvent(format(message, args));
   }
 
   public void log(MetricData metric) {
@@ -47,11 +46,11 @@ public class TrackLogger {
     trackLog.warn(createLogMessage(metric, ConstUtil.METRIC_TRACK_LOG_PATTERN_FAIL).replaceFirst(" ✕", "\n ✕"));
   }
 
-  private StringBuilder getMessage() {
+  private TraceEventLogListData getMessage() {
     try {
-      return requestContext.getMetricData().getMessageBuild();
+      return requestContext.getTraceEventLogListData();
     } catch (ServletException ex) {
-      return new StringBuilder();
+      return new TraceEventLogListData();
     }
   }
 
