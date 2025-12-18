@@ -2,6 +2,8 @@ package br.com.pegasus.api.rest.commerce.infra.handler.lifecycle;
 
 import br.com.pegasus.api.rest.commerce.infra.handler.marker.ControllerLayerMarker;
 import br.com.pegasus.api.rest.commerce.infra.telemetry.HandlerTelemetry;
+import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
+import br.com.pegasus.api.rest.commerce.infra.util.TrackUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.http.ResponseEntity;
 
@@ -33,7 +35,7 @@ public class ControllerLifeCycle implements ContractLifeCycle {
 
   private void start() {
     handlerTelemetry.starts();
-    handlerTelemetry.addTraceEvent("START: " + valueAnn + "#" + methodName);
+    handlerTelemetry.addTraceEvent(ConstUtil.REGEX_TRACE, TrackUtil.START, valueAnn, methodName);
   }
 
   private void execute() throws Throwable {
@@ -41,7 +43,7 @@ public class ControllerLifeCycle implements ContractLifeCycle {
   }
 
   private Object end() {
-    handlerTelemetry.addTraceEvent("END: " + valueAnn + "#" + methodName);
+    handlerTelemetry.addTraceEvent(ConstUtil.REGEX_TRACE, TrackUtil.FINISH, valueAnn, methodName);
     return responseCompletableFuture.thenApply(resp -> {
       handlerTelemetry.ends(resp.getStatusCode().value());
       handlerTelemetry.send();

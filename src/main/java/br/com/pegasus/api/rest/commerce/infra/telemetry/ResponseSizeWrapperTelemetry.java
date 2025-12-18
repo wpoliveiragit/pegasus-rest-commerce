@@ -29,7 +29,8 @@ public class ResponseSizeWrapperTelemetry extends HttpServletResponseWrapper {
   @Override
   public PrintWriter getWriter() {
     return (writer == null) //
-        ? (writer = new PrintWriter(outputStream, true, StandardCharsets.UTF_8)) : writer;
+        ? (writer = new PrintWriter(outputStream, true, StandardCharsets.UTF_8))//
+        : writer;
   }
 
   public void flushToResponse() throws IOException {
@@ -43,6 +44,7 @@ public class ResponseSizeWrapperTelemetry extends HttpServletResponseWrapper {
 
   private static ServletOutputStream createServletOutputStream(ByteArrayOutputStream buffer) {
     return new ServletOutputStream() {
+
       @Override
       public void write(int b) {
         buffer.write(b);
@@ -56,6 +58,8 @@ public class ResponseSizeWrapperTelemetry extends HttpServletResponseWrapper {
       @Override
       public void setWriteListener(jakarta.servlet.WriteListener listener) {
       }
+
     };
   }
+
 }

@@ -6,6 +6,8 @@ import java.util.Map;
 
 public final class ConstUtil {
 
+  public static final String LOGBACK_TRACE_LOG = "TRACE_LOG";
+
 
   // PATH
   public static final String PATH_OPENAPI = "openapi.yaml";
@@ -34,6 +36,11 @@ public final class ConstUtil {
   public static final String METRIC_TIME_NAME = "http_request_duration_ms";
   public static final String METRIC_COUNTER_NAME = "http_requests_total";
   public static final String METRIC_GAUGE_NAME = "http_active_requests";
+
+
+
+  public static final String REGEX_TRACE = "[{}] {}.{}";
+  public static final String REGEX_TRACE_FAIL = "[{}] {}";
 
   public static final String REGEX_TRACE_CACHE = "[✪ cache(↻): {}]";
   public static final String REGEX_TRACE_ADVICE = " [✪]: {}";

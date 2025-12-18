@@ -1,7 +1,7 @@
 package br.com.pegasus.api.rest.commerce.infra.telemetry;
 
 import br.com.pegasus.api.rest.commerce.infra.data.TraceEventLogListData;
-import br.com.pegasus.api.rest.commerce.infra.telemetry.logger.TrackLogger;
+import br.com.pegasus.api.rest.commerce.infra.logback.MethodLogBack;
 import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
 import io.micrometer.core.instrument.Counter;
@@ -29,7 +29,8 @@ public class RegisterMetricsTelemetry {
   public void counterRegister(List<Tag> tags) {
     Counter.builder(ConstUtil.METRIC_COUNTER_NAME)//
         .tags(tags)//
-        .register(meterRegistry).increment();
+        .register(meterRegistry)//
+        .increment();
   }
 
   /** Tempo da requisição */
@@ -56,11 +57,11 @@ public class RegisterMetricsTelemetry {
   }
 
   public void tracelogRegister(TraceEventLogListData traceEventLogListData) {
-    if ((Integer.parseInt(traceEventLogListData.getStatus()) / ConstUtil.INT_100) < 400) {
-      TrackLogger.TRACE_LOG.info(MethodUtil.toJson(traceEventLogListData));
+    if ((Integer.parseInt(traceEventLogListData.getStatus()) / ConstUtil.INT_100) < 4) {
+      MethodLogBack.TRACE_LOG.info(MethodUtil.toJson(traceEventLogListData));
       return;
     }
-    TrackLogger.TRACE_LOG.warn(MethodUtil.toJson(traceEventLogListData));
+    MethodLogBack.TRACE_LOG.warn(MethodUtil.toJson(traceEventLogListData));
   }
 
   /** Cria um DistributionSummary com tags padrão */

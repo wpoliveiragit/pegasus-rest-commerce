@@ -14,10 +14,6 @@ public class ProducerKafka {
 
   private final KafkaTemplate<String, ProductRegisterEvent> kafkaTemplate;
 
-//  public ProducerKafka(KafkaTemplate<String, ProductRegisterEvent> kafkaTemplate) {
-//    this.kafkaTemplate = kafkaTemplate;
-//  }
-
   public void sendProductLifecycleEvents(String action, long productId) {
     ProductRegisterEvent event = new ProductRegisterEvent();
     event.setProductId(productId);

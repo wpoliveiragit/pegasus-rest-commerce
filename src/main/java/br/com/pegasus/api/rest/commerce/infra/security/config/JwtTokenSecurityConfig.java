@@ -1,4 +1,4 @@
-package br.com.pegasus.api.rest.commerce.infra.security;
+package br.com.pegasus.api.rest.commerce.infra.security.config;
 
 import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -19,12 +19,12 @@ import java.util.UUID;
 
 /** JWT (JSON Web Token) */
 @Configuration
-public class JwtTokenSecurity {
+public class JwtTokenSecurityConfig {
 
   private final RSAPublicKey publicKey;
   private final RSAPrivateKey privateKey;
 
-  public JwtTokenSecurity() throws Exception {
+  public JwtTokenSecurityConfig() throws Exception {
     // Gera um par de chaves RSA de 2048 bits
     KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(ConstUtil.SECURITY_ALGORITHM);
     keyPairGenerator.initialize(ConstUtil.INT_2048);

@@ -17,7 +17,6 @@ public class TraceEventLogListData {
   private final AtomicInteger orderSequence = new AtomicInteger(0);
 
   //request
-  private final List<TraceEventLogData> trace;
   private final String traceId;
   private final String method;
   private final String url;
@@ -29,6 +28,7 @@ public class TraceEventLogListData {
   private String status;
   private long runtime;
   private Long responseSize;
+  private final List<TraceEventLogData> trace;
 
   @Setter
   private List<Tag> tags;

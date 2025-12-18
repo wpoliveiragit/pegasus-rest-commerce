@@ -16,7 +16,10 @@ import java.time.OffsetDateTime;
 
 public class ProductRestCore implements ProductPort {
 
+  private static final StackWalker STACK_WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 
+  private String methodCheckName = null;
+  private String methodInternalFindById = null;
 
   private final ProductAdaterJPA productJpa;
   private final MethodAdapter method;
@@ -73,16 +76,25 @@ public class ProductRestCore implements ProductPort {
   }
 
   private ProductModel internalFindById(RequestModel request) {
-    log.startedTrack(ProductRestCore.class, "internalFindById");
+    if (this.methodInternalFindById == null) {
+      this.methodInternalFindById = STACK_WALKER.walk(//
+          stream -> stream.findFirst().map(StackWalker.StackFrame::getMethodName).orElse("unknown"));
+    }
+
+    log.startTrack(ProductRestCore.class, methodInternalFindById);
     ProductModel model = productJpa.findById(request).orElseThrow(method::newNotFoundException);
-    log.endedTrack(ProductRestCore.class, "internalFindById");
+    log.endTrack(ProductRestCore.class, methodInternalFindById);
     return model;
   }
 
   private void checkNameConflict(RequestModel request) throws AppException {
-    log.startedTrack(ProductRestCore.class, "checkNameConflict");
+    if (this.methodCheckName == null) {
+      this.methodCheckName = STACK_WALKER.walk(//
+          stream -> stream.findFirst().map(StackWalker.StackFrame::getMethodName).orElse("unknown"));
+    }
+    log.startTrack(ProductRestCore.class, this.methodCheckName);
     productJpa.findByName(request).ifPresent(obj -> method.throwConflictNameException());
-    log.endedTrack(ProductRestCore.class, "checkNameConflict");
+    log.endTrack(ProductRestCore.class, this.methodCheckName);
   }
 
 }

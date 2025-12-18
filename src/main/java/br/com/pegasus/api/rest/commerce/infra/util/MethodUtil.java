@@ -2,11 +2,10 @@ package br.com.pegasus.api.rest.commerce.infra.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.springframework.core.io.ClassPathResource;
 
 import java.nio.charset.StandardCharsets;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 
 @Log4j2
 public final class MethodUtil {
@@ -24,7 +23,7 @@ public final class MethodUtil {
       return objectMapper.writeValueAsString(obj);
     } catch (Exception e) {
       log.error(e.getMessage());
-      return "{}";
+      return "{" + e.getMessage() + "}";
     }
   }
 
@@ -43,8 +42,8 @@ public final class MethodUtil {
     }
   }
 
-  public static String addColorGreenText(String text) {
-    return ConstUtil.COLOR_GREEN + text + ConstUtil.COLOR_RESET;
+  public static String format(String message, Object... objs) {
+    return ParameterizedMessage.format(message, objs);
   }
 
 }

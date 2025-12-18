@@ -1,20 +1,20 @@
-package br.com.pegasus.api.rest.commerce.infra.security;
+package br.com.pegasus.api.rest.commerce.infra.security.config;
 
 import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.stereotype.Component;
 
-@Component
+@Configuration
 @RequiredArgsConstructor
-public class JwtConfigSecurity {
+public class JwtConfigSecurityConfig {
 
-  private final JwtTokenSecurity configSecurity;
+  private final JwtTokenSecurityConfig configSecurity;
 
   @Bean
   public SecurityFilterChain securityFilterChain(Environment env, HttpSecurity http) throws Exception {
@@ -36,6 +36,5 @@ public class JwtConfigSecurity {
     http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(configSecurity.jwtDecoder())));
     return http.build();
   }
-
 
 }

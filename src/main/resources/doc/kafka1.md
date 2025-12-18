@@ -1,72 +1,77 @@
 # Docker - Kafka
 ```json
 {
-  "orderSequence": 10,
+  "orderSequence": 11,
+  "traceId": "a12f3cde-45b6-7890-abc1-def234567890",
+  "method": "GET",
+  "url": "/product",
+  "requestSize": -1,
+  "requestStartTime": 1765891196405,
+  "keyDistributionSummary": "GET/product200",
+  "status": "200",
+  "runtime": 4,
+  "responseSize": 0,
   "trace": [
     {
       "order": 1,
-      "timestamp": "2025-12-16T00:22:33.265713Z",
-      "message": "START: Delegate.Product#createProduct"
+      "timestamp": "2025-12-16T13:19:56.405317900Z",
+      "message": "START: Delegate.Product#findAllProduct"
     },
     {
       "order": 2,
-      "timestamp": "2025-12-16T00:22:33.269296500Z",
+      "timestamp": "2025-12-16T13:19:56.405317900Z",
       "message": "START: Mapper.Product#delegateToService"
     },
     {
       "order": 3,
-      "timestamp": "2025-12-16T00:22:33.272296Z",
-      "message": "END: Mapper.Product#delegateToService"
+      "timestamp": "2025-12-16T13:19:56.405317900Z",
+      "message": "START: Mapper.Pageable#toModel"
     },
     {
       "order": 4,
-      "timestamp": "2025-12-16T00:22:33.318358900Z",
-      "message": "START: Service.Product#create"
+      "timestamp": "2025-12-16T13:19:56.405317900Z",
+      "message": "END: Mapper.Pageable#toModel"
     },
     {
       "order": 5,
-      "timestamp": "2025-12-16T00:22:33.320378800Z",
-      "message": " [★ INICIOU]ProductRestCore#checkNameConflict"
+      "timestamp": "2025-12-16T13:19:56.405317900Z",
+      "message": "END: Mapper.Product#delegateToService"
     },
     {
       "order": 6,
-      "timestamp": "2025-12-16T00:22:33.322905200Z",
-      "message": "START: Repository.Product#findByName"
+      "timestamp": "2025-12-16T13:19:56.407714600Z",
+      "message": "[✪ cache(↻): all:0:10]"
     },
     {
       "order": 7,
-      "timestamp": "2025-12-16T00:22:33.665678400Z",
-      "message": "START: Mapper.Product#jpaToService"
+      "timestamp": "2025-12-16T13:19:56.409506800Z",
+      "message": "START: Mapper.Product#serviceToDelegate"
     },
     {
       "order": 8,
-      "timestamp": "2025-12-16T00:22:33.665678400Z",
-      "message": "END: Mapper.Product#jpaToService"
+      "timestamp": "2025-12-16T13:19:56.409506800Z",
+      "message": "START: Mapper.Pageable#toType"
     },
     {
       "order": 9,
-      "timestamp": "2025-12-16T00:22:33.665678400Z",
-      "message": "END: Repository.Product#findByName"
+      "timestamp": "2025-12-16T13:19:56.409506800Z",
+      "message": "END: Mapper.Pageable#toType"
     },
     {
       "order": 10,
-      "timestamp": "2025-12-16T00:22:33.672404200Z",
-      "message": "FAIL: Name already registered"
+      "timestamp": "2025-12-16T13:19:56.409506800Z",
+      "message": "END: Mapper.Product#serviceToDelegate"
+    },
+    {
+      "order": 11,
+      "timestamp": "2025-12-16T13:19:56.409506800Z",
+      "message": "END: Delegate.Product#findAllProduct"
     }
   ],
-  "traceId": "a12f3cde-45b6-7890-abc1-def234567890",
-  "method": "POST",
-  "url": "/product",
-  "requestSize": 61,
-  "requestStartTime": 1765844553256,
-  "keyDistributionSummary": "POST/product409",
-  "status": "409",
-  "runtime": 422,
-  "responseSize": 0,
   "tags": [
     {
       "key": "method",
-      "value": "POST"
+      "value": "GET"
     },
     {
       "key": "url",
@@ -74,10 +79,11 @@
     },
     {
       "key": "status",
-      "value": "409"
+      "value": "200"
     }
   ]
 }
+
 ```
 
 ## docker-compose.yml

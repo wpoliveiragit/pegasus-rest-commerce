@@ -11,7 +11,7 @@ import java.time.Instant;
 
 @Component
 @RequiredArgsConstructor
-public class JwtSecurity {
+public class MethodJwtSecurity {
 
   private final JwtEncoder encoder;
 

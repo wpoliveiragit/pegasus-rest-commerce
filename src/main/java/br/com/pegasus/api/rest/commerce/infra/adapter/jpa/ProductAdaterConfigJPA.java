@@ -9,7 +9,7 @@ import br.com.pegasus.api.rest.commerce.infra.handler.marker.ComponentLayerMarke
 import br.com.pegasus.api.rest.commerce.infra.mapper.ProductMapper;
 import br.com.pegasus.api.rest.commerce.infra.repository.ProductRepository;
 import br.com.pegasus.api.rest.commerce.infra.repository.entity.ProductEntity;
-import br.com.pegasus.api.rest.commerce.infra.telemetry.logger.TrackLogger;
+import br.com.pegasus.api.rest.commerce.infra.telemetry.HandlerTelemetry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +23,7 @@ import java.util.Optional;
 public class ProductAdaterConfigJPA implements ProductAdaterJPA {
 
   private final ProductRepository repo;
-  private final TrackLogger trackLog;
+  private final HandlerTelemetry handlerTelemetry;
   private final ProductMapper mapper;
 
   @Override
@@ -49,14 +49,14 @@ public class ProductAdaterConfigJPA implements ProductAdaterJPA {
   @Override
   public ProductModel create(RequestModel request) {
     ProductModel responseModel = save(request);
-    trackLog.append("element created successfully");
+    handlerTelemetry.addTraceEvent("element created successfully");
     return responseModel;
   }
 
   @Override
   public ProductModel update(RequestModel request) {
     ProductModel responseModel = save(request);
-    trackLog.append("(element updated successfully)");
+    handlerTelemetry.addTraceEvent("(element updated successfully)");
     return responseModel;
   }
 
@@ -68,12 +68,12 @@ public class ProductAdaterConfigJPA implements ProductAdaterJPA {
   }
 
   private ProductModel save(RequestModel request) {
-    trackLog.append("● JPA.Product(save)");
+    handlerTelemetry.addTraceEvent("● JPA.Product(save)");
     ProductModel product = request.getProduct();
     ProductEntity productEntity = mapper.serviceToJpa(product);
     ProductEntity response = repo.save(productEntity);
     ProductModel responseModel = mapper.jpaToService(response);
-    trackLog.append("◎ JPA.Product(save)");
+    handlerTelemetry.addTraceEvent("◎ JPA.Product(save)");
     return responseModel;
   }
 

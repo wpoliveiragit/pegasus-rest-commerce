@@ -1,6 +1,8 @@
 package br.com.pegasus.api.rest.commerce.infra.handler.lifecycle;
 
 import br.com.pegasus.api.rest.commerce.infra.telemetry.HandlerTelemetry;
+import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
+import br.com.pegasus.api.rest.commerce.infra.util.TrackUtil;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ public class AdviceLifeCycle implements ContractLifeCycle {
   private void start() {
     for (Object arg : pjp.getArgs()) {
       if (arg instanceof Throwable exParam) {
-        handlerTelemetry.addTraceEvent("FAIL: " + exParam.getMessage());
+        handlerTelemetry.addTraceEvent(ConstUtil.REGEX_TRACE_FAIL, TrackUtil.FAIL, exParam.getMessage());
         break;
       }
     }

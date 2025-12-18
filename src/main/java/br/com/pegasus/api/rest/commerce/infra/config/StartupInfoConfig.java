@@ -4,6 +4,7 @@ import br.com.pegasus.api.rest.commerce.StartApplication;
 import br.com.pegasus.api.rest.commerce.app.delegate.ProductDelegate;
 import br.com.pegasus.api.rest.commerce.infra.handler.RequestLifecycleAspectHandler;
 import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
+import br.com.pegasus.api.rest.commerce.infra.util.TextColorUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
@@ -38,7 +39,7 @@ public class StartupInfoConfig {
     checkBeans().forEach(System.out::println);
 
     double seconds = (System.currentTimeMillis() - StartApplication.START_TIME) / 1000.0;
-    System.out.printf(MethodUtil.addColorGreenText("Started %s in %.3f seconds (process running for %.3f)%n"),//
+    System.out.printf(TextColorUtil.addColorGreen("Started %s in %.3f seconds (process running for %.3f)%n"),//
         StartApplication.class.getSimpleName(), seconds, seconds);
   }
 
@@ -77,8 +78,7 @@ public class StartupInfoConfig {
     String artifactId = elem.getElementsByTagName("artifactId").item(0).getTextContent();
     Node versionNode = elem.getElementsByTagName("version").item(0);
     String version = (versionNode == null) ? "VERSÃO PARENT" : versionNode.getTextContent();
-
-    return "\t- " + groupId + ", " + artifactId + ", " + "[" + version + "]";
+    return MethodUtil.format("\t- {}, {}, [{}]", groupId, artifactId,version);
   }
 
 }

@@ -5,7 +5,9 @@ import br.com.pegasus.api.rest.commerce.domain.adapter.LogAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.MethodAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.ToolAdapter;
 import br.com.pegasus.api.rest.commerce.domain.adapter.jpa.ProductAdaterJPA;
-import br.com.pegasus.api.rest.commerce.infra.telemetry.logger.TrackLogger;
+import br.com.pegasus.api.rest.commerce.infra.telemetry.HandlerTelemetry;
+import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
+import br.com.pegasus.api.rest.commerce.infra.util.TrackUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +17,7 @@ public class ToolConfigAdapter implements ToolAdapter {
 
   private final MethodAdapter validMethod;
   private final ProductAdaterJPA productJpa;
-  private final TrackLogger trackLogger;
+  private final HandlerTelemetry handlerTelemetry;
   private final KafkaAdapter kafka;
 
   @Override
@@ -38,14 +40,15 @@ public class ToolConfigAdapter implements ToolAdapter {
     return new LogAdapter() {
 
       @Override
-      public void startedTrack(Class<?> clazz, String nameMethod) {
-        trackLogger.append(" [★ INICIOU]" + clazz.getSimpleName() + "#" + nameMethod);
+      public void startTrack(Class<?> clazz, String nameMethod) {
+        handlerTelemetry.addTraceEvent(ConstUtil.REGEX_TRACE, TrackUtil.START,clazz.getSimpleName(), nameMethod);
       }
 
       @Override
-      public void endedTrack(Class<?> clazz, String nameMethod) {
-        trackLogger.append(" [☆  FINALIZOU]" + clazz.getSimpleName() + "#" + nameMethod + " [VOLTOU]");
+      public void endTrack(Class<?> clazz, String nameMethod) {
+        handlerTelemetry.addTraceEvent(ConstUtil.REGEX_TRACE, TrackUtil.FINISH,clazz.getSimpleName(), nameMethod);
       }
+
     };
   }
 
