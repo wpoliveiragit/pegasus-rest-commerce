@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-@ComponentLayerMarker("Service.Product")
+@ComponentLayerMarker("Service.website")
 public class WebsiteService implements WebsitePort {
 
   private final WebsiteCore core;

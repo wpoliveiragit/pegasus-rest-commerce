@@ -96,14 +96,13 @@
             <li>Paginação suportada via query parameters <code>page</code> e <code>size</code></li>
         </ul>
 
-        <div th:utext="${environmentHtml}"></div>
+        <div th:utext="${prop.environmentHtml}"></div>
 
 
         <h3>Ambiente</h3>
         <ul>
-            <li>Java: <span th:text="${system.javaVersion}"></span></li>
-            <li>Spring Boot: <span th:text="${system.springBootVersion}"></span></li>
-            <li>databaseUrl: <span th:text="${system.databaseUrl}"></span></li>
+            <li>Java: <span th:text="${prop.system.javaVersion}"></span></li>
+            <li>Spring Boot: <span th:text="${prop.system.springBootVersion}"></span></li>
         </ul>
 
         <h3>Banco de Dados</h3>

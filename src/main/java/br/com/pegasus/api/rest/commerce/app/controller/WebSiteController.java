@@ -1,7 +1,9 @@
 package br.com.pegasus.api.rest.commerce.app.controller;
 
+import br.com.pegasus.api.rest.commerce.domain.port.WebsitePort;
 import br.com.pegasus.api.rest.commerce.infra.handler.marker.ControllerLayerMarker;
 import br.com.pegasus.api.rest.commerce.infra.handler.marker.RestControllerLayerMarker;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,21 +11,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Map;
 
+@RequiredArgsConstructor
 @ControllerLayerMarker("Controller.Website")
 @Controller
 public class WebSiteController {
 
+  private final WebsitePort service;
+
   @GetMapping("/website")
   public String website(Model model) {
-    int javaVersion = Runtime.version().feature();
-    String springVersion = SpringBootVersion.getVersion();
+//    int javaVersion = Runtime.version().feature();
+//    String springVersion = SpringBootVersion.getVersion();
+//
+//    model.addAttribute("system", Map.of(
+//        "databaseUrl", "jdbc:h2:file:./src/main/resources/db/banco-dados-h2",
+//        "javaVersion", javaVersion,
+//        "springBootVersion", springVersion
+//    ));
+//    model.addAttribute("environmentHtml", environmentBlock(javaVersion, springVersion));
 
-    model.addAttribute("system", Map.of(
-        "databaseUrl", "jdbc:h2:file:./src/main/resources/db/banco-dados-h2",
-        "javaVersion", javaVersion,
-        "springBootVersion", springVersion
-    ));
-    model.addAttribute("environmentHtml", environmentBlock(javaVersion, springVersion));
+    Map<String, ?> info = service.info(1);
+
+    model.addAttribute("prop", info);
 
     return "website"; // templates/website.html
   }

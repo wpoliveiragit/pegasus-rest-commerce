@@ -1,11 +1,14 @@
 package br.com.pegasus.api.rest.commerce.infra.adapter;
 
 import br.com.pegasus.api.rest.commerce.domain.adapter.EnvPropAdapter;
+import br.com.pegasus.api.rest.commerce.infra.handler.marker.ComponentLayerMarker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+
+@ComponentLayerMarker("Infra.adapter.EnvProp")
 @RequiredArgsConstructor
 @Component
 public class EnvPropConfigAdapter implements EnvPropAdapter {
