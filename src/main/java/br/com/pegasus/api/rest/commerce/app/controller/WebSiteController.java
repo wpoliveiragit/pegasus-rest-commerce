@@ -1,5 +1,7 @@
 package br.com.pegasus.api.rest.commerce.app.controller;
 
+import br.com.pegasus.api.rest.commerce.infra.handler.marker.ControllerLayerMarker;
+import br.com.pegasus.api.rest.commerce.infra.handler.marker.RestControllerLayerMarker;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Map;
 
+@ControllerLayerMarker("Controller.Website")
 @Controller
 public class WebSiteController {
 

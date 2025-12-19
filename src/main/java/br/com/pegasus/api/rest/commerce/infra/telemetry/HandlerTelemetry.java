@@ -98,6 +98,17 @@ public class HandlerTelemetry {// MetricsTelemetry
     }
   }
 
+  public void onlyTraceSend() {
+    try {
+      TraceEventLogListData traceEventLogListData = requestContext.getTraceEventLogListData();
+      registerMetrics.tracelogRegister(traceEventLogListData);
+    } catch (Exception ex) {
+      log.error(ex.getMessage());
+    } finally {
+      activeRequests.decrement();
+    }
+  }
+
   /** Obtém o tamanho real da resposta */
   private Long readResponseBytes() {
     HttpServletResponse response = requestContext.getCurrentResponse();

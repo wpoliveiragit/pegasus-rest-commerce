@@ -3,6 +3,7 @@ package br.com.pegasus.api.rest.commerce.infra.handler;
 import br.com.pegasus.api.rest.commerce.infra.handler.lifecycle.AdviceLifeCycle;
 import br.com.pegasus.api.rest.commerce.infra.handler.lifecycle.ComponentLifeCycle;
 import br.com.pegasus.api.rest.commerce.infra.handler.lifecycle.ControllerLifeCycle;
+import br.com.pegasus.api.rest.commerce.infra.handler.lifecycle.RestControllerLifeCycle;
 import br.com.pegasus.api.rest.commerce.infra.telemetry.HandlerTelemetry;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -18,8 +19,13 @@ public class RequestLifecycleAspectHandler {
   private final HandlerTelemetry handlerTelemetry;
 
   @Around("@within(br.com.pegasus.api.rest.commerce.infra.handler.marker.ControllerLayerMarker)")
-  public Object controller(ProceedingJoinPoint pjp) throws Throwable {
+  public Object Controller(ProceedingJoinPoint pjp) throws Throwable {
     return new ControllerLifeCycle(pjp, handlerTelemetry).LifeCycle();
+  }
+
+  @Around("@within(br.com.pegasus.api.rest.commerce.infra.handler.marker.RestControllerLayerMarker)")
+  public Object restController(ProceedingJoinPoint pjp) throws Throwable {
+    return new RestControllerLifeCycle(pjp, handlerTelemetry).LifeCycle();
   }
 
   @Around("@within(br.com.pegasus.api.rest.commerce.infra.handler.marker.ComponentLayerMarker)")

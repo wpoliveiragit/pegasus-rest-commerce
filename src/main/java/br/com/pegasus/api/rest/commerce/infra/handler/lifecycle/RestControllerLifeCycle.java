@@ -1,17 +1,15 @@
 package br.com.pegasus.api.rest.commerce.infra.handler.lifecycle;
 
-import br.com.pegasus.api.rest.commerce.infra.handler.marker.ControllerLayerMarker;
 import br.com.pegasus.api.rest.commerce.infra.handler.marker.RestControllerLayerMarker;
 import br.com.pegasus.api.rest.commerce.infra.telemetry.HandlerTelemetry;
 import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import br.com.pegasus.api.rest.commerce.infra.util.TrackUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ControllerLifeCycle implements ContractLifeCycle {
+public class RestControllerLifeCycle implements ContractLifeCycle {
 
   private final ProceedingJoinPoint pjp;
   private final HandlerTelemetry handlerTelemetry;
@@ -19,14 +17,14 @@ public class ControllerLifeCycle implements ContractLifeCycle {
   private final String methodName;
   private final String valueAnn;
 
-  private Object resp;
+  private CompletableFuture<ResponseEntity<?>> responseCompletableFuture;
 
-  public ControllerLifeCycle(ProceedingJoinPoint pjp, HandlerTelemetry handlerTelemetry) {
+  public RestControllerLifeCycle(ProceedingJoinPoint pjp, HandlerTelemetry handlerTelemetry) {
     this.pjp = pjp;
     this.handlerTelemetry = handlerTelemetry;
 
     this.methodName = pjp.getSignature().getName();
-    this.valueAnn = pjp.getTarget().getClass().getAnnotation(ControllerLayerMarker.class).value();
+    this.valueAnn = pjp.getTarget().getClass().getAnnotation(RestControllerLayerMarker.class).value();
   }
 
   public Object LifeCycle() throws Throwable {
@@ -41,14 +39,16 @@ public class ControllerLifeCycle implements ContractLifeCycle {
   }
 
   private void execute() throws Throwable {
-    resp = pjp.proceed();
+    responseCompletableFuture = (CompletableFuture<ResponseEntity<?>>) pjp.proceed();
   }
 
   private Object end() {
     handlerTelemetry.addTraceEvent(ConstUtil.REGEX_TRACE, TrackUtil.FINISH, valueAnn, methodName);
-    handlerTelemetry.ends(0);
-    handlerTelemetry.onlyTraceSend();
-    return resp;
+    return responseCompletableFuture.thenApply(resp -> {
+      handlerTelemetry.ends(resp.getStatusCode().value());
+      handlerTelemetry.send();
+      return resp;
+    });
   }
 
 }

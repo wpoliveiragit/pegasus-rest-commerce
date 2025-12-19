@@ -5,7 +5,7 @@ import br.com.pegasus.api.rest.commerce.domain.model.PageableModel;
 import br.com.pegasus.api.rest.commerce.domain.model.ProductModel;
 import br.com.pegasus.api.rest.commerce.domain.model.RequestModel;
 import br.com.pegasus.api.rest.commerce.domain.port.ProductPort;
-import br.com.pegasus.api.rest.commerce.infra.handler.marker.ControllerLayerMarker;
+import br.com.pegasus.api.rest.commerce.infra.handler.marker.RestControllerLayerMarker;
 import br.com.pegasus.api.rest.commerce.infra.mapper.ProductMapper;
 import br.com.pegasus.gen.openapi.api.ProductApiDelegate;
 import br.com.pegasus.gen.openapi.type.ProductCreateBodyType;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-@ControllerLayerMarker("Delegate.Product")
+@RestControllerLayerMarker("Delegate.Product")
 @Component
 @RequiredArgsConstructor
 public class ProductDelegate implements ProductApiDelegate {
