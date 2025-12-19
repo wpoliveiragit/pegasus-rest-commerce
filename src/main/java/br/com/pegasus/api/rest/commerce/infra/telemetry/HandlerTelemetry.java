@@ -4,6 +4,7 @@ import br.com.pegasus.api.rest.commerce.infra.data.TraceEventLogListData;
 import br.com.pegasus.api.rest.commerce.infra.handler.RequestContextHandler;
 import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
 import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
+import br.com.pegasus.api.rest.commerce.infra.util.TextFormatUtil;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import jakarta.servlet.ServletException;
@@ -66,7 +67,7 @@ public class HandlerTelemetry {// MetricsTelemetry
 
   public void addTraceEvent(String message, Object... objs) {
     try {
-      requestContext.getTraceEventLogListData().addEvent(MethodUtil.format(message, objs));
+      requestContext.getTraceEventLogListData().addEvent(TextFormatUtil.format(message, objs));
     } catch (Throwable ex) {
       log.error(ex.getMessage());
     }

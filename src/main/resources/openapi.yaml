@@ -1,8 +1,7 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: API de Produtos
-  #  title: PEGASUS-SA → API de Produtos
+  title: API de Produtos - PEGASUS-SA
   termsOfService: http://localhost:8080/terms
   description: |
     API RESTful CRUD de controle de produtos para estudo.  
@@ -21,11 +20,10 @@ info:
     - User Name: `ver application.yaml` → `spring.datasource.username`
     - Password: `ver application.yaml` → `spring.datasource.password`
 
-
   contact:
     name: Enterprise
     email: suporte@pegasus.com.br
-    url: http://localhost:8080
+    url: http://localhost:8080/website
   license:
     name: License
     url: http://localhost:8080/license

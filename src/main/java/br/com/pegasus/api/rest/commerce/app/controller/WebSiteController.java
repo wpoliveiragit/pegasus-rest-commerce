@@ -1,38 +1,52 @@
 package br.com.pegasus.api.rest.commerce.app.controller;
 
-import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
-import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
-import org.springframework.http.MediaType;
+import org.springframework.boot.SpringBootVersion;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+import java.util.Map;
+
+@Controller
 public class WebSiteController {
 
-  private final String siteHome;
-  private final String siteLicense;
-  private final String siteTerms;
+  @GetMapping("/website")
+  public String website(Model model) {
+    int javaVersion = Runtime.version().feature();
+    String springVersion = SpringBootVersion.getVersion();
 
-  public WebSiteController() {
-    this.siteHome = MethodUtil.readResourceFileToStringUTF8(ConstUtil.PATH_SITE_INDEX);
-    this.siteLicense = MethodUtil.readResourceFileToStringUTF8(ConstUtil.PATH_SITE_LICENSE);
-    this.siteTerms = MethodUtil.readResourceFileToStringUTF8(ConstUtil.PATH_SITE_TERMS);
+    model.addAttribute("system", Map.of(
+        "databaseUrl", "jdbc:h2:file:./src/main/resources/db/banco-dados-h2",
+        "javaVersion", javaVersion,
+        "springBootVersion", springVersion
+    ));
+    model.addAttribute("environmentHtml", environmentBlock(javaVersion, springVersion));
+
+    return "website"; // templates/website.html
   }
 
-  @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
-  public String getWebsiteHome(Model model) {
-    return siteHome;
+  @GetMapping("/license")
+  public String license(Model model) {
+    return "license"; // templates/license.html
   }
 
-  @GetMapping(value = "/license", produces = MediaType.TEXT_HTML_VALUE)
-  public String getWebsiteLicense(Model model) {
-    return siteLicense;
+  @GetMapping("/terms")
+  public String terms(Model model) {
+    return "terms"; // templates/terms.html
   }
 
-  @GetMapping(value = "/terms", produces = MediaType.TEXT_HTML_VALUE)
-  public String getWebsiteTerms(Model model) {
-    return siteTerms;
+
+  public static String environmentBlock(int javaVersion,
+                                        String springBootVersion) {
+
+    StringBuilder html = new StringBuilder();
+    html.append("<ul>");//
+    html.append("<li>Java: ").append(javaVersion).append("</li>");//
+    html.append("<li>Spring Boot: ").append(springBootVersion).append("</li>");//
+    html.append("</ul>");
+
+    return html.toString();
   }
+
 
 }

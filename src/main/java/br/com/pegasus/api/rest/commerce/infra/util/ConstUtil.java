@@ -11,9 +11,9 @@ public final class ConstUtil {
 
   // PATH
   public static final String PATH_OPENAPI = "openapi.yaml";
-  public static final String PATH_SITE_INDEX = "site/index.html";
-  public static final String PATH_SITE_LICENSE = "site/license.html";
-  public static final String PATH_SITE_TERMS = "site/terms.html";
+  public static final String PATH_SITE_INDEX = "templates/index.html";
+  public static final String PATH_SITE_LICENSE = "templates/license.html";
+  public static final String PATH_SITE_TERMS = "templates/terms.html";
 
   // REQUEST
   public static final String REST_HEADER_X_TRACE_ID = "X-Trace-Id";
@@ -36,7 +36,6 @@ public final class ConstUtil {
   public static final String METRIC_TIME_NAME = "http_request_duration_ms";
   public static final String METRIC_COUNTER_NAME = "http_requests_total";
   public static final String METRIC_GAUGE_NAME = "http_active_requests";
-
 
 
   public static final String REGEX_TRACE = "[{}] {}.{}";
@@ -62,6 +61,7 @@ public final class ConstUtil {
 
   public static final String COLOR_YELLOW = "\u001B[33m";
   public static final String COLOR_GREEN = "\u001B[32m";
+  public static final String COLOR_BLUE = "\u001B[34m";
   public static final String COLOR_WHITE = "\u001B[37m";
   public static final String COLOR_CYAN = "\u001B[36m";
   public static final String COLOR_RED = "\u001B[31m";
@@ -87,6 +87,7 @@ public final class ConstUtil {
   public static final int INT_2048 = 2048;
 
   public static final long LONG_0 = 0L;
+  public static final double DOUBLE_1000 = 1000.0;
 
   public static final Map<Integer, String> COLLOR_MAP = Map.of(//
       Level.INFO_INT, ConstUtil.COLOR_CYAN, //

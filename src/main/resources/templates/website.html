@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Pegasus Enterprise SA</title>
@@ -95,6 +95,27 @@
             <li>Operações suportadas: <span>CRUD completo</span></li>
             <li>Paginação suportada via query parameters <code>page</code> e <code>size</code></li>
         </ul>
+
+        <div th:utext="${environmentHtml}"></div>
+
+
+        <h3>Ambiente</h3>
+        <ul>
+            <li>Java: <span th:text="${system.javaVersion}"></span></li>
+            <li>Spring Boot: <span th:text="${system.springBootVersion}"></span></li>
+            <li>databaseUrl: <span th:text="${system.databaseUrl}"></span></li>
+        </ul>
+
+        <h3>Banco de Dados</h3>
+<!--        <ul>-->
+<!--            <li>URL: <code th:text="${system.databaseUrl}"></code></li>-->
+<!--        </ul>-->
+
+<!--        <h3>Cache</h3>-->
+<!--        <ul>-->
+<!--            <li>Implementação: <span th:text="${system.cacheType}"></span></li>-->
+<!--        </ul>-->
+
     </section>
 </main>
 

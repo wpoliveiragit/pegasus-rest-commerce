@@ -2,7 +2,6 @@ package br.com.pegasus.api.rest.commerce.infra.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.springframework.core.io.ClassPathResource;
 
 import java.nio.charset.StandardCharsets;
@@ -40,10 +39,6 @@ public final class MethodUtil {
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
-  }
-
-  public static String format(String message, Object... objs) {
-    return ParameterizedMessage.format(message, objs);
   }
 
 }
