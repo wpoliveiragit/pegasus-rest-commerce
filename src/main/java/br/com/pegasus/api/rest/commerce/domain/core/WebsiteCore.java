@@ -1,46 +1,75 @@
 package br.com.pegasus.api.rest.commerce.domain.core;
 
 import br.com.pegasus.api.rest.commerce.domain.adapter.EnvPropAdapter;
+import br.com.pegasus.api.rest.commerce.domain.model.PropertiesModel;
 import br.com.pegasus.api.rest.commerce.domain.port.WebsitePort;
-import br.com.pegasus.api.rest.commerce.infra.adapter.EnvPropConfigAdapter;
-import org.springframework.boot.SpringBootVersion;
+import br.com.pegasus.api.rest.commerce.infra.util.TextFormatUtil;
 
 import java.util.Map;
 
 public class WebsiteCore implements WebsitePort {
 
-  private final EnvPropAdapter envProp;
+  private final PropertiesModel prop;
 
-  public WebsiteCore(EnvPropAdapter envProp){
-    this.envProp = envProp;
+  public WebsiteCore(EnvPropAdapter envProp) {
+    prop = envProp.getEnvProp();
   }
 
   @Override
-  public Map<String, ?> info(int page) {
-
-    final int javaVersion = envProp.getJavaVersion();
-    final String springVersion = envProp.getSpringBootVersion();
-
-    Map<String, Object> systemMap = Map.of(//
-        "javaVersion", javaVersion,//
-        "springBootVersion", javaVersion//
+  public Map<String, ?> website(int page) {
+    String block = TextFormatUtil.format("""
+            <h3>Informações da aplicação</h3>
+            <ul>
+                <li>Java: {}</li>
+                <li>Spring Boot: {}</li>
+            </ul>
+            """,//
+        prop.getJavaVersion(),//
+        prop.getSpringVersion()//
     );
+    return concatRootProperties("blocogeral", block);
+  }
 
+  @Override
+  public Map<String, ?> license(int page) {
+    return getSystemProperties();
+  }
 
-    return Map.of(//
-        "system", systemMap,//
-        "environmentHtml", environmentBlock(javaVersion, springVersion)//
+  @Override
+  public Map<String, ?> terms(int page) {
+    return getSystemProperties();
+  }
+
+  private String environmentBlock() {
+    String block = """
+        <h3>Informações da aplicação</h3>
+        <ul>
+            <li>Java: {}</li>
+            <li>Spring Boot: {}</li>
+        </ul>
+        """;
+
+    return TextFormatUtil.format(block,//
+        prop.getJavaVersion(),//
+        prop.getSpringVersion()//
     );
   }
 
-  public static String environmentBlock(int javaVersion, String springBootVersion) {
-    StringBuilder html = new StringBuilder();
-    html.append("<h3>Ambiente (TESTE)</h3>");//
-    html.append("<ul>");//
-    html.append("   <li>Java: ").append(javaVersion).append("</li>");//
-    html.append("   <li>Spring Boot: ").append(springBootVersion).append("</li>");//
-    html.append("</ul>");
-    return html.toString();
+  private Map<String, ?> concatRootProperties(String key, String value) {
+    return Map.of(//
+        "system", getSystemProperties(),//
+        key, value//
+    );
+  }
+
+  private Map<String, ?> getSystemProperties() {
+    return Map.of(//
+        "javaVersion", prop.getJavaVersion(),//
+        "springBootVersion", prop.getSpringVersion(),//
+        "email", prop.getEmail(),//
+        "SAC", prop.getSAC(),//
+        "name", prop.getName()
+    );
   }
 
 }

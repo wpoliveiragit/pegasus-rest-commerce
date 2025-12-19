@@ -22,7 +22,17 @@ public class WebsiteService implements WebsitePort {
 
   @Override
   @Cacheable(value = "website-cache", key = "'id:' + #cache")
-  public Map<String, ?> info(int page) {
-    return core.info(page);
+  public Map<String, ?> website(int page) {
+    return core.website(page);
+  }
+
+  @Override
+  public Map<String, ?> license(int page) {
+    return core.license(page);
+  }
+
+  @Override
+  public Map<String, ?> terms(int page) {
+    return core.terms(page);
   }
 }

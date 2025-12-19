@@ -96,7 +96,7 @@
             <li>Paginação suportada via query parameters <code>page</code> e <code>size</code></li>
         </ul>
 
-        <div th:utext="${prop.environmentHtml}"></div>
+        <div th:utext="${prop.blocogeral}"></div>
 
 
         <h3>Ambiente</h3>
@@ -119,10 +119,15 @@
 </main>
 
 <footer>
-    <p>&copy; <span>2025</span> <span>Pegasus</span> - Todos os direitos reservados.</p>
-    <p>✉ <span>contato@pegasus.com.br</span></p>
-    <p>☎ <span>(11) 1234-5678</span></p>
+    <p>&copy; <span>2025</span> <span th:text="${prop.system.name}"></span> - Todos os direitos reservados.</p>
+    <p>✉ <span th:text="${prop.system.email}"></span></p>
+    <p>☎ <span th:text="${prop.system.SAC}"></span></p>
 </footer>
+<!--<footer>-->
+<!--    <p>&copy; <span>2025</span> <span>Pegasus</span> - Todos os direitos reservados.</p>-->
+<!--    <p>✉ <span>contato@pegasus.com.br</span></p>-->
+<!--    <p>☎ <span>(11) 1234-5678</span></p>-->
+<!--</footer>-->
 </body>
 
 </html>
