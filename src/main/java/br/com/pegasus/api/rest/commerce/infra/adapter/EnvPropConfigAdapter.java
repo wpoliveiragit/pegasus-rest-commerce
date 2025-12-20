@@ -24,7 +24,6 @@ public class EnvPropConfigAdapter implements EnvPropAdapter {
         .name("Pegasus")
         .email("contato@pegasus.com.br")
         .SAC("(11) 1234-5678")
-
         .build();
   }
 

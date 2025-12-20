@@ -18,7 +18,6 @@ public class WebsiteCore implements WebsitePort {
   @Override
   public Map<String, ?> website(int page) {
     String block = TextFormatUtil.format("""
-            <h3>Informações da aplicação</h3>
             <ul>
                 <li>Java: {}</li>
                 <li>Spring Boot: {}</li>
@@ -27,7 +26,7 @@ public class WebsiteCore implements WebsitePort {
         prop.getJavaVersion(),//
         prop.getSpringVersion()//
     );
-    return concatRootProperties("blocogeral", block);
+    return concatRootProperties("blocoSobre", block);
   }
 
   @Override

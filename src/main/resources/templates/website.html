@@ -42,6 +42,7 @@
 <main>
     <section>
         <h2>Sobre o Projeto</h2>
+        <div th:utext="${prop.blocoSobre}"></div>
         <h3>Banco de Dados</h3>
         <ul>
             <li>Banco usado: <span>H2 (arquivo local)</span></li>
@@ -96,15 +97,6 @@
             <li>Paginação suportada via query parameters <code>page</code> e <code>size</code></li>
         </ul>
 
-        <div th:utext="${prop.blocogeral}"></div>
-
-
-        <h3>Ambiente</h3>
-        <ul>
-            <li>Java: <span th:text="${prop.system.javaVersion}"></span></li>
-            <li>Spring Boot: <span th:text="${prop.system.springBootVersion}"></span></li>
-        </ul>
-
         <h3>Banco de Dados</h3>
 <!--        <ul>-->
 <!--            <li>URL: <code th:text="${system.databaseUrl}"></code></li>-->
@@ -123,11 +115,6 @@
     <p>✉ <span th:text="${prop.system.email}"></span></p>
     <p>☎ <span th:text="${prop.system.SAC}"></span></p>
 </footer>
-<!--<footer>-->
-<!--    <p>&copy; <span>2025</span> <span>Pegasus</span> - Todos os direitos reservados.</p>-->
-<!--    <p>✉ <span>contato@pegasus.com.br</span></p>-->
-<!--    <p>☎ <span>(11) 1234-5678</span></p>-->
-<!--</footer>-->
 </body>
 
 </html>
