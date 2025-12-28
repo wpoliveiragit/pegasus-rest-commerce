@@ -2,7 +2,7 @@ package br.com.pegasus.api.rest.commerce.infra.util;
 
 import org.apache.logging.log4j.message.ParameterizedMessage;
 
-public final class TextFormatUtil {
+public final class TextUtil {
 
   public static String format(String message, Object... objs) {
     return ParameterizedMessage.format(message, objs);

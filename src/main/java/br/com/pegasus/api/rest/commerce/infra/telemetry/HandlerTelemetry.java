@@ -3,8 +3,7 @@ package br.com.pegasus.api.rest.commerce.infra.telemetry;
 import br.com.pegasus.api.rest.commerce.infra.data.TraceEventLogListData;
 import br.com.pegasus.api.rest.commerce.infra.handler.RequestContextHandler;
 import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
-import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
-import br.com.pegasus.api.rest.commerce.infra.util.TextFormatUtil;
+import br.com.pegasus.api.rest.commerce.infra.util.TextUtil;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import jakarta.servlet.ServletException;
@@ -13,8 +12,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.LongAdder;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Handler de métricas HTTP:
@@ -65,11 +67,14 @@ public class HandlerTelemetry {// MetricsTelemetry
     }
   }
 
-  public void addTraceEvent(String message, Object... objs) {
+  public void addTraceEvent(String formatMessage, Object... objs) {
     try {
-      requestContext.getTraceEventLogListData().addEvent(TextFormatUtil.format(message, objs));
+      requestContext.getTraceEventLogListData().addEvent(TextUtil.format(formatMessage, objs));
     } catch (Throwable ex) {
-      log.error(ex.getMessage());
+
+      String s = ex.getMessage() + ". " + formatMessage + ": " + Stream.of(objs).map(o -> "'" + o.toString() + "'").collect(Collectors.joining(", "));
+
+      log.warn(s);
     }
   }
 

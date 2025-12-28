@@ -4,14 +4,32 @@
 spring.banner.location: classpath:/other/banner.txt
 logging.config: classpath:other/logback-spring.xml
 
-# PROPRIEDADES LOCAIS: centralize aqui todas as propriedades usadas apenas neste projeto
-api.security.controller: false
-
 # PROPRIEDADES IMPORTADAS
 spring.config.import:
+  - "classpath:properties/database-prop.yml"
   - "classpath:properties/actuator-prop.yml"
   - "classpath:properties/banner-prop.yml"
   - "classpath:properties/cache-prop.yml"
-  - "classpath:properties/database-prop.yml"
   - "classpath:properties/swagger-prop.yml"
   - "classpath:properties/kafka-prop.yml"
+
+
+# PROPRIEDADES LOCAIS: centralize aqui todas as propriedades usadas apenas neste projeto
+api.security.controller: false
+
+# PROPRIEDADES CRIADAS PARA USO NO CONTEXTO DO WEBSITE
+## INFO
+api.website.info.name: 'Pegasus'
+api.website.info.email: 'contato@pegasus.com.br'
+api.website.info.sac: '(11) 1234-5678'
+
+## DATABASE
+api.website.info.database:
+api.website.info.database.typo: H2
+api.website.info.database.url: 'jdbc:h2:file:./datasource/database-h2'
+api.website.info.database.driver-class-name: org.h2.Driver
+api.website.info.database.username: sa
+api.website.info.database.password: ''
+api.website.info.database.schema-locations:
+  - classpath:/scripts/audit-schema.sql
+  - classpath:/scripts/product-schema.sql

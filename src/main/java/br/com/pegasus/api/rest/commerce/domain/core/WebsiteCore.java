@@ -1,74 +1,59 @@
 package br.com.pegasus.api.rest.commerce.domain.core;
 
 import br.com.pegasus.api.rest.commerce.domain.adapter.EnvPropAdapter;
-import br.com.pegasus.api.rest.commerce.domain.model.PropertiesModel;
+import br.com.pegasus.api.rest.commerce.domain.adapter.HtmlAdapter;
+import br.com.pegasus.api.rest.commerce.domain.model.prop.MetadataModelProp;
+import br.com.pegasus.api.rest.commerce.domain.model.prop.MetadataPropModel;
 import br.com.pegasus.api.rest.commerce.domain.port.WebsitePort;
-import br.com.pegasus.api.rest.commerce.infra.util.TextFormatUtil;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WebsiteCore implements WebsitePort {
 
-  private final PropertiesModel prop;
+  private Map<String, Object> websitePropMap;
+  private final MetadataModelProp prop;
 
-  public WebsiteCore(EnvPropAdapter envProp) {
-    prop = envProp.getEnvProp();
+  public WebsiteCore(EnvPropAdapter envProp, HtmlAdapter html) {
+    this.prop = envProp.getEnvProp();
+    websitePropMap = loadPropMap(envProp.getEnvProp());
   }
 
   @Override
   public Map<String, ?> website(int page) {
-    String block = TextFormatUtil.format("""
-            <ul>
-                <li>Java: {}</li>
-                <li>Spring Boot: {}</li>
-            </ul>
-            """,//
-        prop.getJavaVersion(),//
-        prop.getSpringVersion()//
-    );
-    return concatRootProperties("blocoSobre", block);
+    return websitePropMap;
   }
 
   @Override
   public Map<String, ?> license(int page) {
-    return getSystemProperties();
+    return websitePropMap;
   }
 
   @Override
   public Map<String, ?> terms(int page) {
-    return getSystemProperties();
+    return websitePropMap;
   }
 
-  private String environmentBlock() {
-    String block = """
-        <h3>Informações da aplicação</h3>
-        <ul>
-            <li>Java: {}</li>
-            <li>Spring Boot: {}</li>
-        </ul>
-        """;
-
-    return TextFormatUtil.format(block,//
-        prop.getJavaVersion(),//
-        prop.getSpringVersion()//
-    );
+  private Map<String, Object> loadPropMap(MetadataModelProp prop) {
+    Map<String, Object> websitePropMap = new HashMap<>(12);
+    websitePropMap.put("system", loadSystemMap(prop));
+    websitePropMap.put("metadata", loadDatabaseMap(prop));
+    return websitePropMap;
   }
 
-  private Map<String, ?> concatRootProperties(String key, String value) {
+  private Map<String, String> loadSystemMap(MetadataModelProp prop) {
     return Map.of(//
-        "system", getSystemProperties(),//
-        key, value//
-    );
-  }
-
-  private Map<String, ?> getSystemProperties() {
-    return Map.of(//
+        "bla", "xxxxxxxxxx",//
         "javaVersion", prop.getJavaVersion(),//
         "springBootVersion", prop.getSpringVersion(),//
         "email", prop.getEmail(),//
-        "SAC", prop.getSAC(),//
-        "name", prop.getName()
-    );
+        "SAC", prop.getSac(),//
+        "name", prop.getName());
+  }
+
+  private List<?> loadDatabaseMap(MetadataModelProp prop) {
+    return prop.getDataBase().getMetadata();
   }
 
 }

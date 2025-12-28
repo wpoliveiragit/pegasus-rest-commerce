@@ -2,9 +2,13 @@ package br.com.pegasus.api.rest.commerce.infra.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Log4j2
 public final class MethodUtil {
@@ -39,6 +43,10 @@ public final class MethodUtil {
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
+  }
+
+  public static List<String> envGetPropertyList(Environment env, String key){
+    return Binder.get(env).bind(key, Bindable.listOf(String.class)).orElse(List.of());
   }
 
 }

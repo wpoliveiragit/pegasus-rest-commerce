@@ -1,120 +1,280 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Pegasus Enterprise SA</title>
+    <title>Pegasus API – Technical Overview</title>
+
     <style>
+        /* ===== Cores ===== */
+        .color-blue { color: #004080; }
+        .color-green { color: #2e7d32; }
+        .color-orange { color: #e65100; }
+        .color-red  { color: #c62828; }
+        .color-yellow { color: #f9a825; }
+
+        /* ===== Base ===== */
         body {
-          font-family: sans-serif;
-          margin: 0;
-          padding: 0;
-          background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
         }
+
         header {
-          background-color: #004080;
-          color: white;
-          padding: 1rem 2rem;
-          text-align: center;
+            background: #004080;
+            color: #fff;
+            padding: 1.5rem;
+            text-align: center;
         }
-        main {
-          padding: 2rem;
-          max-width: 800px;
-          margin: auto;
-          background-color: white;
-        }
-        section {
-          margin-bottom: 2rem;
-        }
+
         footer {
-          background-color: #eee;
-          text-align: center;
-          padding: 1rem;
-          font-size: 0.9rem;
-          color: #333;
+            text-align: center;
+            padding: 1rem;
+            font-size: .85rem;
+            color: #555;
+            background: #eee;
+        }
+
+        /* ===== Layout ===== */
+        main.layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 2rem;
+            max-width: 1300px;
+            margin: auto;
+            background: #fff;
+            padding: 2rem;
+        }
+
+        /* ===== Sidebar ===== */
+        aside.sidebar {
+            background: #f0f2f5;
+            border-right: 1px solid #ddd;
+            padding: 1.5rem;
+        }
+
+        aside.sidebar h3 {
+            margin-top: 0;
+            color: #004080;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: .5rem;
+        }
+
+        aside.sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        aside.sidebar li {
+            margin: .6rem 0;
+        }
+
+        aside.sidebar a {
+            text-decoration: none;
+            color: #004080;
+            font-weight: bold;
+        }
+
+        aside.sidebar a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== Conteúdo ===== */
+        .content section {
+            margin-bottom: 2.5rem;
+        }
+
+        h2 {
+            border-bottom: 2px solid #004080;
+            padding-bottom: .4rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: .8rem;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: .6rem;
+            vertical-align: top;
+        }
+
+        th {
+            background: #eee;
+            width: 30%;
+            text-align: left;
+        }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 4px;
         }
     </style>
 </head>
+
 <body>
+
 <header>
-    <h1>Empresa Exemplo</h1>
+    <h1>Pegasus Enterprise SA</h1>
     <p>Inovação e soluções inteligentes para um futuro melhor</p>
 </header>
-<main>
-    <section>
-        <h2>Sobre o Projeto</h2>
-        <div th:utext="${prop.blocoSobre}"></div>
-        <h3>Banco de Dados</h3>
-        <ul>
-            <li>Banco usado: <span>H2 (arquivo local)</span></li>
-            <li>URL de acesso: <code>jdbc:h2:file:./src/main/resources/db/banco-dados-h2</code></li>
-            <li>Console H2: <a>http://localhost:8080/h2-console</a></li>
-            <li>Usuário: <span>sa</span></li>
-            <li>Senha: <span>(vazia)</span></li>
-            <li>Hibernate ddl-auto: <span>create</span></li>
-        </ul>
-        <h3>Configuração do Projeto</h3>
-        <ul>
-            <li>Java version: <span>17</span></li>
-            <li>Spring Boot version: <span>3.4.4</span></li>
-            <li>Arquitetura: <span>Hexagonal</span></li>
-            <li>OpenAPI: <span>usado para geração de APIs</span></li>
-            <li>Lombok: <span>sim</span></li>
-            <li>Logs configurados em nível <span>INFO</span></li>
-            <li>Swagger UI: <code>/swagger-ui.html</code></li>
-        </ul>
-        <h3>Dependências do Projeto</h3>
-        <ul>
-            <li><strong>spring-boot-starter-web:</strong> <span>Base para criar APIs REST.</span>
-            </li>
-            <li><strong>spring-boot-starter-data-jpa:</strong> <span>Persistência de dados usando JPA/Hibernate.</span>
-            </li>
-            <li><strong>com.h2database:h2:</strong> <span>Banco de dados em memória/arquivo para desenvolvimento e testes.</span>
-            </li>
-            <li><strong>springdoc-openapi-starter-webmvc-ui:</strong>
-                <span>Geração automática da documentação da API.</span>
-            </li>
-            <li><strong>lombok:</strong> <span>Reduz boilerplate com getters, setters, builders e construtores automáticos.</span>
-            </li>
-            <li><strong>log4j-api & log4j-core:</strong> <span>Configuração e controle de logs do sistema.</span>
-            </li>
-            <li><strong>hibernate-validator:</strong> <span
-            >Valida dados de entidades JPA.</span></li>
-            <li><strong>javax.validation & javax.annotation-api:</strong> <span>Suporte para validações e anotações padrão do Java.</span>
-            </li>
-        </ul>
-        <h3>Estrutura Hexagonal</h3>
-        <ul>
-            <li><strong>app:</strong> <span>Serviços e casos de uso.</span></li>
-            <li><strong>domain:</strong> <span>Entidades e regras de negócio.</span></li>
-            <li><strong>infra:</strong> <span>Repositórios, integrações externas e implementação de interfaces.</span>
-            </li>
-        </ul>
-        <h3>Informações da API</h3>
-        <ul>
-            <li>Endpoints principais: <span>/product, /cooperator, /tax-receipt, /tax-receipt-item</span>
-            </li>
-            <li>Operações suportadas: <span>CRUD completo</span></li>
-            <li>Paginação suportada via query parameters <code>page</code> e <code>size</code></li>
-        </ul>
 
-        <h3>Banco de Dados</h3>
-<!--        <ul>-->
-<!--            <li>URL: <code th:text="${system.databaseUrl}"></code></li>-->
-<!--        </ul>-->
+<main class="layout">
 
-<!--        <h3>Cache</h3>-->
-<!--        <ul>-->
-<!--            <li>Implementação: <span th:text="${system.cacheType}"></span></li>-->
-<!--        </ul>-->
+    <!-- ===== COLUNA LATERAL ===== -->
+    <aside class="sidebar">
+        <h3 class="color-red">Projeto</h3>
+        <ul>
+            <li><a href="#info">Informações</a></li>
+            <li><a href="#metadata">Metadata</a></li>
+        </ul>
+        <br>
+        <h3 class="color-red">Recursos</h3>
+        <ul>
+            <li><a href="/h2-console">H2 Console</a></li>
+            <li><a href="/swagger-ui/index.html">Swagger UI</a></li>
+            <li><a href="/openapi.yaml">OpenAPI</a></li>
+        </ul>
+        <br>
+        <h3 class="color-red">Actuator</h3>
+        <ul>
+            <li><a href="/actuator/health">Health</a></li>
+            <li><a href="/actuator/metrics">Metrics</a></li>
+            <li><a href="/actuator/prometheus">Prometheus</a></li>
+            <li><a href="/actuator/httpexchanges">HTTP Exchanges</a></li>
+        </ul>
+        <br>
+        <h3 class="color-red">Download</h3>
+        <ul>
+            <li><a href="/openapi.yaml">OpenAPI</a></li>
+        </ul>
+    </aside>
 
-    </section>
+    <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+    <div class="content">
+
+        <section id="info">
+            <h1>Informações do projeto</h1>
+            <p>Projeto de estudo</p>
+        </section>
+
+        <section>
+            <h2>Metadados do Projeto</h2>
+            <table>
+                <tr>
+                    <th>Build & Runtime</th>
+                    <td>
+                        <ul>
+                            <!-- SYSTEM -->
+                            <li><strong>Java: </strong> <code th:text="${prop.system.javaVersion}">java 17</code></li>
+                            <li><strong>Spring Boot:</strong> <code
+                                    th:text="${prop.system.springBootVersion}">3.x</code></li>
+
+                            <!-- POM -->
+                            <li><strong>ArtifactId:</strong> <code th:text="${prop.system.bla}">pegasus-api</code></li>
+                            <li><strong>GroupId:</strong> <code th:text="${prop.system.bla}">br.com.pegasus</code></li>
+                            <li><strong>Packaging:</strong> <code th:text="${prop.system.bla}">jar</code></li>
+                            <li><strong>Build Tool:</strong> <code th:text="${prop.system.bla}">Maven</code></li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Console & Debug</th>
+                    <td>
+                        <ul>
+                            <li><strong>H2 Console:</strong> enabled</li>
+                            <li><strong>Path:</strong> /h2-console</li>
+                            <li><strong>Remote Access:</strong> true</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Cache</th>
+                    <td>
+                        <ul>
+                            <li><strong>Provider:</strong> caffeine</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Kafka</th>
+                    <td>
+                        <ul>
+                            <dl>
+                                <dt><strong>Bootstrap Servers</strong></dt>
+                                <dd><b>spring.kafka.bootstrap-servers: </b><code>localhost:9092</code></dd>
+                                <dd><b>Descrição: </b> <code>Lista de endereços do cluster Kafka que o cliente usa apenas para se conectar inicialmente.</code></dd>
+
+                                <dt><b>Consumer Group</b></dt>
+                                <dd><b>spring.kafka.consumer.group-id: </b><code>meu-grupo</code></dd>
+                                <dd><b>Descrição: </b> <code>Identificador que define um grupo lógico de consumidores.</code></dd>
+
+                                <dt><b>Auto Offset Reset</b></dt>
+                                <dd><b>spring.kafka.consumer.auto-offset-reset: </b><code>earliest</code></dd>
+                                <dd><b>Descrição: </b> <code>Define de onde o consumer começa a ler quando não existe offset salvo.</code></dd>
+                            </dl>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Security</th>
+                    <td>
+                        <ul>
+                            <li><strong>OAuth2 Resource Server:</strong> Habilitado</li>
+                            <li><strong>JWT:</strong> Bearer Token</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Database</th>
+                    <td>
+                        <ul>
+                            <li><strong>Tipo:</strong> <code th:text="${prop.system.bla}">H2</code></li>
+                            <li><strong>URL:</strong> <code
+                                    th:text="${prop.system.bla}">jdbc:h2:file:./datasource/database-h2</code></li>
+                            <li><strong>Driver:</strong> <code th:text="${prop.system.bla}">org.h2.Driver</code></li>
+                            <li><strong>Usuário:</strong> <code th:text="${prop.system.bla}">sa</code></li>
+                            <li><strong>Senha:</strong> '<code th:text="${prop.system.bla}"></code>'</li>
+                            <li><strong>Console:</strong> <code th:text="${prop.system.bla}">/h2-console</code></li>
+                            <li><strong>Dialect:</strong> <code th:text="${prop.system.bla}">org.hibernate.dialect.H2Dialect</code>
+                            </li>
+
+                            <li><strong>Mode:</strong> always</li>
+                            <li><strong>Schema Scripts:</strong> audit-schema.sql, product-schema.sql</li>
+                            <li><strong>Data Scripts:</strong> nenhum</li>
+                            <li><strong>Show SQL:</strong> false</li>
+                            <li><strong>DDL Auto:</strong> none</li>
+                            <li><strong>Dialect:</strong> H2Dialect</li>
+                            <li><strong>JDBC URL:</strong> JDBC URL</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="metadata">
+            <h2>Metadata</h2>
+
+            <dl th:each="meta : ${prop.metadata}">
+                <dt>
+                    <b><span th:text="${meta.key}"></span>:</b>
+                    '<code class="color-green" th:text="${meta.value}"></code>'
+                </dt>
+                <dd th:utext="${meta.content}"></dd>
+            </dl>
+        </section>
+
+    </div>
 </main>
 
 <footer>
-    <p>&copy; <span>2025</span> <span th:text="${prop.system.name}"></span> - Todos os direitos reservados.</p>
-    <p>✉ <span th:text="${prop.system.email}"></span></p>
-    <p>☎ <span th:text="${prop.system.SAC}"></span></p>
+    <p class="color-blue">&copy; Pegasus Enterprise SA</p>
+    <p>✉ abc@pegasus.com</p>
+    <p>☎ 55 11 9.9948-2323</p>
 </footer>
-</body>
 
+</body>
 </html>

@@ -1,7 +1,7 @@
 package br.com.pegasus.api.rest.commerce.infra.system;
 
 import br.com.pegasus.api.rest.commerce.infra.util.ConstUtil;
-import br.com.pegasus.api.rest.commerce.infra.util.TextFormatUtil;
+import br.com.pegasus.api.rest.commerce.infra.util.TextUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -16,7 +16,7 @@ public class PomContextSystem {
   public static void printPom() throws Exception {
     final String fileName = "pom.xml";
     final String tagName = "dependency";
-    final String tittle = TextFormatUtil.addColorBlue("◎ DEPENDÊNCIAS DO PROJETO");
+    final String tittle = TextUtil.addColorBlue("◎ DEPENDÊNCIAS DO PROJETO");
 
     //CRIA A INSTANCIA DO ARQUIVO 'pom.xml'
     File pomFile = new File(fileName);
@@ -25,7 +25,8 @@ public class PomContextSystem {
     NodeList docDeps = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(pomFile)//
         .getElementsByTagName(tagName);
 
-    Stream<String> stringStream = IntStream.range(ConstUtil.INT_0, docDeps.getLength()).mapToObj(i -> createLine((Element) docDeps.item(i)));
+    Stream<String> stringStream = IntStream.range(ConstUtil.INT_0, docDeps.getLength())
+        .mapToObj(i -> createLine((Element) docDeps.item(i)));
     Stream.concat(Stream.of(tittle), stringStream).toList().forEach(System.out::println);
   }
 
@@ -36,10 +37,10 @@ public class PomContextSystem {
     String version = (versionNode == null) ? "VERSÃO PARENT" : versionNode.getTextContent();
 
     //add color
-    groupId = TextFormatUtil.addColorGreen(groupId);
-    artifactId = TextFormatUtil.addColorCyan(artifactId);
-    version = TextFormatUtil.addColorCyan(version);
+    groupId = TextUtil.addColorGreen(groupId);
+    artifactId = TextUtil.addColorCyan(artifactId);
+    version = TextUtil.addColorCyan(version);
 
-    return TextFormatUtil.format("\t- {}: {} - [{}]", groupId, artifactId, version);
+    return TextUtil.format("\t- {}: {} - [{}]", groupId, artifactId, version);
   }
 }
