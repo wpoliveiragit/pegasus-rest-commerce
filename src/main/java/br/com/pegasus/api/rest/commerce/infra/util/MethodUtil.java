@@ -45,7 +45,7 @@ public final class MethodUtil {
     }
   }
 
-  public static List<String> envGetPropertyList(Environment env, String key){
+  public static List<String> getEnvList(Environment env, String key){
     return Binder.get(env).bind(key, Bindable.listOf(String.class)).orElse(List.of());
   }
 

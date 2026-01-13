@@ -4,113 +4,116 @@
     <meta charset="UTF-8">
     <title>Pegasus API – Technical Overview</title>
 
-    <style>
-        /* ===== Cores ===== */
-        .color-blue { color: #004080; }
-        .color-green { color: #2e7d32; }
-        .color-orange { color: #e65100; }
-        .color-red  { color: #c62828; }
-        .color-yellow { color: #f9a825; }
+    <link rel="stylesheet" th:href="@{/css/color-common.css}">
+    <link rel="stylesheet" th:href="@{/css/color-highlighter.css}">
 
-        /* ===== Base ===== */
+    <!-- body -->
+    <style>
         body {
             font-family: Arial, sans-serif;
             background: #f5f5f5;
             margin: 0;
             padding: 0;
         }
+    </style>
 
+    <!-- header -->
+    <style>
         header {
             background: #004080;
             color: #fff;
             padding: 1.5rem;
             text-align: center;
         }
+    </style>
 
+    <!-- footer -->
+    <style>
         footer {
             text-align: center;
             padding: 1rem;
             font-size: .85rem;
             color: #555;
             background: #eee;
-        }
+            }
+    </style>
 
-        /* ===== Layout ===== */
+    <!-- main -->
+    <style>
         main.layout {
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 2rem;
-            max-width: 1300px;
-            margin: auto;
-            background: #fff;
-            padding: 2rem;
-        }
+           display: grid;
+           grid-template-columns: 260px 1fr;
+           gap: 2rem;
+           max-width: 1300px;
+           margin: auto;
+           background: #fff;
+           padding: 2rem;
+       }
+    </style>
 
-        /* ===== Sidebar ===== */
+    <!-- aside -->
+    <style>
         aside.sidebar {
             background: #f0f2f5;
             border-right: 1px solid #ddd;
-            padding: 1.5rem;
         }
-
         aside.sidebar h3 {
+            background-color: #dddddd;
+            padding: 2px 4px;
             margin-top: 0;
-            color: #004080;
+            color: #111111;
             border-bottom: 1px solid #ccc;
             padding-bottom: .5rem;
         }
-
         aside.sidebar ul {
-            list-style: none;
-            padding: 0;
+            list-style: disclosure-closed;
         }
-
-        aside.sidebar li {
-            margin: .6rem 0;
-        }
-
         aside.sidebar a {
             text-decoration: none;
-            color: #004080;
+            color: #212121;
             font-weight: bold;
         }
-
         aside.sidebar a:hover {
             text-decoration: underline;
         }
+    </style>
 
-        /* ===== Conteúdo ===== */
-        .content section {
-            margin-bottom: 2.5rem;
-        }
-
+    <!-- global -->
+    <style>
         h2 {
             border-bottom: 2px solid #004080;
-            padding-bottom: .4rem;
-        }
+            <!-- Cria uma linha azul embaixo do título. -->
 
+            padding-bottom: .4rem;
+            <!-- Cria espaço interno entre o texto e a linha. -->
+        }
+    </style>
+
+    <!-- code -->
+    <style>
+        code {
+            background: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+    </style>
+
+    <!-- table -->
+    <style>
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: .8rem;
         }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: .6rem;
-            vertical-align: top;
-        }
-
         th {
             background: #eee;
             width: 30%;
             text-align: left;
         }
-
-        code {
-            background: #f0f0f0;
-            padding: 2px 4px;
-            border-radius: 4px;
+        th, td {
+            border: 1px solid #ddd;
+            padding: .6rem;
+            vertical-align: top;
         }
     </style>
 </head>
@@ -118,163 +121,271 @@
 <body>
 
 <header>
-    <h1>Pegasus Enterprise SA</h1>
-    <p>Inovação e soluções inteligentes para um futuro melhor</p>
+    <h1><span th:text="${@environment.getProperty('metadata.company.name')}"></span></h1>
+    <p><span th:text="${@environment.getProperty('metadata.company.description')}"></span></p>
 </header>
 
 <main class="layout">
 
     <!-- ===== COLUNA LATERAL ===== -->
-    <aside class="sidebar">
-        <h3 class="color-red">Projeto</h3>
-        <ul>
-            <li><a href="#info">Informações</a></li>
-            <li><a href="#metadata">Metadata</a></li>
-        </ul>
-        <br>
-        <h3 class="color-red">Recursos</h3>
-        <ul>
-            <li><a href="/h2-console">H2 Console</a></li>
-            <li><a href="/swagger-ui/index.html">Swagger UI</a></li>
-            <li><a href="/openapi.yaml">OpenAPI</a></li>
-        </ul>
-        <br>
-        <h3 class="color-red">Actuator</h3>
-        <ul>
-            <li><a href="/actuator/health">Health</a></li>
-            <li><a href="/actuator/metrics">Metrics</a></li>
-            <li><a href="/actuator/prometheus">Prometheus</a></li>
-            <li><a href="/actuator/httpexchanges">HTTP Exchanges</a></li>
-        </ul>
-        <br>
-        <h3 class="color-red">Download</h3>
-        <ul>
-            <li><a href="/openapi.yaml">OpenAPI</a></li>
-        </ul>
-    </aside>
+    <aside th:replace="~{site/sidebar :: sidebar}"></aside>
 
     <!-- ===== CONTEÚDO PRINCIPAL ===== -->
-    <div class="content">
+    <div
+         th:with="
+            system_javaVersion=${@environment.getProperty('metadata.system.java-version', 'unavailable')},
+            system_springBootVersion=${@environment.getProperty('metadata.system.spring-boot-version', 'unavailable')},
+            system_buildTool=${@environment.getProperty('metadata.system.build-tool', 'unavailable')},
 
-        <section id="info">
-            <h1>Informações do projeto</h1>
-            <p>Projeto de estudo</p>
-        </section>
+            system_pom_description=${@environment.getProperty('metadata.system.pom.description', 'unavailable')},
+            system_pom_name=${@environment.getProperty('metadata.system.pom.name', 'unavailable')},
+            system_pom_packaging=${@environment.getProperty('metadata.system.pom.packaging', 'unavailable')},
+            system_pom_groupId=${@environment.getProperty('metadata.system.pom.groupId', 'unavailable')},
+            system_pom_artifact=${@environment.getProperty('metadata.system.pom.artifact', 'unavailable')},
+            system_pom_version=${@environment.getProperty('metadata.system.pom.version', 'unavailable')},
+
+            h2_console_path=${@environment.getProperty('spring.h2.console.path', 'unavailable')},
+            h2_console_enabled=${@environment.getProperty('spring.h2.console.enabled', 'unavailable')},
+            h2_console_settings_webAllowOthers=${@environment.getProperty('spring.h2.console.settings.web-allow-others', 'unavailable')},
+
+            cache_type=${@environment.getProperty('cache.type', 'unavailable')},
+
+            kafka_bootstrapServers=${@environment.getProperty('spring.kafka.bootstrap-servers', 'unavailable')},
+            kafka_description=${@environment.getProperty('metadata.kafka.description', 'unavailable')},
+            kafka_consumer_groupId=${@environment.getProperty('spring.kafka.consumer.group-id', 'unavailable')},
+            kafka_consumer_description=${@environment.getProperty('metadata.kafka.consumer.description', 'unavailable')},
+            kafka_consumer_autoOffsetReset=${@environment.getProperty('spring.kafka.consumer.auto-offset-reset', 'unavailable')},
+
+            database_url=${@environment.getProperty('spring.datasource.url', 'unavailable')},
+            database_driverClassName=${@environment.getProperty('spring.datasource.driver-class-name', 'unavailable')},
+            database_username=${@environment.getProperty('spring.datasource.username', 'unavailable')},
+            database_password=${@environment.getProperty('spring.datasource.password', 'unavailable')},
+            database_dialect=${@environment.getProperty('hibernate.dialect', 'unavailable')},
+            database_sql_init_mode=${@environment.getProperty('spring.sql.init.mode', 'unavailable')},
+            database_jpa_showSql=${@environment.getProperty('spring.jpa.show-sql', 'unavailable')},
+            database_jpa_hibernate_ddlAuto=${@environment.getProperty('spring.jpa.hibernate.ddl-auto', 'unavailable')},
+
+            other=${@environment.getProperty('metadata.other', 'unavailable')}">
+
+        <section th:replace="site/info :: info"></section>
 
         <section>
-            <h2>Metadados do Projeto</h2>
+            <h2 class="color-yellow-highlighter">H2 Console <a th:href="${h2_console_path}" target="_blank"
+                   rel="noopener noreferrer">link</a></h2>
             <table>
                 <tr>
-                    <th>Build & Runtime</th>
-                    <td>
-                        <ul>
-                            <!-- SYSTEM -->
-                            <li><strong>Java: </strong> <code th:text="${prop.system.javaVersion}">java 17</code></li>
-                            <li><strong>Spring Boot:</strong> <code
-                                    th:text="${prop.system.springBootVersion}">3.x</code></li>
-
-                            <!-- POM -->
-                            <li><strong>ArtifactId:</strong> <code th:text="${prop.system.bla}">pegasus-api</code></li>
-                            <li><strong>GroupId:</strong> <code th:text="${prop.system.bla}">br.com.pegasus</code></li>
-                            <li><strong>Packaging:</strong> <code th:text="${prop.system.bla}">jar</code></li>
-                            <li><strong>Build Tool:</strong> <code th:text="${prop.system.bla}">Maven</code></li>
-                        </ul>
-                    </td>
+                    <th>Saved Settings</th>
+                    <td>'<span class="color-yellow-medium">Generic H2 (Embedded)</span>'</td>
                 </tr>
                 <tr>
-                    <th>Console & Debug</th>
-                    <td>
-                        <ul>
-                            <li><strong>H2 Console:</strong> enabled</li>
-                            <li><strong>Path:</strong> /h2-console</li>
-                            <li><strong>Remote Access:</strong> true</li>
-                        </ul>
-                    </td>
+                    <th>Setting Name</th>
+                    <td>'<span class="color-yellow-medium">Generic H2 (Embedded)</span>'</td>
                 </tr>
                 <tr>
-                    <th>Cache</th>
-                    <td>
-                        <ul>
-                            <li><strong>Provider:</strong> caffeine</li>
-                        </ul>
-                    </td>
+                    <th>Driver Class</th>
+                    <td>'<span class="color-yellow-medium" th:text="${database_driverClassName}"></span>'</td>
                 </tr>
                 <tr>
-                    <th>Kafka</th>
-                    <td>
-                        <ul>
-                            <dl>
-                                <dt><strong>Bootstrap Servers</strong></dt>
-                                <dd><b>spring.kafka.bootstrap-servers: </b><code>localhost:9092</code></dd>
-                                <dd><b>Descrição: </b> <code>Lista de endereços do cluster Kafka que o cliente usa apenas para se conectar inicialmente.</code></dd>
-
-                                <dt><b>Consumer Group</b></dt>
-                                <dd><b>spring.kafka.consumer.group-id: </b><code>meu-grupo</code></dd>
-                                <dd><b>Descrição: </b> <code>Identificador que define um grupo lógico de consumidores.</code></dd>
-
-                                <dt><b>Auto Offset Reset</b></dt>
-                                <dd><b>spring.kafka.consumer.auto-offset-reset: </b><code>earliest</code></dd>
-                                <dd><b>Descrição: </b> <code>Define de onde o consumer começa a ler quando não existe offset salvo.</code></dd>
-                            </dl>
-                        </ul>
-                    </td>
+                    <th>JDBC URL</th>
+                    <td>'<span class="color-yellow-medium" th:text="${database_url}"></span>'</td>
                 </tr>
                 <tr>
-                    <th>Security</th>
-                    <td>
-                        <ul>
-                            <li><strong>OAuth2 Resource Server:</strong> Habilitado</li>
-                            <li><strong>JWT:</strong> Bearer Token</li>
-                        </ul>
-                    </td>
+                    <th>User Name</th>
+                    <td>'<span class="color-yellow-medium" th:text="${database_username}"></span>'</td>
                 </tr>
                 <tr>
-                    <th>Database</th>
-                    <td>
-                        <ul>
-                            <li><strong>Tipo:</strong> <code th:text="${prop.system.bla}">H2</code></li>
-                            <li><strong>URL:</strong> <code
-                                    th:text="${prop.system.bla}">jdbc:h2:file:./datasource/database-h2</code></li>
-                            <li><strong>Driver:</strong> <code th:text="${prop.system.bla}">org.h2.Driver</code></li>
-                            <li><strong>Usuário:</strong> <code th:text="${prop.system.bla}">sa</code></li>
-                            <li><strong>Senha:</strong> '<code th:text="${prop.system.bla}"></code>'</li>
-                            <li><strong>Console:</strong> <code th:text="${prop.system.bla}">/h2-console</code></li>
-                            <li><strong>Dialect:</strong> <code th:text="${prop.system.bla}">org.hibernate.dialect.H2Dialect</code>
-                            </li>
-
-                            <li><strong>Mode:</strong> always</li>
-                            <li><strong>Schema Scripts:</strong> audit-schema.sql, product-schema.sql</li>
-                            <li><strong>Data Scripts:</strong> nenhum</li>
-                            <li><strong>Show SQL:</strong> false</li>
-                            <li><strong>DDL Auto:</strong> none</li>
-                            <li><strong>Dialect:</strong> H2Dialect</li>
-                            <li><strong>JDBC URL:</strong> JDBC URL</li>
-                        </ul>
-                    </td>
+                    <th>Password</th>
+                    <td>'<span class="color-yellow-medium" th:text="${database_password}"></span>'</td>
                 </tr>
             </table>
         </section>
 
-        <section id="metadata">
-            <h2>Metadata</h2>
+        <section>
+            <h2 class=color-yellow-highlighter>Metadados</h2>
 
-            <dl th:each="meta : ${prop.metadata}">
+            <p><b>Application</b></p>
+            <table>
+                <tr>
+                    <th>JDK</th>
+                    <td th:text="${system_javaVersion}"></td>
+                </tr>
+                <tr>
+                    <th>Spring Boot Version</th>
+                    <td th:text="${system_springBootVersion}"></td>
+                </tr>
+                <tr>
+                    <th>Build Tool</th>
+                    <td th:text="${system_buildTool}"></td>
+                </tr>
+            </table>
+
+            <p><b>Build</b></p>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <td th:text="${system_pom_name}"></td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td th:text="${system_pom_description}"></td>
+                </tr>
+                <tr>
+                    <th>Packaging</th>
+                    <td th:text="${system_pom_packaging}"></td>
+                </tr>
+                <tr>
+                    <th>GroupId</th>
+                    <td th:text="${system_pom_groupId}"></td>
+                </tr>
+                <tr>
+                    <th>ArtifactId</th>
+                    <td th:text="${system_pom_artifact}"></td>
+                </tr>
+                <tr>
+                    <th>Version</th>
+                    <td th:text="${system_pom_version}"></td>
+                </tr>
+            </table>
+
+            <p><b>H2</b></p>
+            <table>
+                <tr>
+                    <th>Path</th>
+                    <td th:text="${h2_console_path}"></td>
+                </tr>
+                <tr>
+                    <th>Enable</th>
+                    <td th:text="${h2_console_enabled}"></td>
+                </tr>
+                <tr>
+                    <th>RemoteAccess</th>
+                    <td th:text="${h2_console_settings_webAllowOthers}"></td>
+                </tr>
+            </table>
+
+            <p><b>Cache</b></p>
+            <table>
+                <tr>
+                    <th>Provider</th>
+                    <td th:text="${cache_type}"></td>
+                </tr>
+            </table>
+
+            <p><b>Kafka</b></p>
+            <table>
+                <tr>
+                    <th>Bootstrap</th>
+                    <td>
+                        <ul>
+                            <li>Service: <span th:text="${kafka_bootstrapServers}"></span></li>
+                            <li>Description: <span th:text="${kafka_description}"></span></li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Consumer</th>
+                    <td>
+                        <ul>
+                            <li>Group-id: <span th:text="${kafka_consumer_groupId}"></span></li>
+                            <li>Description: <span th:text="${kafka_consumer_description}"></span></li>
+                            <li>Auto Offset Reset: <span th:text="${kafka_consumer_autoOffsetReset}"></span></li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+
+            <p><b>Security</b></p>
+            <table>
+                <tr>
+                    <th>Status</th>
+                    <td>Habilitado</td>
+                </tr>
+                <tr>
+                    <th>type</th>
+                    <td>OAuth2</td>
+                </tr>
+                <tr>
+                    <th>JWT</th>
+                    <td>Bearer Token</td>
+                </tr>
+            </table>
+
+            <p><b>Database</b></p>
+            <table>
+                <tr>
+                    <th>Url</th>
+                    <td th:text="${database_url}"></td>
+                </tr>
+                <tr>
+                    <th>Driver</th>
+                    <td th:text="${database_driverClassName}"></td>
+                </tr>
+                <tr>
+                    <th>Username</th>
+                    <td th:text="${database_username}"></td>
+                </tr>
+                <tr>
+                    <th>Password</th>
+                    <td th:text="${database_password}"></td>
+                </tr>
+                <tr>
+                    <th>Dialect</th>
+                    <td th:text="${database_dialect}"></td>
+                </tr>
+                <tr>
+                    <th>Mode</th>
+                    <td th:text="${database_sql_init_mode}"></td>
+                </tr>
+                <tr>
+                    <th>Show SQL</th>
+                    <td th:text="${database_jpa_showSql}"></td>
+                </tr>
+                <tr>
+                    <th>DDL AUTO</th>
+                    <td th:text="${database_jpa_hibernate_ddlAuto}"></td>
+                </tr>
+                <tr>
+                    <th>Schema Script</th>
+                    <td>
+                        <ul>
+                            <li th:each="schemaLocations : ${prop.metadata.database.schemaLocations}">
+                                <code th:text="${schemaLocations}"></code>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Data Script</th>
+                    <td>
+                        <ul>
+                            <li th:each="dataLocations : ${prop.metadata.database.dataLocations}">
+                                <code th:text="${dataLocations}"></code>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+
+        </section>
+
+        <section id="metadata">
+            <h2 class=color-yellow-highlighter>Database Metadata </h2>
+
+            <dl th:each="databaseInfo : ${prop.metadata.database.info}">
                 <dt>
-                    <b><span th:text="${meta.key}"></span>:</b>
-                    '<code class="color-green" th:text="${meta.value}"></code>'
+                    <b><span th:text="${databaseInfo.key}"></span>:</b>
+                    '<code th:text="${databaseInfo.value}"></code>'
                 </dt>
-                <dd th:utext="${meta.content}"></dd>
+                <dd th:utext="${databaseInfo.content}"></dd>
             </dl>
         </section>
 
     </div>
+
 </main>
 
-<footer>
-    <p class="color-blue">&copy; Pegasus Enterprise SA</p>
-    <p>✉ abc@pegasus.com</p>
-    <p>☎ 55 11 9.9948-2323</p>
-</footer>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
 
 </body>
 </html>

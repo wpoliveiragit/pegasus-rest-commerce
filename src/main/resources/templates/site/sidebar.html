@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<aside class="sidebar" th:fragment="sidebar">
+
+    <h3>Recursos</h3>
+    <ul>
+        <li><a href="/h2-console">H2 Console</a></li>
+        <li><a href="/swagger-ui/index.html">Swagger UI</a></li>
+        <li><a href="/openapi.yaml">OpenAPI</a></li>
+    </ul>
+    <h3>Actuator</h3>
+    <ul>
+        <li><a th:href="${health}" target="_blank" rel="noopener noreferrer">Health</a></li>
+        <li><a th:href="${metrics}" target="_blank" rel="noopener noreferrer">Metrics</a></li>
+        <li><a th:href="${httpTotal}" target="_blank" rel="noopener noreferrer">Http Requests Total</a></li>
+        <li><a th:href="${httpDuration}" target="_blank" rel="noopener noreferrer">Http Request Duration ms</a></li>
+        <li><a th:href="${prometheus}" target="_blank" rel="noopener noreferrer">Prometheus</a></li>
+        <li><a th:href="${httpExchanges}" target="_blank" rel="noopener noreferrer">HTTP Exchanges</a></li>
+    </ul>
+    <h3>Download</h3>
+    <ul>
+        <li><a href="/openapi.yaml">OpenAPI</a></li>
+    </ul>
+
+    <br>
+    <h3>Color</h3>
+    <p>color-gray (1 a 8)</p>
+    <p>[
+        <b class="color-gray-scale-1">⬤</b>
+        <b class="color-gray-scale-2">⬤</b>
+        <b class="color-gray-scale-3">⬤</b>
+        <b class="color-gray-scale-4">⬤</b>
+        <b class="color-gray-scale-5">⬤</b>
+        <b class="color-gray-scale-6">⬤</b>
+        <b class="color-gray-scale-7">⬤</b>
+        <b class="color-gray-scale-8">⬤</b>
+        ]
+    </p>
+    <p class="color-black">color-black ⬤ ⬤ ⬤ ⬤ ⬤</p>
+    <p class="color-white">color-white ⬤ ⬤ ⬤ ⬤ ⬤</p>
+    <p class="color-blue-medium">color-blue-medium ⬤ ⬤ ⬤ ⬤ ⬤</p>
+    <p class="color-green-medium">color-green-medium ⬤ ⬤ ⬤ ⬤ ⬤</p>
+    <p class="color-orange-medium">color-orange-medium ⬤ ⬤ ⬤ ⬤ ⬤</p>
+    <p class="color-red-medium">color-red-medium ⬤ ⬤ ⬤ ⬤ ⬤</p>
+    <p class="color-yellow-medium">color-yellow-medium ⬤ ⬤ ⬤ ⬤ ⬤</p>
+</aside>
+</html>

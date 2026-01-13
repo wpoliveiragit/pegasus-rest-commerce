@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+
+<footer th:fragment="footer">
+    <p class="color-blue">&copy; <span th:text="${@environment.getProperty('metadata.company.name')}"></span></p>
+    <p>✉ <span th:text="${@environment.getProperty('metadata.company.email')}"></span></p>
+    <p>☎ SAC: <span th:text="${@environment.getProperty('metadata.company.sac')}"></span></p>
+</footer>
+
+</html>

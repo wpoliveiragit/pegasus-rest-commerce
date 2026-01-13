@@ -1,7 +1,10 @@
 package br.com.pegasus.api.rest.commerce.domain.adapter;
 
-import br.com.pegasus.api.rest.commerce.domain.model.prop.MetadataModelProp;
+import java.util.List;
+import java.util.Map;
 
 public interface EnvPropAdapter {
-  MetadataModelProp getEnvProp();
+  Object getPropertyMap(String key);
+  List<String> getPropertyList(String key);
+  Map<String, String> getH2ConsoleInfo(int page);
 }

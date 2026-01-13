@@ -71,9 +71,7 @@ public class HandlerTelemetry {// MetricsTelemetry
     try {
       requestContext.getTraceEventLogListData().addEvent(TextUtil.format(formatMessage, objs));
     } catch (Throwable ex) {
-
       String s = ex.getMessage() + ". " + formatMessage + ": " + Stream.of(objs).map(o -> "'" + o.toString() + "'").collect(Collectors.joining(", "));
-
       log.warn(s);
     }
   }

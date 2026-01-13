@@ -14,21 +14,22 @@
     <name>pegasus-api-restful</name>
     <description>API RESTful gerada com OpenAPI Generator</description>
     <packaging>jar</packaging>
+
     <groupId>br.com.pegasus.api.rest</groupId>
     <artifactId>pegasus-api-restful</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.34</version>
+
 
     <properties>
+        <!-- Versões -->
+        <java.version>17</java.version>
+        <spring.boot.version>${project.parent.version}</spring.boot.version>
+        <jackson.version>2.18.2</jackson.version>
+        <jjwt.version>0.11.5</jjwt.version>
         <!-- Build -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
         <compilation.build>${maven.build.timestamp}</compilation.build>
-
-        <!-- Versões -->
-        <java.version>17</java.version>
-        <jackson.version>2.18.2</jackson.version>
-        <jjwt.version>0.11.5</jjwt.version>
-
         <!-- OpenAPI -->
         <openapi.inputSpec>${project.basedir}/src/main/resources/openapi.yaml</openapi.inputSpec>
         <openapi.apiPackage>br.com.pegasus.gen.openapi.api</openapi.apiPackage>
@@ -247,7 +248,7 @@
         </plugins>
 
         <resources>
-            <resource><!-- necessário para coleta de dados do banner -->
+            <resource><!-- expõe informações do build do projeto (usado no applycation.yml) -->
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>

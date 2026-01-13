@@ -1,16 +1,16 @@
 package br.com.pegasus.api.rest.commerce.app.controller;
 
 import br.com.pegasus.api.rest.commerce.domain.port.WebsitePort;
-import br.com.pegasus.api.rest.commerce.infra.handler.marker.ControllerLayerMarker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
 
 @RequiredArgsConstructor
-@ControllerLayerMarker("Controller.Website")
 @Controller
 public class WebSiteController {
 
@@ -18,20 +18,30 @@ public class WebSiteController {
 
   @GetMapping("/website")
   public String website(Model model) {
-    model.addAttribute("prop", service.website(1));
+    createModel(model);
     return "website";
   }
 
   @GetMapping("/license")
   public String license(Model model) {
-    model.addAttribute("prop", service.license(1));
+    createModel(model);
     return "license";
   }
 
   @GetMapping("/terms")
   public String terms(Model model) {
-    model.addAttribute("prop", service.terms(1));
+    createModel(model);
     return "terms";
+  }
+
+  @GetMapping(value = "/h2-console-info", produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  public Map<String, String> h2ConsoleInfo() {
+    return service.geth2ConsoleInfo(1);
+  }
+
+  private void createModel(Model model) {
+    model.addAttribute("prop", service.getProp(1));
   }
 
 }

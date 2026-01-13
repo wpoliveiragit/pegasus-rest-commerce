@@ -14,19 +14,18 @@ import java.util.stream.Stream;
 public class PomContextSystem {
 
   public static void printPom() throws Exception {
-    final String fileName = "pom.xml";
-    final String tagName = "dependency";
     final String tittle = TextUtil.addColorBlue("◎ DEPENDÊNCIAS DO PROJETO");
 
     //CRIA A INSTANCIA DO ARQUIVO 'pom.xml'
-    File pomFile = new File(fileName);
+    File pomFile = new File("pom.xml");
 
     //Prepara a lista de tags
     NodeList docDeps = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(pomFile)//
-        .getElementsByTagName(tagName);
+        .getElementsByTagName("dependency");
 
     Stream<String> stringStream = IntStream.range(ConstUtil.INT_0, docDeps.getLength())
         .mapToObj(i -> createLine((Element) docDeps.item(i)));
+
     Stream.concat(Stream.of(tittle), stringStream).toList().forEach(System.out::println);
   }
 

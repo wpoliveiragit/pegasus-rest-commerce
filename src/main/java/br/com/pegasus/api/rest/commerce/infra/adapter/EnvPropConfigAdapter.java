@@ -1,17 +1,20 @@
 package br.com.pegasus.api.rest.commerce.infra.adapter;
 
 import br.com.pegasus.api.rest.commerce.domain.adapter.EnvPropAdapter;
-import br.com.pegasus.api.rest.commerce.domain.model.prop.MetadataModelProp;
 import br.com.pegasus.api.rest.commerce.infra.handler.marker.ComponentLayerMarker;
-import br.com.pegasus.api.rest.commerce.infra.util.MethodUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
-
-@ComponentLayerMarker("Infra.adapter.EnvProp")
+@Slf4j
+//@ComponentLayerMarker("Infra.adapter.EnvProp")
 @RequiredArgsConstructor
 @Component
 public class EnvPropConfigAdapter implements EnvPropAdapter {
@@ -19,18 +22,19 @@ public class EnvPropConfigAdapter implements EnvPropAdapter {
   private final Environment env;
 
   @Override
-  public MetadataModelProp getEnvProp() {
-    return new MetadataModelProp(env);//
+  public Object getPropertyMap(String key) {
+    ResolvableType type = ResolvableType.forClassWithGenerics(//
+        List.class, ResolvableType.forClassWithGenerics(Map.class, String.class, String.class));
+    return Binder.get(env).bind(key, Bindable.of(type)).orElse(List.of());
   }
 
-  public String getProperty(String key){
-    return env.getProperty(key,"");
+  public List<String> getPropertyList(String key) {
+    return Binder.get(env).bind(key, Bindable.listOf(String.class)).orElse(List.of());
   }
 
-  public String getPropertyStringList(String key){
-    List<String> list = MethodUtil.envGetPropertyList(env, key);
-
-    return env.getProperty(key,"");
+  @Override
+  public Map<String, String> getH2ConsoleInfo(int page) {
+    return Map.of();
   }
 
 }

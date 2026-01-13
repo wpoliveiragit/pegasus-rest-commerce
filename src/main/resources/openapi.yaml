@@ -1,25 +1,9 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: API de Produtos - PEGASUS-SA
+  title: API de Produtos - Pegasus S.A.
   termsOfService: http://localhost:8080/terms
-  description: |
-    API RESTful CRUD de controle de produtos para estudo.  
-    
-    #### 🍵🍵🍵 NOTAS DO DESENVOLVEDOR 🍵🍵🍵    
-    
-    ##### Metricas
-    - Todas as métricas disponíveis: `http://localhost:8080/actuator/metrics`
-    - Métrica customizada de contagem de requests: `http://localhost:8080/actuator/metrics/http_requests_total`
-    - Métrica customizada de duração de requests: `http://localhost:8080/actuator/metrics/http_request_duration_ms`
-    - Formato Prometheus (todas as métricas): ` http://localhost:8080/actuator/prometheus`
-    
-    ##### DataBase `http://localhost:8080/h2-console`
-    - Driver class: `ver application.yaml` → `spring.datasource.driver-class-name`
-    - JDBC URL: `ver application.yaml` → `spring.datasource.url`
-    - User Name: `ver application.yaml` → `spring.datasource.username`
-    - Password: `ver application.yaml` → `spring.datasource.password`
-
+  description: API RESTful CRUD de controle de produtos para estudo.
   contact:
     name: Enterprise
     email: suporte@pegasus.com.br

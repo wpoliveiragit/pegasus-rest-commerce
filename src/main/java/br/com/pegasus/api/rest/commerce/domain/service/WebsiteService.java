@@ -1,39 +1,32 @@
 package br.com.pegasus.api.rest.commerce.domain.service;
 
-
 import br.com.pegasus.api.rest.commerce.domain.adapter.EnvPropAdapter;
-import br.com.pegasus.api.rest.commerce.domain.adapter.HtmlAdapter;
 import br.com.pegasus.api.rest.commerce.domain.core.WebsiteCore;
 import br.com.pegasus.api.rest.commerce.domain.port.WebsitePort;
-import br.com.pegasus.api.rest.commerce.infra.handler.marker.ComponentLayerMarker;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 @Service
-@ComponentLayerMarker("Service.website")
 public class WebsiteService implements WebsitePort {
 
   private final WebsiteCore core;
 
-  public WebsiteService(EnvPropAdapter envProp, HtmlAdapter html) {
-    this.core = new WebsiteCore(envProp, html);
+  public WebsiteService(EnvPropAdapter envProp) {
+    this.core = new WebsiteCore(envProp);
+  }
+
+  @Cacheable(value = "website-cache", key = "'id:' + #cache")
+  @Override
+  public Map<String, ?> getProp(int page) {
+    return core.getProp(page);
   }
 
   @Override
-//  @Cacheable(value = "website-cache", key = "'id:' + #cache")
-  public Map<String, ?> website(int page) {
-    return core.website(page);
+  public Map<String, String> geth2ConsoleInfo(int page) {
+    return core.geth2ConsoleInfo(page);
   }
 
-  @Override
-  public Map<String, ?> license(int page) {
-    return core.license(page);
-  }
 
-  @Override
-  public Map<String, ?> terms(int page) {
-    return core.terms(page);
-  }
 }
