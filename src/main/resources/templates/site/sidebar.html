@@ -9,11 +9,20 @@
         <li><a href="/openapi.yaml">OpenAPI</a></li>
     </ul>
     <h3>Actuator</h3>
-    <ul>
+    <ul th:with="
+        health='/actuator/health',
+        metrics='/actuator/metrics',
+        httpTotal='/actuator/metrics/http_requests_total',
+        httpDuration='/actuator/metrics/http_request_duration_ms',
+        httpRequests='/actuator/metrics/http.server.requests',
+        prometheus='/actuator/prometheus',
+        httpExchanges='/actuator/httpexchanges'">
+
         <li><a th:href="${health}" target="_blank" rel="noopener noreferrer">Health</a></li>
         <li><a th:href="${metrics}" target="_blank" rel="noopener noreferrer">Metrics</a></li>
         <li><a th:href="${httpTotal}" target="_blank" rel="noopener noreferrer">Http Requests Total</a></li>
         <li><a th:href="${httpDuration}" target="_blank" rel="noopener noreferrer">Http Request Duration ms</a></li>
+        <li><a th:href="${httpRequests}" target="_blank" rel="noopener noreferrer">Http Request Requests ms</a></li>
         <li><a th:href="${prometheus}" target="_blank" rel="noopener noreferrer">Prometheus</a></li>
         <li><a th:href="${httpExchanges}" target="_blank" rel="noopener noreferrer">HTTP Exchanges</a></li>
     </ul>

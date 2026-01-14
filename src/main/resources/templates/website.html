@@ -131,47 +131,46 @@
     <aside th:replace="~{site/sidebar :: sidebar}"></aside>
 
     <!-- ===== CONTEÚDO PRINCIPAL ===== -->
-    <div
-         th:with="
-            system_javaVersion=${@environment.getProperty('metadata.system.java-version', 'unavailable')},
-            system_springBootVersion=${@environment.getProperty('metadata.system.spring-boot-version', 'unavailable')},
-            system_buildTool=${@environment.getProperty('metadata.system.build-tool', 'unavailable')},
+    <div th:with="
+        system_javaVersion=${@environment.getProperty('metadata.system.java-version', 'unavailable')},
+        system_springBootVersion=${@environment.getProperty('metadata.system.spring-boot-version', 'unavailable')},
+        system_buildTool=${@environment.getProperty('metadata.system.build-tool', 'unavailable')},
 
-            system_pom_description=${@environment.getProperty('metadata.system.pom.description', 'unavailable')},
-            system_pom_name=${@environment.getProperty('metadata.system.pom.name', 'unavailable')},
-            system_pom_packaging=${@environment.getProperty('metadata.system.pom.packaging', 'unavailable')},
-            system_pom_groupId=${@environment.getProperty('metadata.system.pom.groupId', 'unavailable')},
-            system_pom_artifact=${@environment.getProperty('metadata.system.pom.artifact', 'unavailable')},
-            system_pom_version=${@environment.getProperty('metadata.system.pom.version', 'unavailable')},
+        system_pom_description=${@environment.getProperty('metadata.system.pom.description', 'unavailable')},
+        system_pom_name=${@environment.getProperty('metadata.system.pom.name', 'unavailable')},
+        system_pom_packaging=${@environment.getProperty('metadata.system.pom.packaging', 'unavailable')},
+        system_pom_groupId=${@environment.getProperty('metadata.system.pom.groupId', 'unavailable')},
+        system_pom_artifact=${@environment.getProperty('metadata.system.pom.artifact', 'unavailable')},
+        system_pom_version=${@environment.getProperty('metadata.system.pom.version', 'unavailable')},
 
-            h2_console_path=${@environment.getProperty('spring.h2.console.path', 'unavailable')},
-            h2_console_enabled=${@environment.getProperty('spring.h2.console.enabled', 'unavailable')},
-            h2_console_settings_webAllowOthers=${@environment.getProperty('spring.h2.console.settings.web-allow-others', 'unavailable')},
+        h2_console_path=${@environment.getProperty('spring.h2.console.path', 'unavailable')},
+        h2_console_enabled=${@environment.getProperty('spring.h2.console.enabled', 'unavailable')},
+        h2_console_settings_webAllowOthers=${@environment.getProperty('spring.h2.console.settings.web-allow-others', 'unavailable')},
 
-            cache_type=${@environment.getProperty('cache.type', 'unavailable')},
+        cache_type=${@environment.getProperty('cache.type', 'unavailable')},
 
-            kafka_bootstrapServers=${@environment.getProperty('spring.kafka.bootstrap-servers', 'unavailable')},
-            kafka_description=${@environment.getProperty('metadata.kafka.description', 'unavailable')},
-            kafka_consumer_groupId=${@environment.getProperty('spring.kafka.consumer.group-id', 'unavailable')},
-            kafka_consumer_description=${@environment.getProperty('metadata.kafka.consumer.description', 'unavailable')},
-            kafka_consumer_autoOffsetReset=${@environment.getProperty('spring.kafka.consumer.auto-offset-reset', 'unavailable')},
+        kafka_bootstrapServers=${@environment.getProperty('spring.kafka.bootstrap-servers', 'unavailable')},
+        kafka_description=${@environment.getProperty('metadata.kafka.description', 'unavailable')},
+        kafka_consumer_groupId=${@environment.getProperty('spring.kafka.consumer.group-id', 'unavailable')},
+        kafka_consumer_description=${@environment.getProperty('metadata.kafka.consumer.description', 'unavailable')},
+        kafka_consumer_autoOffsetReset=${@environment.getProperty('spring.kafka.consumer.auto-offset-reset', 'unavailable')},
 
-            database_url=${@environment.getProperty('spring.datasource.url', 'unavailable')},
-            database_driverClassName=${@environment.getProperty('spring.datasource.driver-class-name', 'unavailable')},
-            database_username=${@environment.getProperty('spring.datasource.username', 'unavailable')},
-            database_password=${@environment.getProperty('spring.datasource.password', 'unavailable')},
-            database_dialect=${@environment.getProperty('hibernate.dialect', 'unavailable')},
-            database_sql_init_mode=${@environment.getProperty('spring.sql.init.mode', 'unavailable')},
-            database_jpa_showSql=${@environment.getProperty('spring.jpa.show-sql', 'unavailable')},
-            database_jpa_hibernate_ddlAuto=${@environment.getProperty('spring.jpa.hibernate.ddl-auto', 'unavailable')},
+        database_url=${@environment.getProperty('spring.datasource.url', 'unavailable')},
+        database_driverClassName=${@environment.getProperty('spring.datasource.driver-class-name', 'unavailable')},
+        database_username=${@environment.getProperty('spring.datasource.username', 'unavailable')},
+        database_password=${@environment.getProperty('spring.datasource.password', 'unavailable')},
+        database_dialect=${@environment.getProperty('hibernate.dialect', 'unavailable')},
+        database_sql_init_mode=${@environment.getProperty('spring.sql.init.mode', 'unavailable')},
+        database_jpa_showSql=${@environment.getProperty('spring.jpa.show-sql', 'unavailable')},
+        database_jpa_hibernate_ddlAuto=${@environment.getProperty('spring.jpa.hibernate.ddl-auto', 'unavailable')},
 
-            other=${@environment.getProperty('metadata.other', 'unavailable')}">
+        other=${@environment.getProperty('metadata.other', 'unavailable')}">
 
         <section th:replace="site/info :: info"></section>
 
         <section>
             <h2 class="color-yellow-highlighter">H2 Console <a th:href="${h2_console_path}" target="_blank"
-                   rel="noopener noreferrer">link</a></h2>
+                                                               rel="noopener noreferrer">link</a></h2>
             <table>
                 <tr>
                     <th>Saved Settings</th>
