@@ -20,7 +20,7 @@ public class JwtConfigSecurityConfig {
   public SecurityFilterChain securityFilterChain(Environment env, HttpSecurity http) throws Exception {
     boolean securityController = env.getProperty("api.security.controller", Boolean.class, ConstUtil.BOOLEAN_TRUE);
 
-    String[] withToken = {"/oauth/token"};
+    String[] withToken = {"/oauth/token", "/oauth2/token2"};
     String[] withOutToken = {"/**"};
 
     http.csrf(AbstractHttpConfigurer::disable);

@@ -3,25 +3,7 @@ info:
   version: 1.0.0
   title: API de Produtos - Pegasus S.A.
   termsOfService: http://localhost:8080/terms
-  description: |
-    ## Projeto de estudo
-    API **RESTful CRUD** de controle de cadastro de produtos genéricos.
-    
-    ### Atributos
-    - **nome:** obrigatório e único
-    - **descricao:** tamanho máximo de 255 caracteres
-    - **preco:** obrigatório, deve ser ≥ 0
-    - **quantidade:** obrigatório, deve ser ≥ 0
-    - **categoria:** obrigatório, deve existir em tabela auxiliar `Categoria`
-    - **ativo:** valor booleano padrão `true`
-    
-    ### Regras de negócio
-    - Se `quantidade = 0`, o item é automaticamente marcado como `inativo`.
-    - Atualizar o campo `ativo` conforme o estoque (se > 0 = ativo, senão inativo).
-    - Itens com `preco = 0` são considerados “amostras” e não entram em vendas.
-    - Não permitir excluir item se ele estiver vinculado a pedidos ativos.
-    - Registrar data/hora da última atualização de estoque.
-    - Itens inativos não podem ser atualizados via API de vendas.
+  description: Projeto de estudo
   contact:
     name: Enterprise
     email: suporte@pegasus.com.br
