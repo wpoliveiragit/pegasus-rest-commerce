@@ -1,4 +1,0 @@
-<configuration>
-    <include resource="logback/logback-trace.xml"/>
-    <include resource="logback/logback-root.xml"/>
-</configuration>
