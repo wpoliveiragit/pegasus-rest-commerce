@@ -63,25 +63,7 @@ public class BeanSecurity {
         .generatePublic(new X509EncodedKeySpec(MethodSecurity.getDecodedKey(publicKey)));
   }
 
-  @Bean
-  public SecurityFilterChain createRequestFilterConfig(Environment env, HttpSecurity http, JwtDecoder jwtDecoder) throws Exception {
-    boolean activated = env.getProperty(ConstSecurity.PROP_ENABLED, Boolean.class, ConstSecurity.BOOLEAN_TRUE);
-    String[] withToken = Binder.get(env)//
-        .bind(ConstSecurity.PROP_OPEN_ROUTES, Bindable.listOf(String.class))//
-        .orElse(List.of())//
-        .toArray(new String[ConstSecurity.INT_0]);
 
-    http.csrf(AbstractHttpConfigurer::disable);
-
-    // PERMITIR IFRAMES (necessário para H2 Console)
-    http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
-
-    http.authorizeHttpRequests(//
-        auth -> auth.requestMatchers(activated ? withToken : new String[]{ConstSecurity.ALL_PATHS})//
-            .permitAll().anyRequest().authenticated());
-    http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder)));
-    return http.build();
-  }
 
   @Bean
   public JwtTokenSecurity createTokenGenerator(JwtEncoder encoder) {
