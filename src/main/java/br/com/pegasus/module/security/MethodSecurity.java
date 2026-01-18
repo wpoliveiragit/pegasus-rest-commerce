@@ -7,8 +7,16 @@ import java.util.Base64;
 
 public final class MethodSecurity {
 
-  public static String getRequiredStringProperty(Environment env, String key){
+  public static String getReqProp(Environment env, String key){
     String prop = env.getProperty(key);
+    if (prop == null) {
+      throw new IllegalStateException(MessageFormatter.format(ConstSecurity.MSG_EXCEPTION_PROPERTY, key).getMessage());
+    }
+    return prop;
+  }
+
+  public static int getReqIntProp(Environment env, String key){
+    Integer prop = env.getProperty(key, Integer.class);
     if (prop == null) {
       throw new IllegalStateException(MessageFormatter.format(ConstSecurity.MSG_EXCEPTION_PROPERTY, key).getMessage());
     }

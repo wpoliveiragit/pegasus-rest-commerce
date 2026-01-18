@@ -3,14 +3,9 @@ package br.com.pegasus.module.security;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import org.springframework.boot.context.properties.bind.Bindable;
-import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
@@ -21,7 +16,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
@@ -36,24 +30,14 @@ import java.util.UUID;
 @Configuration
 public class BeanSecurity {
 
-  private final int expiresAt;
-  private final int validAfterSeconds;
-  private final String claimKey;
-  private final String claimValue;
-  private final String projName;
   private final String audience;
   private final RSAPublicKey publicKey;
   private final RSAPrivateKey privateKey;
 
   public BeanSecurity(Environment env) throws Exception {
-    String privateKey = MethodSecurity.getRequiredStringProperty(env, ConstSecurity.PROP_RSA_PRIVATE_KEY);
-    String publicKey = MethodSecurity.getRequiredStringProperty(env, ConstSecurity.PROP_RSA_PUBLIC_KEY);
+    String privateKey = MethodSecurity.getReqProp(env, ConstSecurity.PROP_RSA_PRIVATE_KEY);
+    String publicKey = MethodSecurity.getReqProp(env, ConstSecurity.PROP_RSA_PUBLIC_KEY);
 
-    this.projName = env.getProperty(ConstSecurity.PROP_PROJECT_NAME, ConstSecurity.MSG_NOT_FOUND);
-    this.expiresAt = env.getProperty(ConstSecurity.PROP_EXPIRES_AT, Integer.class, ConstSecurity.INT_60);
-    this.validAfterSeconds = env.getProperty(ConstSecurity.PROP_VALID_AFTER_SECONDS, Integer.class, ConstSecurity.INT_60);
-    this.claimKey = env.getProperty(ConstSecurity.PROP_CLAIM_NAME, ConstSecurity.PROP_CLAIM_DEFAULT_NAME);
-    this.claimValue = env.getProperty(ConstSecurity.PROP_CLAIM_VALUE, ConstSecurity.PROP_CLAIM_DEFAULT_VALUE);
     this.audience = env.getProperty(ConstSecurity.PROP_AUDIENCE, ConstSecurity.MSG_NOT_FOUND);
 
     // Gera um par de chaves RSA de 2048 bits
@@ -63,32 +47,39 @@ public class BeanSecurity {
         .generatePublic(new X509EncodedKeySpec(MethodSecurity.getDecodedKey(publicKey)));
   }
 
-
-
   @Bean
-  public JwtTokenSecurity createTokenGenerator(JwtEncoder encoder) {
+  public JwtTokenSecurity createTokenGenerator(Environment env) {
+    RSAKey rsaKey = new RSAKey.Builder(publicKey)//
+        .privateKey(privateKey)//
+        .keyID(UUID.randomUUID().toString())//
+        .build();
+    JwtEncoder encoderGenerator = new NimbusJwtEncoder(new ImmutableJWKSet<>(new JWKSet(rsaKey)));
+
+    //Quem emitiu o token.
+    String name = MethodSecurity.getReqProp(env, ConstSecurity.PROP_PROJECT_NAME);
+    String audience = MethodSecurity.getReqProp(env, ConstSecurity.PROP_AUDIENCE);
+    // mensagem adicional (nomeChave, ValorChave)
+    String claimKey = MethodSecurity.getReqProp(env, ConstSecurity.PROP_CLAIM_NAME);
+    String claimValue = MethodSecurity.getReqProp(env, ConstSecurity.PROP_CLAIM_VALUE);
+    // Tempo de bloqueio de uso após a criação (data atual + propriedade)
+    int validAfterSeconds = MethodSecurity.getReqIntProp(env, ConstSecurity.PROP_VALID_AFTER_SECONDS);
+    // Quando vai expira (data atual + propriedade)
+    int expiresAt = MethodSecurity.getReqIntProp(env, ConstSecurity.PROP_EXPIRES_AT);
+
     return subject -> {
       Instant now = Instant.now();
       JwtClaimsSet claims = JwtClaimsSet.builder()//
           .subject(subject)// Quem solicitou o token
           .id(UUID.randomUUID().toString()) // rastreio e blacklist de token
           .issuedAt(now)// Quando foi criado
-          .issuer(projName)//Quem emitiu o token.
-          .audience(List.of(audience)).expiresAt(now.plusSeconds(expiresAt))// Quando vai expira (data atual + propriedade)
-          .notBefore(now.plusSeconds(validAfterSeconds))// Tempo de bloqueio de uso após a criação (data atual + propriedade)
-          .claim(claimKey, claimValue)// mensagem adicional (nomeChave, ValorChave)
+          .issuer(name)//
+          .audience(List.of(audience))//
+          .expiresAt(now.plusSeconds(expiresAt))//
+          .notBefore(now.plusSeconds(validAfterSeconds))//
+          .claim(claimKey, claimValue)//
           .build();
-      return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+      return encoderGenerator.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     };
-  }
-
-  @Bean
-  public JwtEncoder createEncoderGenerator() { // gera
-    RSAKey rsaKey = new RSAKey.Builder(publicKey)//
-        .privateKey(privateKey)//
-        .keyID(UUID.randomUUID().toString())//
-        .build();
-    return new NimbusJwtEncoder(new ImmutableJWKSet<>(new JWKSet(rsaKey)));
   }
 
   @Bean
