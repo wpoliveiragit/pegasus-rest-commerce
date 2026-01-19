@@ -1,5 +1,6 @@
 package br.com.pegasus.module.security;
 
+import br.com.pegasus.module.security.config.BeanSecConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
@@ -12,7 +13,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ComponentScan(basePackages = {"br.com.pegasus.module.security"})
-@Import({BeanSecurity.class,})
-public @interface ImportOAuthSecurity {
+@Import({BeanSecConfig.class})
+public @interface ImportOAuthWebSecurity {
+  // Porque o nome é import e não Enable no nome? Porque pode se obtar em habilitar/desabilitar atraves das propriedades
 }
