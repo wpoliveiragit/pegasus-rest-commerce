@@ -3,7 +3,8 @@ package br.com.pegasus.module.security.util;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import org.springframework.core.env.Environment;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -17,31 +18,31 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.UUID;
 
+@Log4j2 // ainda vou adicionar os logs
 public final class MethodSecurityUtil {
 
-  private final EnvUtil envUtil;
-
-  public MethodSecurityUtil(Environment env) {
-    this.envUtil = new EnvUtil(env);
+  public static void logInfo(Logger log, boolean enabledLog, String message, Object... objs) {
+    if (enabledLog) {
+      log.info(message, objs);
+    }
   }
 
-  public JwtEncoder createJwtEncoder() {
-    RSAKey rsaKey = new RSAKey.Builder(getPublicKey())//
-        .privateKey(getPrivateKey())//
+  public static  JwtEncoder createJwtEncoder(String publicKey, String privateKey) {
+    RSAKey rsaKey = new RSAKey.Builder(getPublicKey(publicKey))//
+        .privateKey(getPrivateKey(privateKey))//
         .keyID(UUID.randomUUID().toString())//
         .build();
     return new NimbusJwtEncoder(new ImmutableJWKSet<>(new JWKSet(rsaKey)));
   }
 
-  public NimbusJwtDecoder createNimbusJwtDecoder() {
-    return NimbusJwtDecoder.withPublicKey(getPublicKey()).build();
+  public NimbusJwtDecoder createNimbusJwtDecoder(final String publicKey) {
+    return NimbusJwtDecoder.withPublicKey(getPublicKey(publicKey)).build();
   }
 
-  public RSAPublicKey getPublicKey() {
+  public static RSAPublicKey getPublicKey(String publicKey) {
     try {
-      String sKey = envUtil.getRequiredProp(ConstSecUtil.PROP_RSA_PUBLIC_KEY);
       KeyFactory kf = KeyFactory.getInstance(ConstSecUtil.ALGORITHM);
-      return (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(getDecodedKey(sKey)));
+      return (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(getDecodedKey(publicKey)));
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
@@ -50,17 +51,17 @@ public final class MethodSecurityUtil {
   public OAuth2Error createOAuth2Error() {
     return new OAuth2Error(ConstSecUtil.MSG_INVALID_TOKEN, ConstSecUtil.MSG_INVALID_AUDIENCE, null);
   }
-  public RSAPrivateKey getPrivateKey() {
+
+  public  static  RSAPrivateKey getPrivateKey(String privateKey) {
     try {
-      String sKey = envUtil.getRequiredProp(ConstSecUtil.PROP_RSA_PRIVATE_KEY);
       KeyFactory kf = KeyFactory.getInstance(ConstSecUtil.ALGORITHM);
-      return (RSAPrivateKey) kf.generatePrivate(new PKCS8EncodedKeySpec(getDecodedKey(sKey)));
+      return (RSAPrivateKey) kf.generatePrivate(new PKCS8EncodedKeySpec(getDecodedKey(privateKey)));
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
   }
 
-  private byte[] getDecodedKey(String keyPem) {
+  private static byte[] getDecodedKey(String keyPem) {
     String content = keyPem.replaceAll(ConstSecUtil.REGEX_REPLACE_PP, ConstSecUtil.TXT_BLANK);
     content = content.replaceAll(ConstSecUtil.REGEX_REPLACE_BLANK, ConstSecUtil.TXT_BLANK);
     return Base64.getDecoder().decode(content);

@@ -6,6 +6,7 @@ api.security.valid-after-seconds: 5
 api.security.claim.name: version
 api.security.claim.value: v1
 api.security.enable-h2-console: true # Opcional: permite o acesso ao console web do h2
+api.security.enable-log: true
 api.security.open-routes:
   - /oauth/token
 
