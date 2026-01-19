@@ -13,39 +13,26 @@ import org.springframework.security.web.SecurityFilterChain;
 @Log4j2
 public class OAuthWebSecCore {
 
-  public SecurityFilterChain createRequestFilterConfig(HttpSecurity http, JwtDecoder jwtDecoder, SecurityProps props) {
-    boolean enabledLog = props.isEnabledLog();
+  public SecurityFilterChain createRequestFilterConfig(HttpSecurity http, JwtDecoder jwtDecoder, SecurityProps props) throws Exception {
+    boolean enabledLog = props.isEnableLog();
     boolean enableH2ConsoleProp = props.isEnableH2Console();
 
-    try {
-      http.csrf(AbstractHttpConfigurer::disable);
-      MethodSecurityUtil.logInfo(log, enabledLog, "não sei o q isso desabilita"); // nota: ajuste a mensagem
-    } catch (Exception ex) {
-      throw new RuntimeException(ex);
+    http.csrf(AbstractHttpConfigurer::disable);
+    MethodSecurityUtil.logInfo(log, enabledLog, "CSRF protection disabled (stateless JWT authentication)");
+
+    if (enableH2ConsoleProp) { // O H2 Console usa iframe internamente precisa desabilitar para funcionar
+      http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
     }
+    MethodSecurityUtil.logInfo(log, enabledLog, " H2 Console Web: {}", enableH2ConsoleProp ? "habilitado" : "desabilitado"); // nota: melhore a mensagem
 
-    try {
-      if (enableH2ConsoleProp) {
-        http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
-      }
-      MethodSecurityUtil.logInfo(log, enabledLog, " H2 Console Web: {}", enableH2ConsoleProp ? "habilitado" : "desabilitado"); // nota: ajuste a mensagem
-    } catch (Exception ex) {
-      throw new RuntimeException(ex);
-    }
+    String[] openRoutes = props.getOpenRoutes().toArray(new String[ConstSecUtil.INT_0]);
 
-    try {
-      String[] publicAccessEndpoints = props.getOpenRoutes().toArray(new String[ConstSecUtil.INT_0]);
+    http.authorizeHttpRequests(auth -> auth.requestMatchers(openRoutes).permitAll().anyRequest().authenticated());
+    http.oauth2ResourceServer(o -> o.jwt(jwt -> jwt.decoder(jwtDecoder)));
 
-      http.authorizeHttpRequests(//
-          auth -> auth.requestMatchers(publicAccessEndpoints)//
-              .permitAll().anyRequest().authenticated());
-      http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder)));
-
-      MethodSecurityUtil.logInfo(log, enabledLog, "Endpoints without token requirement: ({})", String.join(", ", publicAccessEndpoints)); // nota: ajuste mostrando os endpoints permitidos
-      return http.build();
-    } catch (Exception ex) {
-      throw new RuntimeException(ex);
-    }
+    MethodSecurityUtil.logInfo(log, enabledLog, "Public endpoints (no JWT required): {}", //
+        openRoutes.length == 0 ? "none" : String.join(", ", openRoutes));
+    return http.build();
   }
 
 }

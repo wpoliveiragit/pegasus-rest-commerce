@@ -27,7 +27,7 @@ public final class MethodSecurityUtil {
     }
   }
 
-  public static  JwtEncoder createJwtEncoder(String publicKey, String privateKey) {
+  public static JwtEncoder createJwtEncoder(String publicKey, String privateKey) {
     RSAKey rsaKey = new RSAKey.Builder(getPublicKey(publicKey))//
         .privateKey(getPrivateKey(privateKey))//
         .keyID(UUID.randomUUID().toString())//
@@ -35,36 +35,38 @@ public final class MethodSecurityUtil {
     return new NimbusJwtEncoder(new ImmutableJWKSet<>(new JWKSet(rsaKey)));
   }
 
-  public NimbusJwtDecoder createNimbusJwtDecoder(final String publicKey) {
+  public static NimbusJwtDecoder createNimbusJwtDecoder(final String publicKey) {
     return NimbusJwtDecoder.withPublicKey(getPublicKey(publicKey)).build();
   }
 
-  public static RSAPublicKey getPublicKey(String publicKey) {
+  public static RSAPublicKey getPublicKey(String pem) {
+    return (RSAPublicKey) buildKey(pem, true);
+  }
+
+  public static RSAPrivateKey getPrivateKey(String pem) {
+    return (RSAPrivateKey) buildKey(pem, false);
+  }
+
+  private static Object buildKey(String pem, boolean pub) {
     try {
-      KeyFactory kf = KeyFactory.getInstance(ConstSecUtil.ALGORITHM);
-      return (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(getDecodedKey(publicKey)));
-    } catch (Exception ex) {
-      throw new RuntimeException(ex);
+      String content = pem.replaceAll(ConstSecUtil.REGEX_REPLACE_PP, ConstSecUtil.TXT_BLANK);
+      content = content.replaceAll(ConstSecUtil.REGEX_REPLACE_BLANK, ConstSecUtil.TXT_BLANK);
+
+      byte[] decoded = Base64.getDecoder().decode(content);
+      KeyFactory kf = KeyFactory.getInstance("RSA");
+
+      return pub//
+          ? kf.generatePublic(new X509EncodedKeySpec(decoded))//
+          : kf.generatePrivate(new PKCS8EncodedKeySpec(decoded));
+
+    } catch (Exception e) {
+      throw new IllegalStateException("Chave RSA inválida", e);
     }
   }
 
-  public OAuth2Error createOAuth2Error() {
+
+  public static OAuth2Error createOAuth2Error() {
     return new OAuth2Error(ConstSecUtil.MSG_INVALID_TOKEN, ConstSecUtil.MSG_INVALID_AUDIENCE, null);
-  }
-
-  public  static  RSAPrivateKey getPrivateKey(String privateKey) {
-    try {
-      KeyFactory kf = KeyFactory.getInstance(ConstSecUtil.ALGORITHM);
-      return (RSAPrivateKey) kf.generatePrivate(new PKCS8EncodedKeySpec(getDecodedKey(privateKey)));
-    } catch (Exception ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  private static byte[] getDecodedKey(String keyPem) {
-    String content = keyPem.replaceAll(ConstSecUtil.REGEX_REPLACE_PP, ConstSecUtil.TXT_BLANK);
-    content = content.replaceAll(ConstSecUtil.REGEX_REPLACE_BLANK, ConstSecUtil.TXT_BLANK);
-    return Base64.getDecoder().decode(content);
   }
 
 }

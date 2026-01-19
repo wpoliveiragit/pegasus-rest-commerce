@@ -14,11 +14,11 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableConfigurationProperties(SecurityProps.class)
-@ComponentScan(basePackages = {"br.com.pegasus.module.security.props"})// apagar
+//@ComponentScan(basePackages = {"br.com.pegasus.module.security.props"})// apagar
 public class BeanSecConfig {
 
   @Bean
-  public SecurityFilterChain createRequestFilterConfig(HttpSecurity http, JwtDecoder jwtDecoder, SecurityProps props) {
+  public SecurityFilterChain createRequestFilterConfig(HttpSecurity http, JwtDecoder jwtDecoder, SecurityProps props) throws Exception {
     return new OAuthWebSecCore().createRequestFilterConfig(http, jwtDecoder, props);
   }
 

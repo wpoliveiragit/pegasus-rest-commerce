@@ -7,20 +7,26 @@ import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/oauth")
+@RequestMapping("")
 @RequiredArgsConstructor
-public class TokenController {
+public class AppController {
 
   private final JwtTokenSecurity jwtSecurity;
   private final JwtDecoder jwtDecoder;
 
-  @PostMapping("/token")
+  @GetMapping("/app/test")
+  public ResponseEntity<String> appTest() {
+    return ResponseEntity.ok("ok");
+  }
+
+  @PostMapping("/oauth/token")
   public ResponseEntity<TokenResponse> generateToken(@RequestBody TokenRequest request) {
     String token = jwtSecurity.createToken(request.getUsername());
     Jwt decode = jwtDecoder.decode(token);

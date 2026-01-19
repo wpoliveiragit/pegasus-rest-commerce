@@ -1,16 +1,15 @@
-api.security.enabled: false
-api.security.proj-name: pegasus-api-rest-commerce
-api.security.audience: security-gateway
-api.security.expires-at: 61
-api.security.valid-after-seconds: 5
-api.security.claim.name: version
-api.security.claim.value: v1
+api.security.proj-name: pegasus-api-rest-commerce # Obrigatorio para auditoria
+api.security.audience: security-gateway # Obrigatorio para alditoria
+api.security.expires-at: 15 # Obrigatorio
+api.security.valid-after-seconds: 5 # Opcional: mas deve ser positivo
+api.security.claim.name: version # Obrigatório para minha auditoria
+api.security.claim.value: v2 # Obrigatório para minha auditoria
 api.security.enable-h2-console: true # Opcional: permite o acesso ao console web do h2
-api.security.enable-log: true
-api.security.open-routes:
+api.security.enable-log: true # Opcional: habilita logs do security
+api.security.open-routes: # Opcional: endpoints q são liberados do security
   - /oauth/token
 
-api.security.rsa.public-key: |
+api.security.rsa.public-key: | # Obrigatorio, mas a chave pode ser alterada
   -----BEGIN PUBLIC KEY-----
   MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAomggTzv6/KXVmenuLKuZ
   gZlB7vmETmWi3fQoMzLOXkbSix0krE2ysOfaxa7NuIgKHwGFGfAweXRws4Qhdr+C
@@ -20,7 +19,7 @@ api.security.rsa.public-key: |
   Zubbdo29vCJr9KG8Mr6FTuMQ5fFpydDHdAvLbffMWNzQcbWZPsbq6x58gvMAkXuP
   qQIDAQAB
   -----END PUBLIC KEY-----
-api.security.rsa.private-key: |
+api.security.rsa.private-key: | # Obrigatorio, mas a chave pode ser alterada
   -----BEGIN PRIVATE KEY-----
   MIIEugIBADANBgkqhkiG9w0BAQEFAASCBKQwggSgAgEAAoIBAQCiaCBPO/r8pdWZ
   6e4sq5mBmUHu+YROZaLd9CgzMs5eRtKLHSSsTbKw59rFrs24iAofAYUZ8DB5dHCz

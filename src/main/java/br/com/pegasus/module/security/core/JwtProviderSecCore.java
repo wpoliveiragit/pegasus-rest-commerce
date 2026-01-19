@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -28,7 +29,7 @@ public class JwtProviderSecCore {
     String claimValue = props.getClaim().getValue();
     int validAfterSeconds = props.getValidAfterSeconds();
     int expiresAt = props.getExpiresAt();
-    boolean enabledLog = props.isEnabledLog();
+    boolean enabledLog = props.isEnableLog();
 
     String publicKey = props.getRsa().getPublicKey();
     String privateKey = props.getRsa().getPrivateKey();
@@ -36,43 +37,61 @@ public class JwtProviderSecCore {
 
     JwtTokenSecurity jwtTokenSecurity = subject -> {
       Instant now = Instant.now();
-      JwtClaimsSet claims = JwtClaimsSet.builder()//
+      JwtClaimsSet.Builder builder = JwtClaimsSet.builder();
+
+      builder.expiresAt(now.plusSeconds(expiresAt));
+      JwtClaimsSet claims = builder//
           .subject(subject)// Quem solicitou o token
           .id(UUID.randomUUID().toString()) // rastreio e blacklist de token
           .issuedAt(now)// Quando foi criado
           .issuer(name)//
           .audience(List.of(audience))//
-          .expiresAt(now.plusSeconds(expiresAt))//
           .notBefore(now.plusSeconds(validAfterSeconds))//
           .claim(claimKey, claimValue)//
           .build();
+
+      System.out.println(claims.getIssuedAt());
+      System.out.println(claims.getExpiresAt());
+
       String tokenValue = encoderGenerator.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
       MethodSecurityUtil.logInfo(log, enabledLog, "New token created with ID: {}", claims.getId());
       return tokenValue;
     };
 
-    MethodSecurityUtil.logInfo(log, enabledLog, "Create token Generator ({})", JwtTokenSecurity.class.getSimpleName());
+
+    MethodSecurityUtil.logInfo(log, enabledLog, "JWT Token Generator initialized using RSA keys and audience '{}'", audience);
     return jwtTokenSecurity;
   }
 
   public JwtDecoder createDecoder(SecurityProps props) { // valida
-    MethodSecurityUtil methodS = new MethodSecurityUtil();
-
-    OAuth2Error oA2Err = methodS.createOAuth2Error();
-    NimbusJwtDecoder decoder = methodS.createNimbusJwtDecoder(props.getRsa().getPublicKey());
+    OAuth2Error oA2Err = MethodSecurityUtil.createOAuth2Error();
+    NimbusJwtDecoder decoder = MethodSecurityUtil.createNimbusJwtDecoder(props.getRsa().getPublicKey());
     String audience = props.getAudience();
-    boolean enabledLog = props.isEnabledLog();
+    boolean enabledLog = props.isEnableLog();
 
     decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(//
             JwtValidators.createDefault(),//
-            jwt -> jwt.getAudience().contains(audience) //
+            jwt -> validToken(jwt, audience) //
                 ? OAuth2TokenValidatorResult.success() //
                 : OAuth2TokenValidatorResult.failure(oA2Err)//
         )//
     );
-    MethodSecurityUtil.logInfo(log, enabledLog, "Create Decoder ({})", JwtDecoder.class.getSimpleName());
+    MethodSecurityUtil.logInfo(log, enabledLog, "JWT Decoder initialized with audience validation: '{}'", audience);
     return decoder;
+  }
+
+  private boolean validToken(Jwt jwt, String audience) {
+    /* REGRAS JÁ APLICADAS POR DEFAULT
+      - Expiração (exp): Se now > exp → token inválido
+      - Not Before (nbf): Se now < nbf → token ainda não é válido
+      - Issued At (iat): Valida se não está muito no futuro (proteção contra relógio errado)
+      - Formato básico do JWT: Estrutura de assinatura RSA válida com sua public key
+      - Algoritmo compatível: Garante que o token foi assinado com algoritmo esperado
+     */
+
+    // VALIDACOES EXTRAS
+    return jwt.getAudience().contains(audience);
   }
 
 }
