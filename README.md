@@ -17,17 +17,25 @@
 
 **Explicando cada propriedade**
 
-- api.security.proj-name: pegasus-api-rest-commerce # Obrigatorio para auditoria
-- api.security.audience: security-gateway # Obrigatorio para alditoria
-- api.security.expires-at: 61 # Obrigatorio
-- api.security.valid-after-seconds: 5 # Opcional: mas deve ser positivo
-- api.security.claim.name: version # Obrigatório para minha auditoria
-- api.security.claim.value: v1 # Obrigatório para minha auditoria
-- api.security.enable-h2-console: true # Opcional: permite o acesso ao console web do h2
-- api.security.enable-log: true # Opcional: habilita logs do security
-- api.security.open-routes: # Opcional: endpoints q são liberados do security
-- api.security.rsa.public-key
-- api.security.rsa.privare-key
+- `api.security.proj-name` 
+  - Usado para auditoria
+  - Obrigatírio, exemplo: pegasus-api-rest-commerce 
+- `api.security.audience` 
+  - Usado para alditoria
+  - Obrigatório, exemplo: security-gateway 
+- `api.security.expires-at` 
+  - Opcional, exemplo: 60
+- `api.security.valid-after-seconds`
+  - usado 
+  - Valor deve ser inteiro e positivo.
+  - opcional, Exemplo: 5
+- `api.security.claim.name` version # Obrigatório para minha auditoria
+- `api.security.claim.value` v1 # Obrigatório para minha auditoria
+- `api.security.enable-h2-console` true # Opcional: permite o acesso ao console web do h2
+- `api.security.enable-log` true # Opcional: habilita logs do security
+- `api.security.open-routes` # Opcional: endpoints q são liberados do security
+- `api.security.rsa.public-key` # Obrigatorio, mas a chave pode ser alterada
+- `api.security.rsa.privare-key` # Obrigatorio, mas a chave pode ser alterada
 
 **Adicione a anotação `@EnabledOAuthWebSecurity` em algum Bean do projeto**
 
@@ -85,7 +93,7 @@ public class AppController {
 ```
 
 **Onde adicionar o token?**
-No padrão OAuth2/JWT, o token vai no header Authorization.
+Por padrão OAuth2/JWT, o token vai no header Authorization.
 
 **formato**
 

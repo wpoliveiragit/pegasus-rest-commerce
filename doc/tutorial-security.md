@@ -1,4 +1,154 @@
+jwt
 
+----
+
+## Principais atributos do JwtClaimsSet
+
+### subject(String sub)
+
+Identifica quem é o “dono” do token, ou seja, quem foi autenticado.
+
+Normalmente representa:
+
+- usuário
+- sistema
+- client_id
+
+```java
+.subject("user123")
+```
+
+---
+
+### issuer(String iss)
+
+Identifica quem emitiu o token.  
+Quem valida o token usa esse valor para decidir se confia no emissor.
+
+```java
+.issuer("pegasus-api-rest-commerce")
+```
+
+---
+
+### audience(List<String> aud)
+
+Define para quem o token é destinado.  
+Somente sistemas listados aqui devem aceitar esse token.
+
+```java
+.audience(List.of("security-gateway"))
+```
+
+---
+
+### issuedAt(Instant iat)
+
+Momento exato em que o token foi criado.
+
+```java
+.issuedAt(Instant.now())
+```
+
+---
+
+### expiresAt(Instant exp)
+
+Momento em que o token deixa de ser válido.  
+Após essa data, o Spring Security rejeita automaticamente o token.
+
+```java
+.expiresAt(now.plusSeconds(300)) // 5 minutos
+```
+
+---
+
+### notBefore(Instant nbf)
+
+Antes desse instante o token é inválido.  
+Usado como “tempo de carência” após a criação.
+
+```java
+.notBefore(now.plusSeconds(10)) // só vale após 10s
+```
+
+---
+
+### id(String jti)
+
+Identificador único do token. Usado para:
+
+- rastreio
+- blacklist
+- auditoria
+- revogação manual
+
+```java
+.id(UUID.randomUUID().
+
+toString())
+```
+
+---
+
+### claim(String name, Object value) — Claims customizados
+
+Permite adicionar dados extras ao token.  
+Usado para informações do seu domínio, como:
+
+- versão da API
+- tipo de usuário
+- escopo simples
+- flags internas
+
+```java
+.claim("version","v1")
+.
+
+claim("role","ADMIN")
+```
+
+---
+
+### Exemplo completo
+
+```java
+JwtClaimsSet claims = JwtClaimsSet.builder()
+    .subject(subject)                              // dono do token
+    .id(UUID.randomUUID().toString())              // id único
+    .issuedAt(now)                                 // quando foi criado
+    .issuer(name)                                  // quem criou
+    .audience(List.of(audience))                   // quem pode usar
+    .expiresAt(now.plusSeconds(expiresAt))         // quando expira
+    .notBefore(now.plusSeconds(validAfterSeconds)) // carência
+    .claim(claimKey, claimValue)                   // dados extras
+    .build();
+```
+
+---
+
+### Tabela resumo
+
+| Claim JWT | Método builder | Pra quê                       |
+|-----------|----------------|-------------------------------|
+| sub       | subject        | Dono do token                 |
+| jti       | id             | Identificador único           |
+| iat       | issuedAt       | Quando foi criado             |
+| iss       | issuer         | Emissor do token              |
+| aud       | audience       | Quem pode aceitar             |
+| exp       | expiresAt      | Quando expira                 |
+| nbf       | notBefore      | Só vale depois desse instante |
+| custom    | claim          | Dados extras do seu domínio   |
+
+## Regras de segurança já aplicadas por default
+
+- expiresAt (exp): Se now > exp → token inválido
+- notBefore (nbf): Se now < nbf → token ainda não é válido
+- issuedAt (iat): Valida se não está muito no futuro (proteção contra relógio errado)
+- Formato básico do JWT: Estrutura de assinatura RSA válida com sua public key
+- Algoritmo compatível: Garante que o token foi assinado com algoritmo esperado
+
+----
 
 1) Como gerar a chave para colocar na propriedade
 

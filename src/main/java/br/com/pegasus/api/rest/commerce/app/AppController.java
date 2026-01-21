@@ -30,6 +30,9 @@ public class AppController {
   public ResponseEntity<TokenResponse> generateToken(@RequestBody TokenRequest request) {
     String token = jwtSecurity.createToken(request.getUsername());
     Jwt decode = jwtDecoder.decode(token);
+    System.out.println("\nDECODE TOKEN - headers");
+    decode.getHeaders().forEach((key, value) -> System.out.println("KEI: " + key + " VALUE: " + value));
+    System.out.println("\nDECODE TOKEN - Claims");
     decode.getClaims().forEach((key, value) -> System.out.println("KEI: " + key + " VALUE: " + value));
     return ResponseEntity.ok(new TokenResponse(token));
   }

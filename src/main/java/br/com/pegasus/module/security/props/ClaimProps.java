@@ -7,12 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ClaimProps {
-
-  /** chave da mensagem adicional. */
   @NotBlank
   private String name;
-
-  /** Texto da mensagem adicional. */
   @NotBlank
   private String value;
 }

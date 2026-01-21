@@ -28,37 +28,35 @@ public class JwtProviderSecCore {
     String claimKey = props.getClaim().getName();
     String claimValue = props.getClaim().getValue();
     int validAfterSeconds = props.getValidAfterSeconds();
-    int expiresAt = props.getExpiresAt();
+    Integer expiresAt = props.getExpiresAt();
     boolean enabledLog = props.isEnableLog();
 
     String publicKey = props.getRsa().getPublicKey();
     String privateKey = props.getRsa().getPrivateKey();
     JwtEncoder encoderGenerator = MethodSecurityUtil.createJwtEncoder(publicKey, privateKey);
 
+    JwtClaimsSet.Builder builder = JwtClaimsSet.builder()//
+        .issuer(name)//
+        .audience(List.of(audience))//
+        .claim(claimKey, claimValue);
+
     JwtTokenSecurity jwtTokenSecurity = subject -> {
       Instant now = Instant.now();
-      JwtClaimsSet.Builder builder = JwtClaimsSet.builder();
 
-      builder.expiresAt(now.plusSeconds(expiresAt));
+      if (expiresAt != null) {
+        builder.expiresAt(now.plusSeconds(expiresAt));
+      }
       JwtClaimsSet claims = builder//
-          .subject(subject)// Quem solicitou o token
-          .id(UUID.randomUUID().toString()) // rastreio e blacklist de token
-          .issuedAt(now)// Quando foi criado
-          .issuer(name)//
-          .audience(List.of(audience))//
+          .subject(subject)//
+          .id(UUID.randomUUID().toString()) //
+          .issuedAt(now)//
           .notBefore(now.plusSeconds(validAfterSeconds))//
-          .claim(claimKey, claimValue)//
           .build();
 
-      System.out.println(claims.getIssuedAt());
-      System.out.println(claims.getExpiresAt());
-
       String tokenValue = encoderGenerator.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
       MethodSecurityUtil.logInfo(log, enabledLog, "New token created with ID: {}", claims.getId());
       return tokenValue;
     };
-
 
     MethodSecurityUtil.logInfo(log, enabledLog, "JWT Token Generator initialized using RSA keys and audience '{}'", audience);
     return jwtTokenSecurity;
@@ -82,13 +80,12 @@ public class JwtProviderSecCore {
   }
 
   private boolean validToken(Jwt jwt, String audience) {
-    /* REGRAS JÁ APLICADAS POR DEFAULT
-      - Expiração (exp): Se now > exp → token inválido
-      - Not Before (nbf): Se now < nbf → token ainda não é válido
-      - Issued At (iat): Valida se não está muito no futuro (proteção contra relógio errado)
-      - Formato básico do JWT: Estrutura de assinatura RSA válida com sua public key
-      - Algoritmo compatível: Garante que o token foi assinado com algoritmo esperado
-     */
+    // REGRAS JÁ APLICADAS POR DEFAULT
+    // - Expiração (exp): Se now > exp → token inválido
+    // - Not Before (nbf): Se now < nbf → token ainda não é válido
+    // - Issued At (iat): Valida se não está muito no futuro (proteção contra relógio errado)
+    // - Formato básico do JWT: Estrutura de assinatura RSA válida com sua public key
+    // - Algoritmo compatível: Garante que o token foi assinado com algoritmo esperado
 
     // VALIDACOES EXTRAS
     return jwt.getAudience().contains(audience);

@@ -49,24 +49,22 @@ public final class MethodSecurityUtil {
 
   private static Object buildKey(String pem, boolean pub) {
     try {
-      String content = pem.replaceAll(ConstSecUtil.REGEX_REPLACE_PP, ConstSecUtil.TXT_BLANK);
-      content = content.replaceAll(ConstSecUtil.REGEX_REPLACE_BLANK, ConstSecUtil.TXT_BLANK);
-
-      byte[] decoded = Base64.getDecoder().decode(content);
+      byte[] decoded = Base64.getDecoder().decode(getPemContent(pem));
       KeyFactory kf = KeyFactory.getInstance("RSA");
-
       return pub//
           ? kf.generatePublic(new X509EncodedKeySpec(decoded))//
           : kf.generatePrivate(new PKCS8EncodedKeySpec(decoded));
-
     } catch (Exception e) {
       throw new IllegalStateException("Chave RSA inválida", e);
     }
   }
 
+  private static String getPemContent(String pem) {
+    return pem.replaceAll("-----\\w+ (PUBLIC|PRIVATE) KEY-----", "").replaceAll("\\s", "");
+  }
 
   public static OAuth2Error createOAuth2Error() {
-    return new OAuth2Error(ConstSecUtil.MSG_INVALID_TOKEN, ConstSecUtil.MSG_INVALID_AUDIENCE, null);
+    return new OAuth2Error("invalid_token", "Invalid Audience", null);
   }
 
 }

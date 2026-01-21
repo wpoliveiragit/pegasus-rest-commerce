@@ -1,12 +1,12 @@
-api.security.proj-name: pegasus-api-rest-commerce # Obrigatorio para auditoria
-api.security.audience: security-gateway # Obrigatorio para alditoria
-api.security.expires-at: 15 # Obrigatorio
-api.security.valid-after-seconds: 5 # Opcional: mas deve ser positivo
-api.security.claim.name: version # Obrigatório para minha auditoria
-api.security.claim.value: v2 # Obrigatório para minha auditoria
-api.security.enable-h2-console: true # Opcional: permite o acesso ao console web do h2
-api.security.enable-log: true # Opcional: habilita logs do security
-api.security.open-routes: # Opcional: endpoints q são liberados do security
+api.security.proj-name: pegasus-api-rest-commerce
+api.security.audience: security-gateway
+api.security.expires-at: 15
+api.security.valid-after-seconds: 5
+api.security.claim.name: version
+api.security.claim.value: v2
+api.security.enable-h2-console: true
+api.security.enable-log: true
+api.security.open-routes:
   - /oauth/token
 
 api.security.rsa.public-key: | # Obrigatorio, mas a chave pode ser alterada
